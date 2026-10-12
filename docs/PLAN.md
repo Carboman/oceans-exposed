@@ -202,13 +202,13 @@ https://earth.exposed.
 
 **F. The children (one session each, after D2 is decided).** Hand `earth-exposed/docs/CHILD_SITE_NOTE.md` to a
 session on each site. The oceans-exposed reference implementation is on the `earth-exposed/oceans-child` branch of
-this repository; water-exposed gets the same change (same codebase); waste-exposed follows the note.
+this repository and, ported by hand, on `earth-exposed/water-child` of water-exposed; waste-exposed follows the note.
 
 ## 10. Phases
 
 | Phase | What | Done when |
 |---|---|---|
-| 1 (this session) | Proposal, hub code, shared chrome, contract, child note, oceans reference branch | Branches pushed, checks pass locally |
+| 1 (this session) | Proposal, hub code, shared chrome, contract, child note, oceans and water reference branches | Branches pushed, checks pass locally |
 | 2 (owner) | Decisions D1–D5, steps A–E | https://earth.exposed answers with three real tiles from the adapters |
 | 3 (one session per child) | `/network/stats.json`, `/network/layer.geojson`, shared chrome | Hub tiles say "published by the site", not "derived" |
 | 4 | New sites join by one `sites.json` entry and the child note | |

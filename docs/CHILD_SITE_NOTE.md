@@ -2,8 +2,9 @@
 
 Hand this file to a Claude Code session on the site's repository. It adds two public files and the shared chrome.
 Nothing here changes the site's data, research lane, branding, navigation or theme. Estimated time: one session.
-Reference implementation for the oceans.exposed and water.exposed codebase: branch `earth-exposed/oceans-child` of
-`Carboman/oceans-exposed` (`src/network.js`, two routes in `src/worker.js`, the chrome in every page, one site-check
+Reference implementations: branch `earth-exposed/oceans-child` of `Carboman/oceans-exposed` and branch
+`earth-exposed/water-child` of `Carboman/water-exposed` (same codebase; the water layer is one feature per state). Each adds
+`src/network.js`, two routes in `src/worker.js`, the chrome in every page, one site-check
 rule).
 
 ## 1. The stats file and the map layer
