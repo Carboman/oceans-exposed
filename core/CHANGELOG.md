@@ -1,5 +1,14 @@
 # exposed-core changelog
 
+## 1.1.4 (2026-10-12)
+
+Core sync checks out with `CORE_SYNC_TOKEN`, so its push carries that token (checkout's stored credential had been
+overriding the push URL and GitHub refused the workflow-file changes).
+
+## 1.1.3 (2026-10-12)
+
+`config.mjs` names any missing required key in `site.config.json` instead of failing later with an unclear error.
+
 ## 1.1.2 (2026-10-12)
 
 Core sync uses one secret, `CORE_SYNC_TOKEN` (contents, workflows and pull requests on the site; contents read on

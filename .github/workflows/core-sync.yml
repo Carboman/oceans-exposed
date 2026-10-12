@@ -1,4 +1,4 @@
-# GENERATED from core/workflows/core-sync.yml.tpl by node core/tools/render-workflows.mjs (exposed-core 1.1.2).
+# GENERATED from core/workflows/core-sync.yml.tpl by node core/tools/render-workflows.mjs (exposed-core 1.1.4).
 # Edit the template in exposed-core or site.config.json, then re-render; CI fails when this file is out of date.
 name: Core sync
 
@@ -21,6 +21,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          # The sync token must be the one git uses: checkout's own token would override the push URL and cannot
+          # change workflow files.
+          token: ${{ secrets.CORE_SYNC_TOKEN || github.token }}
       - uses: actions/setup-node@v5
         with:
           node-version: 22
@@ -52,6 +56,6 @@ jobs:
           git checkout -B core/update
           git add -A
           git commit -q -m "Core update: exposed-core $cur -> $new" -m "Vendored core/ refreshed and workflows re-rendered by the Core sync Action."
-          git push -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" core/update
+          git push -f origin core/update
           n=$(gh pr list --head core/update --state open --json number --jq '.[0].number')
           if [ -z "$n" ]; then gh pr create --head core/update --base main --title "Core update: exposed-core $new" --body "Vendored \`core/\` refreshed from exposed-core \`$new\` (was \`$cur\`) and the workflows re-rendered. Review the diff, run \`npm run check\`, merge."; else gh pr edit "$n" --title "Core update: exposed-core $new"; fi
