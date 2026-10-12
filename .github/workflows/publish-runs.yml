@@ -1,6 +1,8 @@
+# GENERATED from core/workflows/publish-runs.yml.tpl by node core/tools/render-workflows.mjs (exposed-core 1.0.2).
+# Edit the template in exposed-core or site.config.json, then re-render; CI fails when this file is out of date.
 name: Publish runs
 
-# The research lane commits runs/<YYYY-MM-DD[-N]>/feed.json (+ optional PDF) to main (normally via Stage runs).
+# Research runs land as runs/<YYYY-MM-DD[-N]>/feed.json on main (normally promoted there by Stage runs).
 # For each changed run folder: quality check -> publish via the authenticated API -> confirm live.
 # Afterwards it files GitHub issues:
 #   data-quality   one issue per run with warnings (published anyway; fix in the next run)
@@ -79,7 +81,7 @@ jobs:
           REPORT_DIR: ${{ runner.temp }}/reports
           QUALITY_ONLY: ${{ github.event.inputs.mode == 'quality-only' && '1' || '0' }}
           ALLOW_OLDER: ${{ github.event.inputs.allow_older == 'true' && '1' || '0' }}
-        run: node tools/publish-run.mjs ${{ steps.dirs.outputs.list }}
+        run: node core/tools/publish-run.mjs ${{ steps.dirs.outputs.list }}
 
       - name: File or close GitHub issues
         if: always()
@@ -89,10 +91,10 @@ jobs:
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           COMMIT: ${{ github.sha }}
           LANE_FILE: ${{ runner.temp }}/lane.txt
-        run: node tools/file-issues.mjs
+        run: node core/tools/file-issues.mjs
 
       - name: Mirror live feed to branch `live`
         if: steps.publish.outcome == 'success' && github.event.inputs.mode != 'quality-only'
         env:
           GH_TOKEN: ${{ github.token }}
-        run: bash tools/mirror-live.sh
+        run: bash core/tools/mirror-live.sh

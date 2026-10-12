@@ -1,0 +1,15 @@
+{
+  "host": "water.exposed",
+  "repo": "Carboman/water-exposed",
+  "slug": "water",
+  "feedName": "us-water-intelligence",
+  "runPrefix": "Water run",
+  "schema": "contract/us-water-intelligence.schema.json",
+  "fieldRulesDoc": "docs/FIELD_RULES.md",
+  "dossierPrefix": "U.S.-Water-Issues-Dossier",
+  "dossierTitle": "U.S. Water Issues Dossier",
+  "bucket": "water-exposed-reports",
+  "sampleRun": "runs/2026-10-09",
+  "research": { "cronDaily": "23 8 * * *", "dailyTime": "08:23", "cronWatchdog": "17 14 * * *" },
+  "workflows": { "skip": ["bootstrap.yml"] }
+}

@@ -4,6 +4,7 @@ import { readFileSync, existsSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
+import { cfg } from './config.mjs';
 
 const DIR = process.env.REPORT_DIR;
 const RUN_URL = process.env.RUN_URL || '';
@@ -40,7 +41,7 @@ const footer = `\n---\nWorkflow run: ${RUN_URL}${COMMIT ? ` · commit ${COMMIT}`
 if (lane) {
   const fence = '`'.repeat(3);
   const body = [
-    'A commit whose message starts with "Ocean run" changed files outside `runs/`. Only `runs/**` belongs to the research lane.',
+    'A commit whose message starts with "' + cfg.runPrefix + '" changed files outside `runs/`. Only `runs/**` belongs to the research lane.',
     '',
     fence, lane, fence,
     '',

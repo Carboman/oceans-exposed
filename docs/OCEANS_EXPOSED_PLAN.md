@@ -65,7 +65,7 @@ Reply with the numbers and any changes. Recommended choices are first.
 | `public/infographic.html` | Later | Not in version 1 |
 | `contract/` | New | `ocean-intelligence.schema.json`, `VERSION` 1.0.0, changelog, one example record |
 | `docs/FEED_SPEC.md`, `PUBLISHING.md`, `WORKFLOW.md`, `OPERATIONS.md`, `RESEARCH.md`, `RESEARCH_PROMPT.md`, `CLAUDE.md`, `README.md` | Rewrite | Same structure, ocean content. The retired research-agent instruction files are not carried over |
-| `tools/*.mjs`, `tools/mirror-live.sh` | Rename | Site URL, feed name, bucket; `site-check` looks for the `oceans.exposed` wordmark and canonical |
+| `tools/*.mjs`, `core/tools/mirror-live.sh` | Rename | Site URL, feed name, bucket; `site-check` looks for the `oceans.exposed` wordmark and canonical |
 | `tools/research/BRIEF.template.md`, `assemble.mjs`, `brief.mjs`, `check.mjs` | Rewrite | Per-sea brief, `--seas` instead of `--states`, `regions_researched` |
 | `tools/epa-baseline.py`, `ucmr5-pfas.py` | Drop | Replaced in 1.1 by `tools/ocean-indicators.py` |
 | `.github/workflows/*` | Rename | Same six workflows; URLs, feed name, bot name. Daily research at a different minute (e.g. 09:41 UTC) so the two sites never share a window of API load |

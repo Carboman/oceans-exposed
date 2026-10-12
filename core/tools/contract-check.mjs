@@ -1,14 +1,16 @@
-// Validates every research run in runs/ against contract/ocean-intelligence.schema.json.
+// Validates every research run in runs/ against the site's contract schema (site.config.json → schema).
 // Used by the Contract check workflow on pull requests that change contract/**, and locally.
 // Usage: node tools/contract-check.mjs [--schema path] [--base path-to-main-schema] [--out report.md]
 // With --base, a change is "breaking" only if a run that was valid under the base schema becomes invalid.
 import { readFileSync, readdirSync, existsSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import Ajv2020 from 'ajv/dist/2020.js';
+import { cfg, sitePath } from './config.mjs';
 
 const args = process.argv.slice(2);
 const opt = (k, d) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : d; };
-const schemaPath = opt('--schema', 'contract/ocean-intelligence.schema.json');
+const schemaArg = opt('--schema', cfg.schema);
+const schemaPath = schemaArg.startsWith('/') ? schemaArg : sitePath(schemaArg);
 const basePath = opt('--base');
 const out = opt('--out');
 const lines = [];
@@ -34,20 +36,20 @@ let base = null;
 if (basePath && existsSync(basePath)) {
   try { base = compile(basePath, 'base'); } catch (e) { log('- Base schema could not be compiled (' + e.message + '); comparing without it.'); }
 }
-const version = existsSync('contract/VERSION') ? readFileSync('contract/VERSION', 'utf8').trim() : null;
+const version = existsSync(sitePath('contract/VERSION')) ? readFileSync(sitePath('contract/VERSION'), 'utf8').trim() : null;
 
 log('### Contract check\n');
-log('Schema ' + code(schemaPath) + ' · contract_version ' + code(cur.schema.contract_version || '?') + ' · contract/VERSION ' + code(version || '?') +
+log('Schema ' + code(schemaArg) + ' · contract_version ' + code(cur.schema.contract_version || '?') + ' · contract/VERSION ' + code(version || '?') +
   (base ? ' · compared with main (contract_version ' + code(base.schema.contract_version || '?') + ')' : ''));
 if (version && cur.schema.contract_version !== version) log('\n- ⚠️ ' + code('contract_version') + ' in the schema does not match ' + code('contract/VERSION') + '.');
 if (base && base.schema.contract_version === cur.schema.contract_version && JSON.stringify(base.schema) !== JSON.stringify(cur.schema)) log('\n- ⚠️ The schema changed but ' + code('contract_version') + ' was not bumped.');
 
-const runs = existsSync('runs') ? readdirSync('runs').filter((d) => existsSync(join('runs', d, 'feed.json'))).sort() : [];
+const runs = existsSync(sitePath('runs')) ? readdirSync(sitePath('runs')).filter((d) => existsSync(sitePath('runs', d, 'feed.json'))).sort() : [];
 let checked = 0, invalid = 0, newlyBroken = 0;
 log('\n| Run | Result | First problems |\n|---|---|---|');
 for (const d of runs) {
-  const feed = JSON.parse(readFileSync(join('runs', d, 'feed.json'), 'utf8'));
-  if (feed.feed_name !== 'ocean-intelligence') { log('| ' + code(d) + ' | skipped (site-format baseline) | |'); continue; }
+  const feed = JSON.parse(readFileSync(sitePath('runs', d, 'feed.json'), 'utf8'));
+  if (feed.feed_name !== cfg.feedName) { log('| ' + code(d) + ' | skipped (site-format baseline) | |'); continue; }
   checked++;
   const wasValid = base ? base.validate(feed) : true;
   if (cur.validate(feed)) { log('| ' + code(d) + ' | ✅ valid' + (base && !wasValid ? ' (was invalid on main)' : '') + ' | |'); continue; }

@@ -34,14 +34,14 @@ CLAUDE.md            Claude Code's notes (lane, check routine, guardrails)
 runs/<date[-N]>/     One folder per run: feed.json, NOTES.md, RUN.json
 research/pending/    Researched records waiting for a source
 tools/research/      brief.mjs, assemble.mjs, check.mjs and BRIEF.template.md (research helpers)
-tools/publish-run.mjs    Quality-checks and publishes run folders (used by the Actions)
-tools/quality-check.mjs  Content-quality warnings for a run folder
-tools/validate-remote.mjs  Validates a run against the live site (used by Stage runs)
-tools/file-issues.mjs    Files and closes data-quality / publish-failed / lane-check issues
+core/tools/publish-run.mjs    Quality-checks and publishes run folders (used by the Actions)
+core/tools/quality-check.mjs  Content-quality warnings for a run folder
+core/tools/validate-remote.mjs  Validates a run against the live site (used by Stage runs)
+core/tools/file-issues.mjs    Files and closes data-quality / publish-failed / lane-check issues
 tools/site-check.mjs     Pre-deploy checks (branding, links, sample feed valid)
-tools/contract-check.mjs Schema compiles, past runs still valid, version bumped
-tools/cost-report.mjs    Research cost by month from runs/*/RUN.json
-tools/mirror-live.sh     Mirrors the live feed to the `live` branch
+core/tools/contract-check.mjs Schema compiles, past runs still valid, version bumped
+core/tools/cost-report.mjs    Research cost by month from runs/*/RUN.json
+core/tools/mirror-live.sh     Mirrors the live feed to the `live` branch
 .github/workflows/   research-daily.yml, research-watchdog.yml, stage-runs.yml, publish-runs.yml,
                      deploy.yml, contract-check.yml
 ```

@@ -1,3 +1,5 @@
+# GENERATED from core/workflows/bootstrap.yml.tpl by node core/tools/render-workflows.mjs (exposed-core 1.0.2).
+# Edit the template in exposed-core or site.config.json, then re-render; CI fails when this file is out of date.
 name: Bootstrap site
 
 # One-off launch of oceans.exposed, run by hand (Actions > Bootstrap site > Run workflow). Safe to re-run.
@@ -80,7 +82,7 @@ jobs:
         env:
           PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
           REPORT_DIR: ${{ runner.temp }}/reports
-        run: node tools/publish-run.mjs runs/2026-10-12
+        run: node core/tools/publish-run.mjs runs/2026-10-12
 
       - name: Live check
         if: always()

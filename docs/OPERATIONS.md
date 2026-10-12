@@ -17,7 +17,7 @@ publishes it and mirrors `live`. Nothing in this path depends on claude.ai sessi
 - The live feed grows with every run, so the prompt works from `tools/research/brief.mjs` and the summary API rather
   than loading the whole feed.
 - Every run writes `runs/<folder>/RUN.json`: model, turns, web searches, tokens, duration, cost at list price, records
-  published, trigger and the Actions run URL. `node tools/cost-report.mjs` totals them by month; the job summary
+  published, trigger and the Actions run URL. `node core/tools/cost-report.mjs` totals them by month; the job summary
   (Actions → Daily research → the run) shows the same figures plus Claude's report.
 - The model is Sonnet (`claude-sonnet-5-5`); the repository variable `RESEARCH_MODEL` overrides it.
 - One run at a time: the workflow refuses to start while a `staging/*` branch exists, and stops after 150 minutes or

@@ -5,7 +5,7 @@ Worker secret (`npx wrangler secret put PUBLISH_TOKEN`) and the same value is th
 the Actions use. Never put it in the repo.
 
 In normal operation nobody calls these endpoints by hand: the research lane commits `runs/<folder>/feed.json` to
-`staging/<folder>`, and the **Stage runs** and **Publish runs** Actions call them through `tools/publish-run.mjs`
+`staging/<folder>`, and the **Stage runs** and **Publish runs** Actions call them through `core/tools/publish-run.mjs`
 (`docs/WORKFLOW.md`). This page documents what they do.
 
 ## 1. Upload the PDF (optional, do this first)

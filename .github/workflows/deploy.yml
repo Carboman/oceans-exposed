@@ -1,3 +1,5 @@
+# GENERATED from core/workflows/deploy.yml.tpl by node core/tools/render-workflows.mjs (exposed-core 1.0.2).
+# Edit the template in exposed-core or site.config.json, then re-render; CI fails when this file is out of date.
 name: Deploy site
 
 # Deploys the Worker and static pages when code changes on main.
@@ -30,6 +32,7 @@ jobs:
 
       - name: Site checks and tests
         run: |
+          node core/tools/render-workflows.mjs --check
           node tools/site-check.mjs
           node --test tests/*.test.mjs
 

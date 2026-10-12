@@ -1,0 +1,67 @@
+name: Contract check
+
+# Runs on pull requests that change the publishing contract (contract/**).
+# Reports whether the proposed schema compiles and which past runs it would break,
+# comments on the PR, and labels it contract-change (+ breaking).
+on:
+  pull_request:
+    paths: ['contract/**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
+
+      - name: Lane check (contract PRs may only touch contract/)
+        id: lane
+        if: github.event_name == 'pull_request'
+        run: |
+          other=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -v '^contract/' || true)
+          if [ -n "$other" ]; then
+            echo "::warning::This contract PR also changes files outside contract/:"; echo "$other"
+            { echo 'other<<EOF'; echo "$other"; echo 'EOF'; } >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Tests
+        run: node --test tests/*.test.mjs
+
+      - name: Validate past runs against the proposed schema
+        id: check
+        run: |
+          git show "origin/${{ github.base_ref || 'main' }}:contract/{{FEED_NAME}}.schema.json" > "$RUNNER_TEMP/base.schema.json" 2>/dev/null || true
+          node core/tools/contract-check.mjs --base "$RUNNER_TEMP/base.schema.json" --out "$RUNNER_TEMP/contract-report.md"
+
+      - name: Comment and label
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          BREAKING: ${{ steps.check.outputs.breaking }}
+          OTHER: ${{ steps.lane.outputs.other }}
+        run: |
+          gh label create contract-change --color 5319e7 --description "Proposed change to the publishing contract" --force
+          gh label create breaking --color b60205 --description "Would reject past runs; needs owner approval" --force
+          gh pr edit "$PR" --add-label contract-change
+          if [ "$BREAKING" = "true" ]; then gh pr edit "$PR" --add-label breaking; else gh pr edit "$PR" --remove-label breaking || true; fi
+          {
+            cat "$RUNNER_TEMP/contract-report.md"
+            if [ -n "$OTHER" ]; then printf '\n**Lane warning:** this PR also changes files outside `contract/`:\n```\n%s\n```\n' "$OTHER"; fi
+            printf '\n---\nNext: Claude Code reviews and implements. %s\n' "$( [ "$BREAKING" = "true" ] && echo '**Breaking change: needs the owner'"'"'s explicit approval before merge.**' || echo 'Non-breaking: Claude Code can merge once the site supports it.')"
+          } > "$RUNNER_TEMP/comment.md"
+          gh pr comment "$PR" --body-file "$RUNNER_TEMP/comment.md"

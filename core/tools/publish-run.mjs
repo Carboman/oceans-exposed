@@ -1,6 +1,6 @@
-// Publishes one or more run folders (runs/<YYYY-MM-DD...>/) to the oceans.exposed API.
+// Publishes one or more run folders (runs/<YYYY-MM-DD...>/) to the site's API.
 // Each folder holds feed.json and optionally one PDF report.
-// Usage: PUBLISH_TOKEN=... [SITE=https://oceans.exposed] node tools/publish-run.mjs runs/2026-11-09 [...]
+// Usage: PUBLISH_TOKEN=... [SITE=https://<host>] node core/tools/publish-run.mjs runs/2026-11-09 [...]
 //
 // Per folder: quality check vs the live feed -> upload PDF -> dry-run publish -> real publish -> confirm live.
 // Env:
@@ -11,9 +11,10 @@
 import { readFileSync, readdirSync, existsSync, writeFileSync, mkdirSync } from 'node:fs';
 import { join, basename } from 'node:path';
 import { normalize, checkRun, toMarkdown, annotate } from './quality-check.mjs';
-import { isAgentFeed } from '../src/adapt.js';
+import { cfg, API, INTERNAL, SITE_URL, siteModule } from './config.mjs';
+const { isAgentFeed } = await siteModule('src/adapt.js');
 
-const SITE = (process.env.SITE || 'https://oceans.exposed').replace(/\/$/, '');
+const SITE = (process.env.SITE || SITE_URL).replace(/\/$/, '');
 const TOKEN = process.env.PUBLISH_TOKEN;
 const REPORT_DIR = process.env.REPORT_DIR || '';
 const ALLOW_OLDER = process.env.ALLOW_OLDER === '1';
@@ -39,7 +40,7 @@ function failRun(label, errors) {
   errors.forEach((m) => console.log(`::error title=${label}::${m}`));
   report(`${label}.failed.md`, `## Publish failed: run \`${label}\`\n\nNothing from this run went live; the site still shows the previous run.\n\n` +
     errors.map((m) => `- ${m}`).join('\n') + '\n\n**Fix:** correct `runs/' + label + '/feed.json` (GET its sha, then PUT the corrected file to the same path). ' +
-    'The publish check re-runs automatically on that commit. Field rules: `docs/FEED_SPEC.md` and `tools/research/BRIEF.template.md`.\n');
+    'The publish check re-runs automatically on that commit. Field rules: `' + (cfg.fieldRulesDoc || 'docs/FEED_SPEC.md') + '`.\n');
   results.push({ label, status: 'failed', errors });
   return false;
 }
@@ -54,13 +55,13 @@ async function publish(dir) {
   // ---- quality check (never blocks) ----
   let prev = null, prevLabel = null;
   if (QUALITY_ONLY) {
-    const runs = ((await getJson('/api/ocean/runs')) || {}).runs || [];
+    const runs = ((await getJson(API + '/runs')) || {}).runs || [];
     const i = runs.findIndex((x) => x.run === label);
     const older = i >= 0 ? runs[i + 1] : runs[0];
-    if (older) { prev = await getJson(`/api/ocean/feed?run=${older.run}`); prevLabel = older.run; }
+    if (older) { prev = await getJson(`${API}/feed?run=${older.run}`); prevLabel = older.run; }
   } else {
-    prev = await getJson('/api/ocean/feed');
-    const runs = ((await getJson('/api/ocean/runs')) || {}).runs || [];
+    prev = await getJson(API + '/feed');
+    const runs = ((await getJson(API + '/runs')) || {}).runs || [];
     prevLabel = runs[0] ? runs[0].run : 'the live feed';
   }
   let warnings = [];
@@ -83,26 +84,26 @@ async function publish(dir) {
   if (pdfs.length > 1) return failRun(label, [`expected at most one PDF, found ${pdfs.length}`]);
   if (pdfs.length) {
     // Keep the agent's filename only if it is URL-safe and ends with the run-folder name, so runs never overwrite each other in R2.
-    const name = PDF_NAME.test(pdfs[0]) && pdfs[0].replace(/\.pdf$/i, '').endsWith(label) ? pdfs[0] : `Global-Ocean-Issues-Dossier-${label}.pdf`;
-    const up = await call('PUT', `/internal/ocean/reports/${name}`, readFileSync(join(dir, pdfs[0])), { 'content-type': 'application/pdf' });
+    const name = PDF_NAME.test(pdfs[0]) && pdfs[0].replace(/\.pdf$/i, '').endsWith(label) ? pdfs[0] : `${cfg.dossierPrefix || 'Dossier'}-${label}.pdf`;
+    const up = await call('PUT', `${INTERNAL}/reports/${name}`, readFileSync(join(dir, pdfs[0])), { 'content-type': 'application/pdf' });
     if (up.status !== 200) return failRun(label, [`PDF upload failed (${up.status}): ${JSON.stringify(up.data)}`]);
     console.log(`${dir}: uploaded ${name} (${up.data.bytes} bytes)`);
-    if (!feed.source_report || !feed.source_report.file) feed.source_report = { ...(feed.source_report || {}), file: name, title: (feed.source_report && feed.source_report.title) || `Global Ocean Issues Dossier — ${label.slice(0, 10)}` };
+    if (!feed.source_report || !feed.source_report.file) feed.source_report = { ...(feed.source_report || {}), file: name, title: (feed.source_report && feed.source_report.title) || `${cfg.dossierTitle || 'Dossier'} — ${label.slice(0, 10)}` };
   }
 
   // ---- publish ----
   const older = ALLOW_OLDER ? 'allow_older=1' : '';
   const body = JSON.stringify(feed);
   const json = { 'content-type': 'application/json' };
-  const dry = await call('POST', `/internal/ocean/publish?dry_run=1${older ? '&' + older : ''}`, body, json);
+  const dry = await call('POST', `${INTERNAL}/publish?dry_run=1${older ? '&' + older : ''}`, body, json);
   if (dry.status !== 200) return failRun(label, ((dry.data && dry.data.errors) || [{ message: `HTTP ${dry.status}` }]).map((e) => e.message));
   console.log(`${dir}: dry run ok (${dry.data.records} records, run ${dry.data.run_date})`);
 
-  const real = await call('POST', `/internal/ocean/publish${older ? '?' + older : ''}`, body, json);
+  const real = await call('POST', `${INTERNAL}/publish${older ? '?' + older : ''}`, body, json);
   if (real.status !== 200) return failRun(label, [`publish failed (${real.status}): ${JSON.stringify(real.data)}`]);
   console.log(`${dir}: published run ${real.data.run_date} rev ${real.data.revision} (${real.data.records} records)`);
 
-  const live = await getJson('/api/ocean/summary');
+  const live = await getJson(API + '/summary');
   const liveRev = live && live.run && live.run.revision;
   if (!live || live.run.run_date !== real.data.run_date || (real.data.revision && liveRev !== real.data.revision)) return failRun(label, [`after publishing, the live feed shows run ${live && live.run.run_date} rev ${liveRev}; expected ${real.data.run_date} rev ${real.data.revision}`]);
   console.log(`${dir}: confirmed live at ${SITE} (${live.summary.total} findings, rev ${liveRev})`);
