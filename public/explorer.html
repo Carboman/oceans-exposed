@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Findings Explorer · oceans.exposed</title>
+<meta name="description" content="Filter, sort and export every ocean finding in the current feed.">
+<link rel="canonical" href="https://oceans.exposed/explorer.html">
+<meta property="og:site_name" content="oceans.exposed">
+<meta property="og:url" content="https://oceans.exposed/explorer.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<script>try{var t=localStorage.getItem('oe-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+</head>
+<body data-page="explorer">
+<header class="topbar">
+  <a href="/" class="topbar-wordmark" aria-label="oceans.exposed home">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" style="flex-shrink:0;display:block"><circle cx="12" cy="12" r="10" fill="var(--accent-bright)"/><path d="M3.6 10.4c1.7-1.6 3.4-1.6 5.1 0s3.4 1.6 5.1 0 3.4-1.6 5.1 0" fill="none" stroke="#06202e" stroke-width="1.8" stroke-linecap="round"/><path d="M4.2 14.8c1.7-1.6 3.4-1.6 5.1 0s3.4 1.6 5.1 0 3.4-1.6 5.1 0" fill="none" stroke="#06202e" stroke-width="1.8" stroke-linecap="round" opacity=".55"/></svg>
+    <span>oceans<em>.exposed</em></span>
+  </a>
+  <button class="nav-toggle" aria-expanded="false" aria-controls="topnav">Menu</button>
+  <nav class="topnav" id="topnav">
+    <a href="index.html">Overview</a>
+    <a href="explorer.html" aria-current="page">Explorer</a>
+    <a href="updates.html">Changes &amp; Coverage</a>
+    <a href="methodology.html">Methodology</a>
+    <button class="theme-toggle" type="button" aria-label="Toggle light/dark theme">◐</button>
+  </nav>
+</header>
+<div id="sample-banner" class="sample-banner" hidden><b>Sample data.</b> All locations and figures on this site are fictional placeholders that show the format. </div>
+
+<div class="page-banner" aria-hidden="true"></div>
+<main class="page-body">
+  <section class="hero">
+    <div class="eyebrow">All findings</div>
+    <h1>Findings Explorer</h1>
+    <p class="lede">Filter by category, issue layer, severity, regional sea, basin, country, status, economic risk, trend, minimum score or change type. Click any row to open its dossier. Filters are kept in the page URL, so a filtered view can be shared.</p>
+    <div class="run-meta" data-run-meta></div>
+  </section>
+
+  <div class="filters">
+    <label>Search<input id="f-q" type="search" placeholder="Place, reef, stock, pollutant…"></label>
+    <label>Category<select id="f-category"></select></label>
+    <label>Issue layer<select id="f-layer"></select></label>
+    <label>Issue level<select id="f-level"></select></label>
+    <label>Regional sea<select id="f-sea"></select></label>
+    <label>Ocean basin<select id="f-basin"></select></label>
+    <label>Country / high seas<select id="f-country"></select></label>
+    <label>Status<select id="f-status"></select></label>
+    <label>Economic risk<select id="f-risk"></select></label>
+    <label>Trend<select id="f-trend"></select></label>
+    <label>Minimum score<select id="f-min"></select></label>
+    <label>Change this run<select id="f-change"></select></label>
+  </div>
+  <section class="card xstack" aria-label="Severity mix of the findings in view">
+    <div id="viz-filtered"></div>
+  </section>
+  <div class="result-count">
+    <span id="result-count-n"></span>
+    <button class="btn" id="reset" type="button">Clear filters</button>
+    <button class="btn" id="export" type="button">Download CSV</button>
+    <a class="btn" id="sea-map-link" href="sea.html" hidden>Open sea page →</a>
+  </div>
+
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr>
+        <th><button data-sort="rank">Cat. rank</button></th>
+        <th><button data-sort="loc">Location</button></th>
+        <th><button data-sort="sea">Sea &amp; countries</button></th>
+        <th><button data-sort="cat">Primary category</button></th>
+        <th>Issue layer</th>
+        <th><button data-sort="score">Level / score</button></th>
+        <th>Status</th>
+        <th><button data-sort="pop">Population</button></th>
+        <th>Key measure</th>
+        <th>Economic risk</th>
+        <th>Trend</th>
+        <th><button data-sort="date">Source date</button></th>
+      </tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <a href="/" class="footer-brand">oceans<em>.exposed</em></a>
+    <span class="footer-links">
+      <a href="methodology.html">Methodology</a>
+      <a href="updates.html#coverage">Coverage limitations</a>
+      <a href="/api/ocean/feed">Data API (JSON)</a>
+    </span>
+    <span class="footer-sponsor">Sponsored by <a href="https://carbotura.com" target="_blank" rel="noopener">Carbotura</a></span>
+    <span>Informational only. Not a census of every ocean issue.</span>
+  </div>
+</footer>
+<script src="assets/app.js"></script>
+<script src="assets/charts.js"></script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Changes and Coverage · oceans.exposed</title>
+<meta name="description" content="Changes since the prior run, corrections, and coverage limitations of the ocean issues feed.">
+<link rel="canonical" href="https://oceans.exposed/updates.html">
+<meta property="og:site_name" content="oceans.exposed">
+<meta property="og:url" content="https://oceans.exposed/updates.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<script>try{var t=localStorage.getItem('oe-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+</head>
+<body data-page="updates">
+<header class="topbar">
+  <a href="/" class="topbar-wordmark" aria-label="oceans.exposed home">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" style="flex-shrink:0;display:block"><circle cx="12" cy="12" r="10" fill="var(--accent-bright)"/><path d="M3.6 10.4c1.7-1.6 3.4-1.6 5.1 0s3.4 1.6 5.1 0 3.4-1.6 5.1 0" fill="none" stroke="#06202e" stroke-width="1.8" stroke-linecap="round"/><path d="M4.2 14.8c1.7-1.6 3.4-1.6 5.1 0s3.4 1.6 5.1 0 3.4-1.6 5.1 0" fill="none" stroke="#06202e" stroke-width="1.8" stroke-linecap="round" opacity=".55"/></svg>
+    <span>oceans<em>.exposed</em></span>
+  </a>
+  <button class="nav-toggle" aria-expanded="false" aria-controls="topnav">Menu</button>
+  <nav class="topnav" id="topnav">
+    <a href="index.html">Overview</a>
+    <a href="explorer.html">Explorer</a>
+    <a href="updates.html" aria-current="page">Changes &amp; Coverage</a>
+    <a href="methodology.html">Methodology</a>
+    <button class="theme-toggle" type="button" aria-label="Toggle light/dark theme">◐</button>
+  </nav>
+</header>
+<div id="sample-banner" class="sample-banner" hidden><b>Sample data.</b> All locations and figures on this site are fictional placeholders that show the format. </div>
+
+<div class="page-banner" aria-hidden="true"></div>
+<main class="page-body">
+  <section class="hero">
+    <div class="eyebrow">Run notes</div>
+    <h1>Changes &amp; Coverage</h1>
+    <p class="lede">What changed since the prior run (<span id="prior-run"></span>), what was corrected, and what this run could and could not cover.</p>
+    <div class="run-meta" data-run-meta></div>
+  </section>
+
+  <h2>Changes since the prior run</h2>
+  <div id="baseline-note"></div>
+  <div id="changes"></div>
+
+  <h2>Cross-cutting findings</h2>
+  <div id="cross"></div>
+
+  <h2>Resolved or stabilized milestones</h2>
+  <div id="milestones"></div>
+
+  <h2>Corrections</h2>
+  <div id="corrections"></div>
+
+  <h2 id="coverage">Coverage limitations</h2>
+  <div class="kv">
+    <div>Date range searched</div><div id="cov-range"></div>
+    <div>Regional seas researched in depth</div><div id="cov-seas"></div>
+    <div>Scope limits</div><div id="cov-scope"></div>
+  </div>
+  <p class="small muted">Seas are researched one at a time; the daily run re-verifies two seas in rotation. A sea not yet researched in depth shows only findings from global sweeps.</p>
+  <h3>Findings by category</h3>
+  <section class="card"><div id="viz-coverage"></div></section>
+  <h3>Categories researched</h3>
+  <div class="table-wrap"><table class="data-table">
+    <thead><tr><th>#</th><th>Category</th><th>Researched</th><th>Findings in feed</th><th>Note</th></tr></thead>
+    <tbody id="cov-cats"></tbody>
+  </table></div>
+  <h3>Fields that could not be verified</h3>
+  <ul class="clean" id="cov-unverified"></ul>
+  <h3>Source, geographic and record gaps</h3>
+  <ul class="clean" id="cov-gaps"></ul>
+  <h3>Feed errors</h3>
+  <ul class="clean" id="cov-errors"></ul>
+  <p class="callout" id="cov-statement"></p>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <a href="/" class="footer-brand">oceans<em>.exposed</em></a>
+    <span class="footer-links">
+      <a href="methodology.html">Methodology</a>
+      <a href="updates.html#coverage">Coverage limitations</a>
+      <a href="/api/ocean/feed">Data API (JSON)</a>
+    </span>
+    <span class="footer-sponsor">Sponsored by <a href="https://carbotura.com" target="_blank" rel="noopener">Carbotura</a></span>
+    <span>Informational only. Not a census of every ocean issue.</span>
+  </div>
+</footer>
+<script src="assets/app.js"></script>
+<script src="assets/charts.js"></script>
+</body>
+</html>

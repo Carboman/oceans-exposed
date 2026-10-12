@@ -1,6 +1,6 @@
 // Geography of the oceans.exposed contract (contract 1.0.0): basins, regional seas, countries, geometry.
 // The regional sea is the unit of the side panel, the sea tile map, coverage and the re-verification rotation.
-// The browser has its own copy of SEAS in public/assets/seamap.js; keep them in step.
+// The browser has its own copy of SEAS in public/assets/app.js (bounding boxes in seamap.js); keep them in step.
 
 export const BASINS = {
   PAC: 'Pacific Ocean', ATL: 'Atlantic Ocean', IND: 'Indian Ocean', SOU: 'Southern Ocean', ARC: 'Arctic Ocean', GLOBAL: 'Global ocean',
