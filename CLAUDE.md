@@ -20,14 +20,14 @@ the record (same `id`, `revision` + 1) or tombstones it.
 2. `git log --format='%h %ad %s' --date=iso -15`: list new runs (`Ocean run ...` commits). Any run not made by the
    Daily research Action or a Claude Code session is a problem: tell the owner.
 3. `gh run list --repo Carboman/oceans-exposed --limit 10`: every Daily research, Stage runs, Publish runs, Research
-   watchdog and Deploy site run should be green. For a failure: `gh run view <id> --log`. `node tools/cost-report.mjs`
+   watchdog and Deploy site run should be green. For a failure: `gh run view <id> --log`. `node core/tools/cost-report.mjs`
    totals research cost by month.
 4. `gh issue list --repo Carboman/oceans-exposed --state open`. Handle every `claude-task`. Read `data-quality`,
    `publish-failed` and `research-stale` (a missed daily run: `docs/OPERATIONS.md`).
 5. Live state: `curl -s https://oceans.exposed/api/ocean/summary` and `/api/ocean/runs`. Report
    `coverage.regions_researched` as N of 32 seas (the baseline pass per sea is in `docs/RESEARCH.md`; once it is
    complete the daily run re-verifies two seas a day in rotation).
-6. Re-check any run: `node tools/quality-check.mjs runs/<folder> --prev-run auto` (compares it with the run published before it).
+6. Re-check any run: `node core/tools/quality-check.mjs runs/<folder> --prev-run auto` (compares it with the run published before it).
 7. Report: new runs, live counts, open issues, and actions taken.
 
 ## Contract proposals (`contract-change` pull requests or issues)
@@ -39,7 +39,7 @@ The owner decides, Claude Code or the owner proposes, you implement (`contract/R
    (vocabulary), `src/adapt.js`, `src/validate.js`, the API (`src/worker.js`), the site, then `docs/FEED_SPEC.md`,
    `docs/RESEARCH_PROMPT.md` (bump `instructions_version`) and `tools/research/BRIEF.template.md`, `contract/VERSION`
    and `contract/CHANGELOG.md`.
-4. Run `node tools/contract-check.mjs` and `node tools/site-check.mjs`, merge, comment with what shipped, and close.
+4. Run `node core/tools/contract-check.mjs` and `node tools/site-check.mjs`, merge, comment with what shipped, and close.
 
 ## When you change the data contract
 

@@ -1,0 +1,21 @@
+{
+  "host": "oceans.exposed",
+  "repo": "Carboman/oceans-exposed",
+  "slug": "ocean",
+  "feedName": "ocean-intelligence",
+  "runPrefix": "Ocean run",
+  "schema": "contract/ocean-intelligence.schema.json",
+  "fieldRulesDoc": "docs/FEED_SPEC.md",
+  "dossierPrefix": "Global-Ocean-Issues-Dossier",
+  "dossierTitle": "Global Ocean Issues Dossier",
+  "bucket": "oceans-exposed-reports",
+  "sampleRun": "runs/2026-10-12",
+  "research": {
+    "cronDaily": "41 9 * * *",
+    "dailyTime": "09:41",
+    "cronWatchdog": "17 15 * * *"
+  },
+  "workflows": {
+    "skip": []
+  }
+}

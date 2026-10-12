@@ -1,0 +1,55 @@
+name: Research watchdog
+
+# Once a day, after the {{DAILY_TIME}} UTC Daily research run should have published, check how old the newest published run
+# is (https://{{SITE_HOST}}{{API}}/runs, newest `uploaded`). Older than 30 hours, or the site not answering: open
+# one research-stale issue, and comment on it each further day. Fresh again: close it.
+# If the repository variable RESEARCH_FALLBACK_AUTO is "true" and the ANTHROPIC_API_KEY secret exists, also start
+# Daily research again. Runbook: docs/OPERATIONS.md.
+on:
+  schedule:
+    - cron: '{{CRON_WATCHDOG}}'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+  actions: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the age of the newest published run
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          AUTO: ${{ vars.RESEARCH_FALLBACK_AUTO }}
+          HAS_KEY: ${{ secrets.ANTHROPIC_API_KEY != '' }}
+        run: |
+          if s=$(curl -fsS --retry 3 https://{{SITE_HOST}}{{API}}/runs); then
+            up=$(echo "$s" | jq -r '[.runs[].uploaded] | max')
+            run=$(echo "$s" | jq -r --arg up "$up" '.runs[] | select(.uploaded == $up) | .run' | head -1)
+            age=$(( ( $(date -u +%s) - $(date -u -d "$up" +%s) ) / 3600 ))
+            what="newest published run $run, uploaded $up, is ${age}h old"
+          else
+            age=999; what="https://{{SITE_HOST}}{{API}}/runs did not answer"
+          fi
+          echo "$what"
+          open=$(gh issue list --label research-stale --state open --json number -q '.[0].number' 2>/dev/null || true)
+          if [ "$age" -lt 30 ]; then
+            [ -n "$open" ] && gh issue close "$open" --comment "Fresh again: $what."
+            exit 0
+          fi
+          echo "::warning::Research is stale: $what"
+          if [ -z "$open" ]; then
+            gh label create research-stale --color B60205 --description "No research run published in 30 hours" --force
+            gh issue create --label research-stale --title "Research is stale: $what" --body "The daily research run has not published for 30 hours or more ($what).
+
+          Follow docs/OPERATIONS.md: open the latest Daily research run in Actions to see why, then use a backup. This issue closes itself when a fresh run is live."
+          else
+            gh issue comment "$open" --body "Still stale: $what."
+          fi
+          if [ "$AUTO" = "true" ] && [ "$HAS_KEY" = "true" ]; then
+            gh workflow run research-daily.yml --ref main -f note="Started by the watchdog: $what."
+            echo "Started Daily research."
+          fi

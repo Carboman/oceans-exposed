@@ -1,0 +1,194 @@
+name: Daily research
+
+# The daily research run: Claude Code headless inside GitHub Actions, on a Claude API key scoped to the
+# {{REPO_NAME}} workspace. It does not depend on claude.ai sessions, connectors or Routines.
+# Runs every day at {{DAILY_TIME}} UTC, by hand (Actions > Daily research > Run workflow, with an optional note), or from
+# the Research watchdog. Claude writes only runs/<folder>/ (feed.json, NOTES.md); this workflow checks that lane,
+# validates the feed the same way tools/research/assemble.mjs does, records the run's cost in runs/<folder>/RUN.json,
+# pushes the folder to staging/<folder> and starts Stage runs, which validates it against the live site and publishes.
+# Secret: ANTHROPIC_API_KEY (a workspace-scoped key). Variables: RESEARCH_MODEL (default claude-sonnet-5-5),
+# ANTHROPIC_WORKSPACE_ID (only for a key that is not scoped to a workspace). Runbook: docs/OPERATIONS.md.
+on:
+  schedule:
+    - cron: '{{CRON_DAILY}}'
+  workflow_dispatch:
+    inputs:
+      note:
+        description: 'Extra instructions for this run (optional)'
+        required: false
+        default: ''
+
+concurrency:
+  group: research-daily
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  actions: write
+  issues: read
+
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Check the API key
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "::error::ANTHROPIC_API_KEY secret is not set. Add it under Settings > Secrets and variables > Actions (docs/OPERATIONS.md)."
+            exit 1
+          fi
+
+      - name: Prepare (live feed, next free folder, one run at a time)
+        id: prep
+        run: |
+          curl -fsS --retry 3 https://{{SITE_HOST}}{{API}}/feed -o "$RUNNER_TEMP/live.json"
+          node -e "const f=require('$RUNNER_TEMP/live.json');console.log('live feed: '+f.records.length+' records, run '+(f.run_id||(f.run||{}).run_id))"
+          if [ -n "$(git ls-remote --heads origin 'staging/*')" ]; then
+            echo "::error::A staging/* branch exists on origin: a run is still in flight. Finish or delete it first (docs/OPERATIONS.md)."; exit 1
+          fi
+          today=$(date -u +%F)
+          last=$(git ls-tree --name-only origin/main runs/ | grep "^runs/$today" | sed "s|runs/$today-\?||" | sed 's/^$/1/' | sort -n | tail -1)
+          if [ -z "$last" ]; then folder="$today"; else folder="$today-$((last + 1))"; fi
+          echo "folder=$folder" >> "$GITHUB_OUTPUT"
+          echo "today=$today" >> "$GITHUB_OUTPUT"
+          echo "Next run folder: runs/$folder"
+
+      - name: Research run (Claude Code, headless)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GH_TOKEN: ${{ github.token }}
+          MODEL: ${{ vars.RESEARCH_MODEL || 'claude-sonnet-5-5' }}
+          WORKSPACE_ID: ${{ vars.ANTHROPIC_WORKSPACE_ID }}
+          NOTE: ${{ github.event.inputs.note }}
+          FOLDER: ${{ steps.prep.outputs.folder }}
+          TODAY: ${{ steps.prep.outputs.today }}
+        run: |
+          # An organization-level key must name its workspace on every request.
+          [ -n "$WORKSPACE_ID" ] && export ANTHROPIC_CUSTOM_HEADERS="anthropic-workspace-id: $WORKSPACE_ID"
+          npm install -g @anthropic-ai/claude-code --no-audit --no-fund
+          prompt="$(cat docs/RESEARCH_PROMPT.md)
+
+          Environment for this run (GitHub Actions, fresh checkout of main at $GITHUB_WORKSPACE):
+          - Today is $TODAY. Your run folder is runs/$FOLDER/ (already chosen; do not pick another).
+          - The live feed is already saved at $RUNNER_TEMP/live.json; use it wherever the instructions say /tmp/live.json.
+          - Do NOT commit, push, create branches or run any git command that writes. The workflow validates, stages and
+            publishes runs/$FOLDER/ after you finish, and records the run in Actions.
+          - Write scratch files under $RUNNER_TEMP, never in the repository outside runs/$FOLDER/.
+          - Read issues with: gh issue list --label <label> --state open (the token is read-only for issues).
+          - Set generated_at from \`date -u +%Y-%m-%dT%H:%M:%SZ\`; never estimate it.
+          ${NOTE:+Note for this run: $NOTE}"
+          start=$(date +%s)
+          claude -p "$prompt" --model "$MODEL" --max-turns 700 \
+            --allowedTools "Read,Write,Edit,Glob,Grep,WebSearch,WebFetch,Bash(date:*),Bash(node:*),Bash(python3:*),Bash(git status:*),Bash(git log:*),Bash(git diff:*),Bash(git show:*),Bash(git ls-tree:*),Bash(ls:*),Bash(cat:*),Bash(head:*),Bash(tail:*),Bash(wc:*),Bash(sort:*),Bash(grep:*),Bash(jq:*),Bash(curl:*),Bash(gh issue:*),Bash(mkdir:*),Bash(cp:*)" \
+            --output-format json > "$RUNNER_TEMP/claude.json" || true
+          echo "$(( $(date +%s) - start ))" > "$RUNNER_TEMP/seconds"
+          if ! jq -e . "$RUNNER_TEMP/claude.json" > /dev/null 2>&1; then echo '{"result":"Claude Code produced no JSON result (it may have failed to start).","is_error":true}' > "$RUNNER_TEMP/claude.json"; fi
+          jq -r '.result // "No result returned."' "$RUNNER_TEMP/claude.json" | tee "$RUNNER_TEMP/claude-report.txt"
+          jq -r '"Turns: \(.num_turns // "?"), web searches: \(.usage.server_tool_use.web_search_requests // "?"), cost at list price: $\(.total_cost_usd // "?"), error: \(.is_error // false)"' "$RUNNER_TEMP/claude.json" | tee -a "$RUNNER_TEMP/claude-report.txt"
+
+      - name: Lane check and validation
+        id: check
+        env:
+          FOLDER: ${{ steps.prep.outputs.folder }}
+        run: |
+          changed=$(git status --porcelain --untracked-files=all | cut -c4-)
+          other=$(echo "$changed" | grep -v "^runs/$FOLDER/" | grep -v '^$' || true)
+          if [ -n "$other" ]; then echo "::error::The run changed files outside runs/$FOLDER/: $other"; exit 1; fi
+          if [ -z "$changed" ]; then echo "::error::The run wrote nothing. Report:"; cat "$RUNNER_TEMP/claude-report.txt"; exit 1; fi
+          d="runs/$FOLDER"
+          if [ ! -f "$d/feed.json" ]; then
+            [ -f "$d/NOTES.md" ] || { echo "::error::$d has neither feed.json nor NOTES.md."; exit 1; }
+            echo "records=0" >> "$GITHUB_OUTPUT"; echo "Empty run: NOTES.md only."; exit 0
+          fi
+          # Same validation as tools/research/assemble.mjs: normalize against the live feed, then the publish validator.
+          node -e "
+            Promise.all([import('./src/quality.js'), import('./src/validate.js')]).then(([q, v]) => {
+              const fs = require('fs');
+              const feed = JSON.parse(fs.readFileSync('$d/feed.json', 'utf8'));
+              const live = JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + '/live.json', 'utf8'));
+              const problems = [];
+              if (feed.feed_name !== '{{FEED_NAME}}') problems.push('feed_name must be {{FEED_NAME}}');
+              if (feed.mode !== 'incremental') problems.push('mode must be incremental');
+              if (!Array.isArray(feed.records)) problems.push('records must be an array');
+              let site; try { site = q.normalize(feed, live); } catch (e) { problems.push('normalize failed: ' + e.message); }
+              if (site) problems.push(...v.validateFeed(site));
+              if (problems.length) { problems.slice(0, 80).forEach((p) => console.log('::error::$d: ' + p)); process.exit(1); }
+              const w = site ? q.checkRun(site, live, { touchedIds: new Set(feed.records.map((r) => r.id)) }) : [];
+              w.forEach((x) => console.log('::warning::$d: ' + x.rule + ': ' + x.message));
+              console.log('$d valid: ' + feed.records.length + ' records, ' + w.length + ' quality warning(s)');
+              fs.writeFileSync(process.env.RUNNER_TEMP + '/records', String(feed.records.length));
+            }).catch((e) => { console.log('::error::' + e.message); process.exit(1); });
+          "
+          echo "records=$(cat "$RUNNER_TEMP/records")" >> "$GITHUB_OUTPUT"
+
+      - name: Record the run (RUN.json)
+        env:
+          FOLDER: ${{ steps.prep.outputs.folder }}
+          MODEL: ${{ vars.RESEARCH_MODEL || 'claude-sonnet-5-5' }}
+          RECORDS: ${{ steps.check.outputs.records }}
+          NOTE: ${{ github.event.inputs.note }}
+        run: |
+          instr=$(sed -n 's/^instructions_version: *//p' docs/RESEARCH_PROMPT.md | head -1)
+          jq -n --arg folder "$FOLDER" --arg model "$MODEL" --arg instr "$instr" --arg trigger "${{ github.event_name }}" \
+             --arg note "$NOTE" --arg url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+             --argjson records "${RECORDS:-0}" --argjson seconds "$(cat "$RUNNER_TEMP/seconds")" \
+             --slurpfile c "$RUNNER_TEMP/claude.json" \
+             '{folder: $folder, date: ($folder | .[0:10]), model: $model, instructions_version: $instr, trigger: $trigger, note: $note,
+               records: $records, turns: ($c[0].num_turns // null),
+               web_searches: (([$c[0].modelUsage[]?.webSearchRequests // 0] | add) // $c[0].usage.server_tool_use.web_search_requests // null),
+               cost_usd_list: ($c[0].total_cost_usd // null), duration_min: (($seconds / 60 * 10 | round) / 10),
+               input_tokens: ($c[0].usage.input_tokens // null), output_tokens: ($c[0].usage.output_tokens // null),
+               cache_read_tokens: ($c[0].usage.cache_read_input_tokens // null), error: ($c[0].is_error // false), workflow_run: $url,
+               usage: ($c[0].usage // null), model_usage: ($c[0].modelUsage // null)}' \
+             > "runs/$FOLDER/RUN.json"
+          cat "runs/$FOLDER/RUN.json"
+
+      - name: Stage and publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FOLDER: ${{ steps.prep.outputs.folder }}
+          RECORDS: ${{ steps.check.outputs.records }}
+        run: |
+          git config user.name "{{BOT_NAME}}"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          instr=$(sed -n 's/^instructions_version: *//p' docs/RESEARCH_PROMPT.md | head -1)
+          d="runs/$FOLDER"
+          if [ "${RECORDS:-0}" = "0" ]; then
+            # Nothing to publish: keep the notes and the cost record on main (no feed.json, so nothing is published).
+            git add "$d"
+            git commit -q -m "{{RUN_PREFIX}} $FOLDER: empty sweep, notes only [instr $instr]" -m "Daily research workflow, run $GITHUB_RUN_ID."
+            for attempt in 1 2 3; do git pull -q --rebase origin main && git push -q origin HEAD:main && break; [ "$attempt" = 3 ] && exit 1; sleep 5; done
+            echo "Empty run recorded on main." | tee -a "$RUNNER_TEMP/claude-report.txt"; exit 0
+          fi
+          git checkout -q -b "staging/$FOLDER"
+          git add "$d"
+          git commit -q -m "{{RUN_PREFIX}} $FOLDER (incremental): $RECORDS records [instr $instr]" -m "Daily research workflow, run $GITHUB_RUN_ID."
+          git push -q -u origin "staging/$FOLDER"
+          sha=$(git rev-parse HEAD)
+          # Pushes made with the workflow token do not trigger other workflows, so start Stage runs explicitly.
+          gh workflow run stage-runs.yml --ref "staging/$FOLDER"
+          echo "Staged $d on staging/$FOLDER ($sha); waiting for Stage runs."
+          for i in $(seq 1 80); do
+            sleep 15; git fetch -q origin main
+            if git cat-file -e "origin/main:$d/feed.json" 2>/dev/null; then echo "Published: $d is on main." | tee -a "$RUNNER_TEMP/claude-report.txt"; exit 0; fi
+            if [ -z "$(git ls-remote --heads origin "staging/$FOLDER")" ]; then break; fi
+          done
+          echo "::error::$d was not promoted. Stage runs' verdict (commit comment on $sha):"
+          gh api "repos/$GITHUB_REPOSITORY/commits/$sha/comments" --jq '.[].body' | head -60 || true
+          exit 1
+
+      - name: Job summary
+        if: always()
+        run: |
+          { echo "## Daily research: runs/${{ steps.prep.outputs.folder }}"; echo; cat "$RUNNER_TEMP/claude-report.txt" 2>/dev/null || echo "No report."; } >> "$GITHUB_STEP_SUMMARY"

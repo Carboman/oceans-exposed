@@ -1,5 +1,5 @@
 // Content-quality checks for a run, compared with the feed that was live before it (pure: no Node APIs).
-// Shared by the Worker (POST /api/ocean/validate), tools/publish-run.mjs and tools/quality-check.mjs.
+// Shared by the Worker (POST /api/ocean/validate), core/tools/publish-run.mjs and core/tools/quality-check.mjs.
 // Warnings never block publishing.
 import { isAgentFeed, adaptAgentFeed } from './adapt.js';
 import { mappability, seasOf, seaName } from './geo.js';

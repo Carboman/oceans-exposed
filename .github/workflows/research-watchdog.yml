@@ -1,3 +1,5 @@
+# GENERATED from core/workflows/research-watchdog.yml.tpl by node core/tools/render-workflows.mjs (exposed-core 1.0.2).
+# Edit the template in exposed-core or site.config.json, then re-render; CI fails when this file is out of date.
 name: Research watchdog
 
 # Once a day, after the 09:41 UTC Daily research run should have published, check how old the newest published run

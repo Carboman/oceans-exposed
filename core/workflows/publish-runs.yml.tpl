@@ -1,0 +1,98 @@
+name: Publish runs
+
+# Research runs land as runs/<YYYY-MM-DD[-N]>/feed.json on main (normally promoted there by Stage runs).
+# For each changed run folder: quality check -> publish via the authenticated API -> confirm live.
+# Afterwards it files GitHub issues:
+#   data-quality   one issue per run with warnings (published anyway; fix in the next run)
+#   publish-failed one issue per run that did not go live
+# A later clean, published run closes the open data-quality and publish-failed issues.
+on:
+  push:
+    branches: [main]
+    paths: ['runs/**']
+  workflow_dispatch:
+    inputs:
+      run_dir:
+        description: 'Run folder, e.g. runs/2026-11-09'
+        required: true
+      mode:
+        description: 'publish = (re)publish this run; quality-only = just re-check it and file an issue'
+        type: choice
+        options: [publish, quality-only]
+        default: publish
+      allow_older:
+        description: 'Rollback: allow publishing a run dated earlier than the live one'
+        type: boolean
+        default: false
+
+concurrency:
+  group: publish-runs
+  cancel-in-progress: false
+
+permissions:
+  contents: write   # to force-push the `live` mirror branch
+  issues: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Find changed run folders
+        id: dirs
+        env:
+          BEFORE: ${{ github.event.before }}
+          INPUT_DIR: ${{ github.event.inputs.run_dir }}
+        run: |
+          if [ -n "$INPUT_DIR" ]; then
+            dirs="$INPUT_DIR"
+          else
+            base="$BEFORE"
+            if [ -z "$base" ] || ! git cat-file -e "$base^{commit}" 2>/dev/null; then base="$(git rev-list --max-parents=0 HEAD)"; fi
+            dirs=$(git diff --name-only "$base" "$GITHUB_SHA" -- runs/ | awk -F/ 'NF>=3 {print $1"/"$2}' | sort -u | while read d; do [ -d "$d" ] && echo "$d"; done | tr '\n' ' ')
+          fi
+          echo "Run folders: ${dirs:-none}"
+          echo "list=$dirs" >> "$GITHUB_OUTPUT"
+          # Lane guard: research run commits ("{{RUN_PREFIX}} ...") must only touch runs/.
+          if [ -z "$INPUT_DIR" ]; then
+            : > "$RUNNER_TEMP/lane.txt"
+            for c in $(git rev-list "$base..$GITHUB_SHA"); do
+              if git log -1 --format=%s "$c" | grep -q '^{{RUN_PREFIX}}'; then
+                git diff-tree --no-commit-id --name-only -r "$c" | grep -v '^runs/' | sed "s|^|$(git rev-parse --short $c) |" >> "$RUNNER_TEMP/lane.txt" || true
+              fi
+            done
+            if [ -s "$RUNNER_TEMP/lane.txt" ]; then echo "::warning::Research run commit touched files outside runs/"; cat "$RUNNER_TEMP/lane.txt"; fi
+          fi
+
+      - name: Quality check and publish
+        id: publish
+        if: steps.dirs.outputs.list != ''
+        env:
+          PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
+          REPORT_DIR: ${{ runner.temp }}/reports
+          QUALITY_ONLY: ${{ github.event.inputs.mode == 'quality-only' && '1' || '0' }}
+          ALLOW_OLDER: ${{ github.event.inputs.allow_older == 'true' && '1' || '0' }}
+        run: node core/tools/publish-run.mjs ${{ steps.dirs.outputs.list }}
+
+      - name: File or close GitHub issues
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPORT_DIR: ${{ runner.temp }}/reports
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          COMMIT: ${{ github.sha }}
+          LANE_FILE: ${{ runner.temp }}/lane.txt
+        run: node core/tools/file-issues.mjs
+
+      - name: Mirror live feed to branch `live`
+        if: steps.publish.outcome == 'success' && github.event.inputs.mode != 'quality-only'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash core/tools/mirror-live.sh
