@@ -1,0 +1,1040 @@
+{
+ "feed_name": "ocean-intelligence",
+ "schema_version": "1.0.0",
+ "generated_at": "2026-10-12T15:48:59Z",
+ "run_id": "run_2026-10-12_global_claude",
+ "mode": "incremental",
+ "research_window": {
+  "start": "2023-10-12",
+  "end": "2026-10-12"
+ },
+ "records": [
+  {
+   "revision": 1,
+   "change_type": "new",
+   "first_seen": "2026-10-12",
+   "latest_seen": "2026-10-12",
+   "verification": {
+    "status": "Verified through cited source date(s)",
+    "last_verified": "2026-10-12",
+    "confidence": "Medium"
+   },
+   "conflicts": [],
+   "missing_fields": [],
+   "related_ids": [],
+   "id": "OC-GLOBAL-EPAC-ELNINO-HEAT-2026",
+   "title": "Historic El Niño drives extreme eastern Pacific warmth and a forecast record share of the ocean in marine heatwave",
+   "description": "NOAA's Climate Prediction Center says on 8 October 2026 that El Niño continues to strengthen, with eastern equatorial Pacific sea surface temperatures more than 4.0C above average in places. NOAA's marine heatwave forecast gives eastern tropical Pacific heatwave likelihood above 90% through winter 2026-27, and global coverage is forecast to reach 45%.",
+   "location": {
+    "name": "Eastern tropical Pacific and global ocean",
+    "type": "Ocean basin",
+    "basin": "PAC",
+    "sea": "TROPEPAC",
+    "seas": [
+     "TROPEPAC"
+    ],
+    "countries": [
+     "ABNJ"
+    ],
+    "detail": "Eastern equatorial Pacific El Niño region with global marine heatwave coverage effects",
+    "coordinates": {
+     "lat": 0,
+     "lon": -110,
+     "precision": "sea",
+     "source_ref": 1
+    },
+    "points": [],
+    "extent": "basin"
+   },
+   "primary_category": "ocean-warming-heatwaves",
+   "secondary_categories": [],
+   "issue_layer": "Climate & Physical",
+   "layer_rationale": "Basin-scale ocean heating from a developing El Niño is a physical climate condition.",
+   "secondary_drivers": [
+    "El Niño"
+   ],
+   "severity": {
+    "components": {
+     "harm": 1,
+     "livelihoods": 0,
+     "scale": 2,
+     "duration": 1,
+     "significance": 1
+    },
+    "notes": {
+     "harm": "Heatwave exposure is forecast rather than a documented mortality event; subsurface anomalies above +10C persist in the eastern Pacific (ref 1).",
+     "livelihoods": "None of the opened sources documents closures or fishery losses from this event so far (refs 1-3).",
+     "scale": "NOAA puts 38% of the global ocean in heatwave in August 2026 and forecasts 45% for winter (ref 3).",
+     "duration": "Copernicus recorded heatwaves over about 82% of the ocean by end of June, and NOAA forecasts them through winter 2026-27 (refs 2, 3).",
+     "significance": "CPC has an El Niño Advisory in effect and gives 83% for a historic event in October-December (ref 1)."
+    }
+   },
+   "status": "Monitoring or Emerging Risk",
+   "population_affected": {
+    "value": null,
+    "status": "Not reported",
+    "note": "No population figure in the cited sources."
+   },
+   "key_measure": {
+    "status": "Reported",
+    "text": "CPC: 83% chance of a historic El Niño (above +2.5C on the 3-month RONI) for October-December 2026; Nino-3.4 at +2.1C."
+   },
+   "measures": [
+    {
+     "name": "Nino-3.4 anomaly",
+     "value": 2.1,
+     "unit": "C",
+     "status": "Reported",
+     "note": "CPC discussion of 8 October 2026 (ref 1)."
+    },
+    {
+     "name": "Global ocean in marine heatwave, August 2026",
+     "value": 38,
+     "unit": "%",
+     "status": "Reported",
+     "note": "NOAA PSL monthly figure (ref 3)."
+    },
+    {
+     "name": "Forecast global marine heatwave coverage, winter 2026-27",
+     "value": 45,
+     "unit": "%",
+     "status": "Reported",
+     "note": "NOAA PSL forecast (ref 3)."
+    }
+   ],
+   "economic_risk": {
+    "level": "Unknown",
+    "signals": []
+   },
+   "trend": {
+    "direction": "Worsening",
+    "note": "CPC says El Niño continues to strengthen (ref 1)."
+   },
+   "responsible_bodies": [
+    {
+     "name": "NOAA Climate Prediction Center",
+     "role": "ENSO monitoring and advisory",
+     "contact": "https://www.cpc.ncep.noaa.gov/"
+    }
+   ],
+   "public_contact": "NOAA Climate Prediction Center, contact details on cpc.ncep.noaa.gov",
+   "corrective_actions": [
+    "CPC issued an El Niño Advisory and continues monthly updates (ref 1)."
+   ],
+   "sources": [
+    {
+     "ref": 1,
+     "title": "ENSO: Recent Evolution, Current Status and Predictions (diagnostic discussion)",
+     "publisher": "NOAA Climate Prediction Center",
+     "date": "2026-10-08",
+     "accessed": "2026-10-12",
+     "url": "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.shtml",
+     "basis": "Agency report"
+    },
+    {
+     "ref": 2,
+     "title": "Persistent ocean warmth and expanding marine heatwaves mark the first half of 2026",
+     "publisher": "Copernicus Marine Service",
+     "date": "2026-07-01",
+     "accessed": "2026-10-12",
+     "url": "https://marine.copernicus.eu/press/press-releases/persistent-ocean-warmth-and-expanding-marine-heatwaves-mark-first-half-2026",
+     "basis": "Agency press release"
+    },
+    {
+     "ref": 3,
+     "title": "Marine Heatwaves forecast",
+     "publisher": "NOAA Physical Sciences Laboratory",
+     "date": null,
+     "accessed": "2026-10-12",
+     "url": "https://www.psl.noaa.gov/marine-heatwaves/",
+     "basis": "Agency forecast page (supporting)"
+    },
+    {
+     "ref": 4,
+     "title": "What historic super El Nino ahead means for your fall, winter",
+     "publisher": "The Weather Channel",
+     "date": "2026-10-08",
+     "accessed": "2026-10-12",
+     "url": "https://weather.com/2026/10/08/news/weather/super-el-nino-update-winter",
+     "basis": "News"
+    }
+   ],
+   "history": [
+    {
+     "date": "2026-10-12",
+     "status": "Monitoring or Emerging Risk",
+     "score": 5,
+     "note": "New record (global 7-day sweep)."
+    }
+   ]
+  },
+  {
+   "revision": 1,
+   "change_type": "new",
+   "first_seen": "2026-10-12",
+   "latest_seen": "2026-10-12",
+   "verification": {
+    "status": "Verified through cited source date(s)",
+    "last_verified": "2026-10-12",
+    "confidence": "Medium"
+   },
+   "conflicts": [],
+   "missing_fields": [],
+   "related_ids": [],
+   "id": "OC-NWATL-MIAMI-KINGTIDE-2026",
+   "title": "Record king tide flooding in Broward and Miami-Dade, with higher tides forecast through November",
+   "description": "Unusually high king tides flooded streets across Broward and Miami-Dade counties on 26-27 September 2026, and a coastal flood advisory was issued. Port Everglades recorded its highest flooding since the gauge was installed in 2018. Further king tide windows run through October and November.",
+   "location": {
+    "name": "Port Everglades to Miami Beach, Florida",
+    "type": "Urban coastline",
+    "basin": "ATL",
+    "sea": "NWATL",
+    "seas": [
+     "NWATL"
+    ],
+    "countries": [
+     "US"
+    ],
+    "detail": "Broward and Miami-Dade counties, southeast Florida",
+    "coordinates": {
+     "lat": 26.09,
+     "lon": -80.12,
+     "precision": "site",
+     "source_ref": 1
+    },
+    "points": [],
+    "extent": "local"
+   },
+   "primary_category": "sea-level-coastal-flooding",
+   "secondary_categories": [],
+   "issue_layer": "Climate & Physical",
+   "layer_rationale": "Tidal flooding of a low-lying coast made more frequent by sea level rise.",
+   "secondary_drivers": [
+    "Heavy rainfall"
+   ],
+   "severity": {
+    "components": {
+     "harm": 1,
+     "livelihoods": 1,
+     "scale": 0,
+     "duration": 1,
+     "significance": 1
+    },
+    "notes": {
+     "harm": "Saltwater covered the Hollywood Broadwalk and nearly reached street level on Collins Avenue, but NWS had no reports of water entering homes or businesses (ref 1).",
+     "livelihoods": "Fort Lauderdale police closed about two miles of A1A because of flooding (ref 1).",
+     "scale": "The event affected two counties on one stretch of coast, below regional-sea scale (ref 1).",
+     "duration": "King tide windows recur through 24-30 October and into November, and the city lists six fall windows in 2026 (ref 2).",
+     "significance": "A coastal flood advisory was issued, a formal notice (ref 1)."
+    }
+   },
+   "status": "Ongoing Major Issue",
+   "population_affected": {
+    "value": null,
+    "status": "Not reported",
+    "note": "No population figure in the cited sources."
+   },
+   "key_measure": {
+    "status": "Reported",
+    "text": "Tide about 2 feet above normal at Port Everglades and Virginia Key, highest at Port Everglades since the station began in 2018, topping Hurricane Nicole (2022)."
+   },
+   "measures": [
+    {
+     "name": "Tide height above normal high tide",
+     "value": 2,
+     "unit": "ft",
+     "status": "Reported",
+     "note": "Port Everglades and Virginia Key, 27 September 2026 report (ref 1)."
+    },
+    {
+     "name": "Sea level rise over past 30 years",
+     "value": 8,
+     "unit": "in",
+     "status": "Reported",
+     "note": "Figure as stated in the news report (ref 1)."
+    }
+   ],
+   "economic_risk": {
+    "level": "Watch",
+    "signals": [
+     "Road closure of about two miles of A1A (ref 1)."
+    ]
+   },
+   "trend": {
+    "direction": "Worsening",
+    "note": "Report says the next king tide period is forecast to be the year's highest (ref 1)."
+   },
+   "responsible_bodies": [
+    {
+     "name": "City of Miami Public Works",
+     "role": "Stormwater and flooding response",
+     "contact": "https://www.miami.gov/kingtide"
+    },
+    {
+     "name": "City of Hollywood",
+     "role": "Tidal Flooding Mitigation Project",
+     "contact": "https://www.hollywoodfl.org/"
+    }
+   ],
+   "public_contact": "City of Miami: dial 311 or 305-468-5900",
+   "corrective_actions": [
+    "Hollywood is testing removable storm panels at seawall openings on South Lake Drive (ref 1).",
+    "Miami takes flooding reports online and by 311 (ref 2)."
+   ],
+   "sources": [
+    {
+     "ref": 1,
+     "title": "South Florida King Tides Flood Streets, Break Records",
+     "publisher": "Hoodline",
+     "date": "2026-09-27",
+     "accessed": "2026-10-12",
+     "url": "https://hoodline.com/2026/09/king-tides-swamp-south-florida-streets-fort-lauderdale-highway-shut-down/",
+     "basis": "News citing the Miami Herald and National Weather Service"
+    },
+    {
+     "ref": 2,
+     "title": "King Tides in Miami (2026)",
+     "publisher": "City of Miami",
+     "date": null,
+     "accessed": "2026-10-12",
+     "url": "https://www.miami.gov/kingtide",
+     "basis": "City agency page"
+    }
+   ],
+   "history": [
+    {
+     "date": "2026-10-12",
+     "status": "Ongoing Major Issue",
+     "score": 4,
+     "note": "New record (global 7-day sweep)."
+    }
+   ]
+  },
+  {
+   "revision": 1,
+   "change_type": "new",
+   "first_seen": "2026-10-12",
+   "latest_seen": "2026-10-12",
+   "verification": {
+    "status": "Verified through cited source date(s)",
+    "last_verified": "2026-10-12",
+    "confidence": "Medium"
+   },
+   "conflicts": [],
+   "missing_fields": [],
+   "related_ids": [],
+   "id": "OC-GLOBAL-POLAR-SEAICE-2026",
+   "title": "Arctic sea ice minimum ties tenth lowest and Antarctic winter peak is third lowest in 2026",
+   "description": "NASA reports the Arctic minimum on 12 September 2026 was about 4.6 million square km, tied for tenth lowest, and the 20 lowest minimums all fall in 2007-2026. Provisional NSIDC data put the Antarctic winter peak at 17.59 million square km on 14 September, third lowest in the satellite record.",
+   "location": {
+    "name": "Arctic Ocean and Southern Ocean sea ice",
+    "type": "Polar sea ice zone",
+    "basin": "GLOBAL",
+    "countries": [
+     "ABNJ"
+    ],
+    "detail": "Pan-Arctic and circum-Antarctic sea ice",
+    "coordinates": {
+     "lat": 90,
+     "lon": 0,
+     "precision": "sea",
+     "source_ref": 1
+    },
+    "points": [],
+    "extent": "global"
+   },
+   "primary_category": "polar-oceans-sea-ice",
+   "secondary_categories": [],
+   "issue_layer": "Climate & Physical",
+   "layer_rationale": "Loss of polar sea ice is a physical climate change.",
+   "secondary_drivers": [
+    "Atmospheric warming"
+   ],
+   "severity": {
+    "components": {
+     "harm": 1,
+     "livelihoods": 0,
+     "scale": 2,
+     "duration": 2,
+     "significance": 0
+    },
+    "notes": {
+     "harm": "The Barents Sea recorded its earliest melt-out on record, an ecosystem-relevant ice loss without a documented mortality (ref 2).",
+     "livelihoods": "The opened reports describe no closures or economic restrictions (refs 1, 2).",
+     "scale": "Both polar oceans are covered, with the Antarctic winter peak third lowest in 48 years (ref 2).",
+     "duration": "NASA says all 20 lowest Arctic minimums occurred from 2007 to 2026 (ref 1).",
+     "significance": "Agency reporting only; no listing, order or advisory is involved (refs 1, 2)."
+    }
+   },
+   "status": "Monitoring or Emerging Risk",
+   "population_affected": {
+    "value": null,
+    "status": "Not reported",
+    "note": "No population figure in the cited sources."
+   },
+   "key_measure": {
+    "status": "Reported",
+    "text": "Arctic minimum about 4.6 million sq km on 12 September 2026, tied for tenth lowest; Antarctic peak 17.59 million sq km on 14 September (provisional), third lowest."
+   },
+   "measures": [
+    {
+     "name": "Arctic sea ice minimum extent",
+     "value": 4.6,
+     "unit": "million km2",
+     "status": "Reported",
+     "note": "NASA, 12 September 2026 (ref 1)."
+    },
+    {
+     "name": "Antarctic winter peak extent (provisional)",
+     "value": 17.59,
+     "unit": "million km2",
+     "status": "Reported",
+     "note": "NSIDC provisional data via Carbon Brief (ref 2)."
+    }
+   ],
+   "economic_risk": {
+    "level": "Not Indicated",
+    "signals": []
+   },
+   "trend": {
+    "direction": "Volatile or Mixed",
+    "note": "NSIDC scientist Walt Meier: the Arctic has plateaued but remains low relative to earlier years (ref 1)."
+   },
+   "responsible_bodies": [
+    {
+     "name": "National Snow and Ice Data Center",
+     "role": "Sea ice monitoring",
+     "contact": "https://nsidc.org/"
+    },
+    {
+     "name": "NASA",
+     "role": "Earth science research",
+     "contact": "https://science.nasa.gov/"
+    }
+   ],
+   "public_contact": "NSIDC User Services via nsidc.org",
+   "corrective_actions": [],
+   "sources": [
+    {
+     "ref": 1,
+     "title": "Arctic sea ice 2026 minimum",
+     "publisher": "NASA Science",
+     "date": "2026-09-23",
+     "accessed": "2026-10-12",
+     "url": "https://science.nasa.gov/science-research/earth-science/climate-science/sea-ice/arctic-sea-ice-2026-min/",
+     "basis": "Agency report"
+    },
+    {
+     "ref": 2,
+     "title": "Concerning low sea ice persists as Antarctic hits third-lowest winter peak",
+     "publisher": "Carbon Brief",
+     "date": "2026-09-25",
+     "accessed": "2026-10-12",
+     "url": "https://www.carbonbrief.org/concerning-low-sea-ice-persists-as-antarctic-hits-third-lowest-winter-peak",
+     "basis": "News citing NSIDC data and scientists"
+    }
+   ],
+   "history": [
+    {
+     "date": "2026-10-12",
+     "status": "Monitoring or Emerging Risk",
+     "score": 5,
+     "note": "New record (global 7-day sweep)."
+    }
+   ]
+  },
+  {
+   "id": "OC-TASMAN-NINETYMILE-WHALESTRANDING-2026",
+   "revision": 1,
+   "change_type": "new",
+   "title": "At least 12 of 15 stranded pygmy killer whales dead on Ninety Mile Beach, New Zealand",
+   "description": "Fifteen pygmy killer whales stranded on Ninety Mile Beach in New Zealand's Far North District on 1 October 2026, and at least 12 were found dead. The whales were spread over several kilometres of beach, and rough conditions hampered the rescue. Officials said they were still working to understand the full circumstances of the stranding.",
+   "location": {
+    "name": "Ninety Mile Beach, Far North District",
+    "type": "Sandy beach coastline",
+    "sea": "TASMAN",
+    "seas": [
+     "TASMAN"
+    ],
+    "basin": "PAC",
+    "countries": [
+     "NZ"
+    ],
+    "detail": "West coast of the Far North District, North Island, New Zealand",
+    "coordinates": {
+     "lat": -34.9,
+     "lon": 173,
+     "precision": "coastline",
+     "source_ref": 1
+    },
+    "points": [],
+    "extent": "local"
+   },
+   "primary_category": "marine-wildlife",
+   "secondary_categories": [],
+   "issue_layer": "Living Resources & Habitats",
+   "layer_rationale": "A mass stranding and mortality of a marine mammal species.",
+   "secondary_drivers": [],
+   "severity": {
+    "components": {
+     "harm": 2,
+     "livelihoods": 0,
+     "scale": 0,
+     "duration": 0,
+     "significance": 0
+    },
+    "notes": {
+     "harm": "At least 12 of the 15 stranded pygmy killer whales were found dead (ref 1, ref 2).",
+     "livelihoods": "The reports describe no closure, advisory or economic disruption (ref 1).",
+     "scale": "The whales were spread over several kilometres of a single beach (ref 1).",
+     "duration": "The stranding was reported on a Thursday and burial of the dead was under way the next day (ref 1).",
+     "significance": "The reports cite a conservation agency response but no formal notice, listing or enforcement action (ref 2)."
+    }
+   },
+   "status": "Monitoring or Emerging Risk",
+   "population_affected": {
+    "value": null,
+    "status": "Not reported",
+    "note": "No population figure in the cited sources."
+   },
+   "key_measure": {
+    "status": "Reported",
+    "text": "At least 12 of 15 stranded pygmy killer whales were found dead."
+   },
+   "measures": [
+    {
+     "name": "Whales stranded",
+     "value": 15,
+     "unit": "animals",
+     "status": "Reported",
+     "note": "Stranding reported on Thursday 1 October 2026 (ref 1)."
+    },
+    {
+     "name": "Whales found dead",
+     "value": 12,
+     "unit": "animals",
+     "status": "Reported",
+     "note": "Stated as at least 12 (ref 1)."
+    }
+   ],
+   "economic_risk": {
+    "level": "Not Indicated",
+    "signals": []
+   },
+   "trend": {
+    "direction": "Insufficient History",
+    "note": ""
+   },
+   "responsible_bodies": [
+    {
+     "name": "Department of Conservation (New Zealand)",
+     "role": "Marine mammal stranding response",
+     "contact": "https://www.doc.govt.nz"
+    }
+   ],
+   "public_contact": "Department of Conservation's published general channel",
+   "corrective_actions": [
+    "Conservation officials and volunteers launched a rescue effort; burial of the dead whales was under way (ref 1)."
+   ],
+   "sources": [
+    {
+     "ref": 1,
+     "title": "Twelve killer whales found dead on New Zealand beach",
+     "publisher": "The Star (Anadolu Agency, citing Radio New Zealand)",
+     "date": "2026-10-03",
+     "accessed": "2026-10-12",
+     "url": "https://www.thestar.com.my/aseanplus/aseanplus-news/2026/10/03/twelve-killer-whales-found-dead-on-new-zealand-beach",
+     "basis": "News"
+    },
+    {
+     "ref": 2,
+     "title": "12 killer whales found dead on New Zealand beach",
+     "publisher": "Anadolu Agency (anews.com.tr)",
+     "date": "2026-10-02",
+     "accessed": "2026-10-12",
+     "url": "https://www.anews.com.tr/world/2026/10/02/12-killer-whales-found-dead-on-new-zealand-beach/amp",
+     "basis": "News"
+    }
+   ],
+   "history": [
+    {
+     "date": "2026-10-12",
+     "status": "Monitoring or Emerging Risk",
+     "score": 2,
+     "note": "New record (global 7-day sweep)."
+    }
+   ],
+   "first_seen": "2026-10-12",
+   "latest_seen": "2026-10-12",
+   "verification": {
+    "status": "Verified through cited source date(s)",
+    "last_verified": "2026-10-12",
+    "confidence": "Medium"
+   },
+   "conflicts": [
+    "Headlines call the animals killer whales; the article text identifies them as pygmy killer whales. The record follows the article text."
+   ],
+   "missing_fields": [
+    "cause of stranding",
+    "primary agency statement"
+   ],
+   "related_ids": []
+  },
+  {
+   "revision": 1,
+   "change_type": "new",
+   "first_seen": "2026-10-12",
+   "latest_seen": "2026-10-12",
+   "verification": {
+    "status": "Verified through cited source date(s)",
+    "last_verified": "2026-10-12",
+    "confidence": "Medium"
+   },
+   "conflicts": [],
+   "missing_fields": [],
+   "related_ids": [],
+   "id": "OC-GLOBAL-CCZ-NOAA-NODULE-PERMIT-2026",
+   "title": "NOAA public comment on a 65,000 km2 deep-seabed nodule mining application in the Clarion-Clipperton Zone",
+   "description": "NOAA found a consolidated exploration licence and commercial recovery permit application from TMC USA in full compliance with US deep seabed mining law and opened a public comment period running to 19 October 2026, with a virtual hearing on 13 October. Certification and an environmental impact statement would follow if NOAA certifies the application.",
+   "location": {
+    "name": "Clarion-Clipperton Zone, central Pacific",
+    "type": "Deep seabed mineral area beyond national jurisdiction",
+    "basin": "PAC",
+    "countries": [
+     "ABNJ"
+    ],
+    "detail": "Polymetallic nodule area between Hawaii and Mexico, outside any national jurisdiction.",
+    "coordinates": {
+     "lat": 12,
+     "lon": -135,
+     "precision": "sea",
+     "source_ref": 1
+    },
+    "points": [],
+    "extent": "basin"
+   },
+   "primary_category": "deep-sea-mining",
+   "secondary_categories": [
+    "governance-treaties-disputes"
+   ],
+   "issue_layer": "Governance & Economy",
+   "layer_rationale": "A national permitting process for mining the high seabed outside the international regime.",
+   "secondary_drivers": [
+    "Critical minerals demand"
+   ],
+   "severity": {
+    "components": {
+     "harm": 1,
+     "livelihoods": 0,
+     "scale": 1,
+     "duration": 1,
+     "significance": 1
+    },
+    "notes": {
+     "harm": "Potential seabed habitat disturbance only; no environmental impact statement has yet been prepared and NOAA says one follows certification (ref 1).",
+     "livelihoods": "No fishery or coastal-livelihood disruption is reported in the cited coverage (ref 1).",
+     "scale": "A single mining province in the Clarion-Clipperton Zone, a regional-scale area of the Pacific (ref 1).",
+     "duration": "The application was filed on 6 February 2026 and review has run for months (ref 1).",
+     "significance": "A formal Federal Register notice with a 60-day comment period and a public hearing (ref 2)."
+    }
+   },
+   "status": "Monitoring or Emerging Risk",
+   "population_affected": {
+    "value": null,
+    "status": "Not reported",
+    "note": "No population figure in the cited sources."
+   },
+   "key_measure": {
+    "status": "Reported",
+    "text": "Public comment period 19 August to 19 October 2026; virtual public hearing 13 October 2026, 3-5 p.m. ET."
+   },
+   "measures": [
+    {
+     "name": "Comment period length",
+     "value": 60,
+     "unit": "days",
+     "status": "Reported",
+     "note": "Federal Register comment period ending 19 October 2026 (ref 1)."
+    }
+   ],
+   "economic_risk": {
+    "level": "Unknown",
+    "signals": [
+     "The applicant is a US-listed deep-sea mining developer; no market data in the cited sources (ref 1)."
+    ]
+   },
+   "trend": {
+    "direction": "Insufficient History",
+    "note": ""
+   },
+   "responsible_bodies": [
+    {
+     "name": "NOAA National Ocean Service, deep seabed mining programme",
+     "role": "Licensing authority",
+     "contact": "https://oceanservice.noaa.gov/deep-seabed-mining/"
+    }
+   ],
+   "public_contact": "NOAA deep seabed mining page lists the docket and hearing registration.",
+   "corrective_actions": [
+    "NOAA opened public comment and a virtual hearing before deciding on certification."
+   ],
+   "sources": [
+    {
+     "ref": 1,
+     "title": "The Metals Company USA: Consolidation Application (docket NOAA-NOS-2026-1751)",
+     "publisher": "NOAA National Ocean Service",
+     "date": null,
+     "accessed": "2026-10-12",
+     "url": "https://oceanservice.noaa.gov/deep-seabed-mining/",
+     "basis": "Agency page"
+    },
+    {
+     "ref": 2,
+     "title": "NOAA Opens Public Comment on The Metals Company USA Deep Seabed Mining Application",
+     "publisher": "OceanMiningIntel",
+     "date": "2026-08-19",
+     "accessed": "2026-10-12",
+     "url": "https://oceanminingintel.com/?p=202120",
+     "basis": "News"
+    }
+   ],
+   "history": [
+    {
+     "date": "2026-10-12",
+     "status": "Monitoring or Emerging Risk",
+     "score": 4,
+     "note": "New record (global sweep)."
+    }
+   ]
+  },
+  {
+   "revision": 1,
+   "change_type": "new",
+   "first_seen": "2026-10-12",
+   "latest_seen": "2026-10-12",
+   "verification": {
+    "status": "Verified through cited source date(s)",
+    "last_verified": "2026-10-12",
+    "confidence": "Medium"
+   },
+   "conflicts": [],
+   "missing_fields": [],
+   "related_ids": [],
+   "id": "OC-WIND-NAIROBI-COP12-2026",
+   "title": "Nairobi Convention COP12 opens in Dar es Salaam on its 40th anniversary to set Western Indian Ocean governance priorities",
+   "description": "The twelfth Conference of the Parties to the Nairobi Convention met in Dar es Salaam on 6-9 October 2026 with its ten Contracting Parties. Tanzania set priorities including national law and enforcement, coastal ecosystem restoration and marine pollution; adopted decisions are not reported in the cited sources.",
+   "location": {
+    "name": "Western Indian Ocean region",
+    "type": "Regional seas convention area",
+    "sea": "WIND",
+    "seas": [
+     "WIND"
+    ],
+    "basin": "IND",
+    "countries": [
+     "TZ",
+     "KE",
+     "MZ",
+     "ZA",
+     "MG",
+     "MU",
+     "SC"
+    ],
+    "detail": "Meeting held in Dar es Salaam, Tanzania; Convention covers ten Contracting Parties.",
+    "coordinates": {
+     "lat": -6.82,
+     "lon": 39.29,
+     "precision": "city",
+     "source_ref": 1
+    },
+    "points": [],
+    "extent": "regional_sea"
+   },
+   "primary_category": "governance-treaties-disputes",
+   "secondary_categories": [],
+   "issue_layer": "Governance & Economy",
+   "layer_rationale": "Regional treaty process for ocean governance.",
+   "secondary_drivers": [],
+   "severity": {
+    "components": {
+     "harm": 0,
+     "livelihoods": 0,
+     "scale": 1,
+     "duration": 2,
+     "significance": 1
+    },
+    "notes": {
+     "harm": "No specific harm is documented in the cited meeting coverage (ref 1).",
+     "livelihoods": "The cited coverage says more than 65 million people depend directly on the ocean but reports no disruption (ref 1).",
+     "scale": "The Convention covers the Western Indian Ocean region with ten Contracting Parties (ref 2).",
+     "duration": "The Convention dates from 1985 and the meeting marks 40 years of governance work (ref 1).",
+     "significance": "A formal treaty COP reviewing the 2025-2035 Integrated Regional Programme and 2025-2028 Programme of Work (ref 2)."
+    }
+   },
+   "status": "Monitoring or Emerging Risk",
+   "population_affected": {
+    "value": 65000000,
+    "status": "Reported",
+    "note": "People depending directly on the ocean in the region, per the cited article (ref 1)."
+   },
+   "key_measure": {
+    "status": "Reported",
+    "text": "Ocean wealth valued at over $300 billion; more than 65 million people depend directly on the ocean."
+   },
+   "measures": [
+    {
+     "name": "Contracting Parties",
+     "value": 10,
+     "unit": "countries",
+     "status": "Reported",
+     "note": "ref 2."
+    }
+   ],
+   "economic_risk": {
+    "level": "Not Indicated",
+    "signals": [
+     "Tourism is about 70% of the region's estimated $20.8 billion annual economic output (ref 1)."
+    ]
+   },
+   "trend": {
+    "direction": "Insufficient History",
+    "note": ""
+   },
+   "responsible_bodies": [
+    {
+     "name": "Nairobi Convention Secretariat (UNEP)",
+     "role": "Regional seas convention secretariat",
+     "contact": "https://www.unep.org/events/conference/twelfth-conference-parties-nairobi-convention-cop-12"
+    }
+   ],
+   "public_contact": "Nairobi Convention Secretariat via the UNEP COP12 page.",
+   "corrective_actions": [
+    "Parties review the Integrated Regional Programme 2025-2035 and Programme of Work 2025-2028."
+   ],
+   "sources": [
+    {
+     "ref": 1,
+     "title": "Tanzania hosts Nairobi Convention COP12, calls for stronger ocean cooperation",
+     "publisher": "ATTA (Africa Travel Association)",
+     "date": "2026-10-09",
+     "accessed": "2026-10-12",
+     "url": "https://atta.travel/resource/tanzania-hosts-nairobi-convention-cop12-calls-for-stronger-ocean-cooperation.html",
+     "basis": "News"
+    },
+    {
+     "ref": 2,
+     "title": "Twelfth Conference of the Parties to the Nairobi Convention (COP 12)",
+     "publisher": "UNEP",
+     "date": null,
+     "accessed": "2026-10-12",
+     "url": "https://www.unep.org/events/conference/twelfth-conference-parties-nairobi-convention-cop-12",
+     "basis": "Agency event page"
+    }
+   ],
+   "history": [
+    {
+     "date": "2026-10-12",
+     "status": "Monitoring or Emerging Risk",
+     "score": 4,
+     "note": "New record (global sweep)."
+    }
+   ]
+  },
+  {
+   "id": "OC-GULF-HALLANIYAT-CAROLINEBEZENGI-SPILL-2026",
+   "revision": 1,
+   "change_type": "new",
+   "title": "Crude oil leaking from grounded tanker Caroline Bezengi reaches Oman's coast",
+   "description": "The tanker Caroline Bezengi, reported to carry around 800,000 barrels of Russian crude, has been disabled near the Al Hallaniyat Islands off Oman and has leaked oil since the summer. Omani authorities put the slick at nearly 400 square kilometres and confirmed oil on mainland beaches at Ras Madrakah in mid-August; Greenpeace estimated about 1,300 square kilometres. A salvage operation began on 13 August 2026; the sources opened for this record do not report the situation after mid-August.",
+   "location": {
+    "name": "Al Hallaniyat Islands to Ras Madrakah, Oman",
+    "type": "Offshore oil spill and coastline",
+    "sea": "GULF",
+    "seas": [
+     "GULF"
+    ],
+    "basin": "IND",
+    "countries": [
+     "OM"
+    ],
+    "detail": "Arabian Sea coast of Oman, off the Hallaniyat archipelago marine reserve; oil reported on the Ras Madrakah shoreline and expected on southern Masirah Island",
+    "extent": "national_waters"
+   },
+   "primary_category": "chemical-oil-pollution",
+   "secondary_categories": [
+    "marine-wildlife"
+   ],
+   "issue_layer": "Pollution",
+   "layer_rationale": "Crude oil released into coastal waters from a grounded tanker.",
+   "secondary_drivers": [
+    "Sanctioned shadow-fleet tanker",
+    "Monsoon limiting salvage access"
+   ],
+   "severity": {
+    "components": {
+     "harm": 1,
+     "livelihoods": 0,
+     "scale": 0,
+     "duration": 1,
+     "significance": 1
+    },
+    "notes": {
+     "harm": "Oil reached beaches at Ras Madrakah, affecting up to 40 km of coastline, near a marine reserve created last year for sea turtles; no casualty counts are reported (ref 1).",
+     "livelihoods": "None of the opened sources reports a fishery closure or lost catch; the vessel lies about 22 nautical miles off the fishing village of Sharbithat (ref 2).",
+     "scale": "Omani authorities put the slick at nearly 400 sq km around one archipelago and a stretch of mainland coast; Greenpeace's 1,300 sq km estimate is still within one national coast (refs 1, 3).",
+     "duration": "The tanker was disabled on 8 June and grounded on 30 June, and was still leaking at the 12 to 14 August reports, so the release has run for more than two months (refs 1, 2).",
+     "significance": "The IMO publicly confirmed monitoring and oil spill contingency planning, and Oman's Environment Authority is running response operations (refs 1, 2)."
+    }
+   },
+   "status": "Ongoing Major Issue",
+   "population_affected": {
+    "value": null,
+    "status": "Not reported",
+    "note": "No affected-population figure in the cited sources."
+   },
+   "key_measure": {
+    "status": "Reported",
+    "text": "Omani authorities: spill measured nearly 400 square kilometres; Greenpeace: about 1,300 square kilometres as of 12 August 2026."
+   },
+   "measures": [
+    {
+     "name": "Slick area (Omani authorities)",
+     "value": 400,
+     "unit": "km2",
+     "status": "Reported",
+     "note": "Stated as 'nearly 400 square kilometres' (ref 1)."
+    },
+    {
+     "name": "Slick area (Greenpeace, satellite)",
+     "value": 1300,
+     "unit": "km2",
+     "status": "Reported",
+     "note": "Grew from 45 sq km in late July (ref 3)."
+    },
+    {
+     "name": "Cargo on board",
+     "value": 800000,
+     "unit": "barrels",
+     "status": "Estimated",
+     "note": "IMO spokesperson: around 800,000 barrels (ref 2)."
+    },
+    {
+     "name": "Oiled shoreline at Ras Madrakah",
+     "value": 40,
+     "unit": "km",
+     "status": "Reported",
+     "note": "'Up to 40km' (ref 1)."
+    }
+   ],
+   "economic_risk": {
+    "level": "Unknown",
+    "signals": [
+     "No fishery or tourism loss is reported in the opened sources."
+    ]
+   },
+   "trend": {
+    "direction": "Insufficient History",
+    "note": "Reports opened run from 12 to 14 August 2026; none newer was found, so the current state is unconfirmed."
+   },
+   "responsible_bodies": [
+    {
+     "name": "Oman Environment Authority",
+     "role": "National spill response",
+     "contact": "https://www.ea.gov.om"
+    },
+    {
+     "name": "International Maritime Organization",
+     "role": "Monitoring and contingency planning",
+     "contact": "https://www.imo.org"
+    }
+   ],
+   "public_contact": "Oman Environment Authority public enquiries (see published website)",
+   "corrective_actions": [
+    "Ambrey announced a salvage operation with Omani authorities on 13 August 2026, with specialists aboard to stabilise the cargo (ref 3).",
+    "Oman's Environment Authority reports monitoring and response teams prioritising sensitive areas (ref 1)."
+   ],
+   "sources": [
+    {
+     "ref": 1,
+     "title": "Oman says oil spill from stricken tanker has reached its coast",
+     "publisher": "Al Jazeera",
+     "date": "2026-08-13",
+     "accessed": "2026-10-12",
+     "url": "https://www.aljazeera.com/news/2026/8/13/oman-says-oil-spill-from-stricken-tanker-has-reached-its-coast",
+     "basis": "News"
+    },
+    {
+     "ref": 2,
+     "title": "IMO says oil slick from grounded shadow tanker reaches Oman mainland",
+     "publisher": "Baird Maritime (Reuters)",
+     "date": "2026-08-12",
+     "accessed": "2026-10-12",
+     "url": "https://www.bairdmaritime.com/security/emergency-services/pollution-control/imo-says-oil-slick-from-grounded-shadow-tanker-reaches-oman-mainland",
+     "basis": "News"
+    },
+    {
+     "ref": 3,
+     "title": "Salvage work begins on tanker leaking oil off Oman, risk firm says",
+     "publisher": "Al Jazeera",
+     "date": "2026-08-14",
+     "accessed": "2026-10-12",
+     "url": "https://www.aljazeera.com/news/2026/8/14/salvage-work-begins-on-tanker-leaking-oil-off-oman-risk-firm-says",
+     "basis": "News"
+    }
+   ],
+   "history": [
+    {
+     "date": "2026-10-12",
+     "status": "Ongoing Major Issue",
+     "score": 3,
+     "note": "New record; latest source dated 14 August 2026."
+    }
+   ],
+   "first_seen": "2026-10-12",
+   "latest_seen": "2026-10-12",
+   "verification": {
+    "status": "Verified through cited source date(s)",
+    "last_verified": "2026-10-12",
+    "confidence": "Medium"
+   },
+   "conflicts": [
+    "Slick size: Omani authorities say nearly 400 sq km, Greenpeace says about 1,300 sq km (refs 1, 3).",
+    "Timeline: Al Jazeera says the ship has been disabled since 8 June; Reuters says it grounded on 30 June (refs 1, 2)."
+   ],
+   "missing_fields": [
+    "Developments after 14 August 2026 not found",
+    "Coordinates not given by the opened sources"
+   ],
+   "related_ids": []
+  }
+ ],
+ "tombstones": [],
+ "corrections": [],
+ "coverage": {
+  "searched_geography": [
+   "World ocean"
+  ],
+  "date_window": {
+   "start": "2023-10-12",
+   "end": "2026-10-12"
+  },
+  "categories": [
+   "ocean-warming-heatwaves",
+   "sea-level-coastal-flooding",
+   "polar-oceans-sea-ice",
+   "marine-wildlife",
+   "deep-sea-mining",
+   "governance-treaties-disputes",
+   "chemical-oil-pollution"
+  ],
+  "regions_researched": [],
+  "exhaustive": false,
+  "source_limitations": [
+   "Researched by Claude Code agents from international and national agencies, scientific monitoring programmes, courts and news; documented issues, not a census."
+  ],
+  "notes": [
+   "Global topical pass (daily sweep 2026-10-12, Claude Code): 7 new findings, added to existing findings."
+  ]
+ },
+ "errors": []
+}
