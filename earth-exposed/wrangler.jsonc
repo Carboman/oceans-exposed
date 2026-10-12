@@ -1,0 +1,24 @@
+{
+  // earth.exposed: network hub. Static pages + a small JSON API Worker. Deploy: npx wrangler deploy
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "earth-exposed",
+  "main": "src/worker.js",
+  "account_id": "a0268f33dbddbfc9ca056d7575f661b3",
+  "compatibility_date": "2026-09-01",
+  "routes": [
+    { "pattern": "earth.exposed", "custom_domain": true }
+  ],
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*"]
+  },
+  "vars": {
+    // Cloudflare Web Analytics beacon token. Leave empty to use the dashboard's automatic setup instead.
+    "CF_BEACON_TOKEN": ""
+  },
+  "observability": { "enabled": true }
+  // No R2 bucket, no secrets: the hub is rebuilt from the children's public stats files by tools/refresh.mjs.
+}

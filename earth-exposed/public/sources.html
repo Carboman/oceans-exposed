@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sources — earth.exposed</title>
+<meta name="description" content="Every figure currently shown on the hub, with its named public source, the source date and the date it was pulled.">
+<link rel="canonical" href="https://earth.exposed/sources">
+<meta property="og:site_name" content="earth.exposed">
+<meta property="og:title" content="Sources — earth.exposed">
+<meta property="og:description" content="Every figure currently shown on the hub, with its named public source, the source date and the date it was pulled.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="network/chrome/latest/chrome.css">
+<link rel="stylesheet" href="assets/styles.css">
+<script>try{var t=localStorage.getItem('ex-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+</head>
+<body data-page="sources">
+<!-- network-bar v1.0.0 -->
+<div class="ex-net-bar" data-network-chrome="1.0.0" data-network-site="earth.exposed" role="navigation" aria-label="earth.exposed network">
+  <div class="ex-net-inner">
+    <a class="ex-net-home" href="https://earth.exposed/">earth<em>.exposed</em></a>
+    <span class="ex-net-tag">Public data, mapped. No opinions.</span>
+    <span class="ex-net-sites">
+      <a href="https://earth.exposed/" data-site="earth.exposed" aria-current="true">Hub</a>
+      <a href="https://water.exposed/" data-site="water.exposed">Water</a>
+      <a href="https://waste.exposed/" data-site="waste.exposed">Waste</a>
+      <a href="https://oceans.exposed/" data-site="oceans.exposed">Oceans</a>
+    </span>
+  </div>
+</div>
+<!-- /network-bar -->
+<header class="topbar">
+  <a href="/" class="topbar-wordmark" aria-label="earth.exposed home">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="24" height="24" aria-hidden="true" style="flex-shrink:0;display:block"><circle cx="16" cy="16" r="10.5" fill="none" stroke="var(--accent-bright)" stroke-width="2.2"/><path d="M5.5 16h21M16 5.5c-4.2 3.2-4.2 17.8 0 21M16 5.5c4.2 3.2 4.2 17.8 0 21" fill="none" stroke="var(--accent-bright)" stroke-width="1.6" stroke-linecap="round"/></svg>
+    <span>earth<em>.exposed</em></span>
+  </a>
+  <button class="nav-toggle" aria-expanded="false" aria-controls="topnav">Menu</button>
+  <nav class="topnav" id="topnav" aria-label="Main">
+    <a href="index.html">Home</a>
+    <a href="map.html">Map</a>
+    <a href="standards.html">Standards</a>
+    <a href="methodology.html">Methodology</a>
+    <a href="sources.html" aria-current="page">Sources</a>
+    <a href="about.html">About</a>
+    <button class="theme-toggle" type="button" aria-label="Toggle light/dark theme">◐</button>
+  </nav>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <div class="eyebrow">Sources</div>
+    <h1>Every number on the hub, and where it came from</h1>
+    <p class="lede">Built from the current snapshot. A figure that reached the hub without a named source, a link and a date is withheld and listed as withheld. <span id="sources-meta" class="mono small"></span></p>
+  </div>
+  <div class="card table-wrap">
+    <table>
+      <thead><tr><th>Site</th><th>Figure</th><th>Value</th><th>Source</th><th>Source date</th><th>Pulled</th></tr></thead>
+      <tbody id="sources"><tr><td colspan="6" class="muted">Loading the snapshot…</td></tr></tbody>
+    </table>
+    <noscript><p>The table needs JavaScript. The same data is in <a href="/api/network/summary.json">/api/network/summary.json</a>.</p></noscript>
+  </div>
+  <section class="prose">
+    <h2>Map data</h2>
+    <ul>
+      <li>Land: <a href="https://www.naturalearthdata.com/" rel="noopener">Natural Earth</a>, 1:110m, public domain.</li>
+      <li>U.S. state outlines (for centroids): U.S. Census Bureau cartographic boundary files via <a href="https://github.com/topojson/us-atlas" rel="noopener">us-atlas</a>.</li>
+      <li>Each site's map layer is that site's own file; its points link back to the site, where the finding's sources are listed.</li>
+    </ul>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <a href="/" class="footer-brand">earth<em>.exposed</em></a>
+    <span class="footer-links">
+      <a href="standards.html">Standards</a>
+      <a href="methodology.html">Methodology</a>
+      <a href="sources.html">Sources</a>
+      <a href="/api/network/summary.json">Data API (JSON)</a>
+      <a href="https://github.com/Carboman/earth-exposed" rel="noopener">Code</a>
+    </span>
+    <span>Public data, mapped. No opinions.</span>
+  </div>
+<!-- network-footer v1.0.0 -->
+<div class="ex-net-foot" data-network-chrome="1.0.0">
+  <div class="ex-net-inner">
+    <span class="ex-net-foot-brand">Part of the <a href="https://earth.exposed/">earth.exposed</a> network. Public data, mapped. No opinions.</span>
+    <span class="ex-net-foot-links">
+      <a href="https://earth.exposed/standards">Standards</a>
+      <a href="https://earth.exposed/methodology">Methodology</a>
+      <a href="https://earth.exposed/sources">Sources</a>
+      <a href="https://earth.exposed/map">Map</a>
+    </span>
+    <span class="ex-net-slot" data-network-slot="credit"></span>
+  </div>
+</div>
+<!-- /network-footer -->
+</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

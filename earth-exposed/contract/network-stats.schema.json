@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://earth.exposed/contract/network-stats.schema.json",
+  "title": "earth.exposed network stats file",
+  "description": "Published by every site in the network at /network/stats.json. Every number carries a named public source with an https URL and a date.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "site", "url", "tagline", "headline", "records", "last_run", "generated_at"],
+  "properties": {
+    "schema": { "const": "earth.exposed/network-stats/1" },
+    "site": { "type": "string", "pattern": "^[a-z0-9-]+\\.exposed$" },
+    "url": { "type": "string", "format": "uri", "pattern": "^https://" },
+    "tagline": { "type": "string", "minLength": 3, "maxLength": 120 },
+    "scope": { "type": "string", "maxLength": 300 },
+    "headline": { "$ref": "#/$defs/fact" },
+    "facts": { "type": "array", "maxItems": 5, "items": { "$ref": "#/$defs/fact" } },
+    "records": { "type": "integer", "minimum": 0 },
+    "sources": { "type": "integer", "minimum": 0 },
+    "last_run": { "type": "string", "format": "date" },
+    "map_layer": { "type": "string", "format": "uri", "pattern": "^https://" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "derived": { "type": "string", "maxLength": 200, "description": "Set only by the hub's interim adapter: how the file was derived from the site's public API." }
+  },
+  "$defs": {
+    "fact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "value", "unit", "source", "pulled"],
+      "properties": {
+        "text": { "type": "string", "minLength": 5, "maxLength": 160 },
+        "value": { "type": "number" },
+        "unit": { "type": "string", "minLength": 1, "maxLength": 40 },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name", "url", "date"],
+          "properties": {
+            "name": { "type": "string", "minLength": 3, "maxLength": 160 },
+            "url": { "type": "string", "format": "uri", "pattern": "^https://" },
+            "date": { "type": "string", "format": "date" }
+          }
+        },
+        "pulled": { "type": "string", "format": "date" }
+      }
+    }
+  }
+}

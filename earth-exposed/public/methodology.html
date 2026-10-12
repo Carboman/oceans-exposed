@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Methodology — earth.exposed</title>
+<meta name="description" content="How the hub works: the stats contract each site publishes, the nightly refresh, the staleness rule, the shared map, and the public API.">
+<link rel="canonical" href="https://earth.exposed/methodology">
+<meta property="og:site_name" content="earth.exposed">
+<meta property="og:title" content="Methodology — earth.exposed">
+<meta property="og:description" content="How the hub works: the stats contract each site publishes, the nightly refresh, the staleness rule, the shared map, and the public API.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="network/chrome/latest/chrome.css">
+<link rel="stylesheet" href="assets/styles.css">
+<script>try{var t=localStorage.getItem('ex-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+</head>
+<body data-page="methodology">
+<!-- network-bar v1.0.0 -->
+<div class="ex-net-bar" data-network-chrome="1.0.0" data-network-site="earth.exposed" role="navigation" aria-label="earth.exposed network">
+  <div class="ex-net-inner">
+    <a class="ex-net-home" href="https://earth.exposed/">earth<em>.exposed</em></a>
+    <span class="ex-net-tag">Public data, mapped. No opinions.</span>
+    <span class="ex-net-sites">
+      <a href="https://earth.exposed/" data-site="earth.exposed" aria-current="true">Hub</a>
+      <a href="https://water.exposed/" data-site="water.exposed">Water</a>
+      <a href="https://waste.exposed/" data-site="waste.exposed">Waste</a>
+      <a href="https://oceans.exposed/" data-site="oceans.exposed">Oceans</a>
+    </span>
+  </div>
+</div>
+<!-- /network-bar -->
+<header class="topbar">
+  <a href="/" class="topbar-wordmark" aria-label="earth.exposed home">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="24" height="24" aria-hidden="true" style="flex-shrink:0;display:block"><circle cx="16" cy="16" r="10.5" fill="none" stroke="var(--accent-bright)" stroke-width="2.2"/><path d="M5.5 16h21M16 5.5c-4.2 3.2-4.2 17.8 0 21M16 5.5c4.2 3.2 4.2 17.8 0 21" fill="none" stroke="var(--accent-bright)" stroke-width="1.6" stroke-linecap="round"/></svg>
+    <span>earth<em>.exposed</em></span>
+  </a>
+  <button class="nav-toggle" aria-expanded="false" aria-controls="topnav">Menu</button>
+  <nav class="topnav" id="topnav" aria-label="Main">
+    <a href="index.html">Home</a>
+    <a href="map.html">Map</a>
+    <a href="standards.html">Standards</a>
+    <a href="methodology.html" aria-current="page">Methodology</a>
+    <a href="sources.html">Sources</a>
+    <a href="about.html">About</a>
+    <button class="theme-toggle" type="button" aria-label="Toggle light/dark theme">◐</button>
+  </nav>
+</header>
+
+<main class="wrap prose">
+  <div class="page-head">
+    <div class="eyebrow">Methodology</div>
+    <h1>How the hub works</h1>
+    <p class="lede">The hub holds no research of its own. It reads a small, validated file from each site every night and shows what the file says, with its sources.</p>
+    <ul class="toc"><li><a href="#contract">The stats contract</a></li><li><a href="#refresh">Nightly refresh</a></li><li><a href="#stale">Stale data</a></li><li><a href="#derived">Derived figures</a></li><li><a href="#map">The map</a></li><li><a href="#api">API</a></li><li><a href="#never">What the hub never does</a></li></ul>
+  </div>
+  <h2 id="contract">The stats contract</h2>
+  <p>Each site publishes two files at fixed paths:</p>
+  <ul>
+    <li><code>/network/stats.json</code>: the site's name, tagline and scope; one headline fact and up to five more, each with text, value, unit, a named source (name, https link, date) and the date it was pulled; record and source counts; the date of the site's last run; and the address of its map layer. Schema: <code>contract/network-stats.schema.json</code> in the <a href="https://github.com/Carboman/earth-exposed" rel="noopener">code</a>.</li>
+    <li><code>/network/layer.geojson</code>: a GeoJSON FeatureCollection of points, each with the finding's id, title, link, level, category and date. A finding known only to a U.S. state may carry a null geometry and a region; the map places it at the state's centroid and labels it as placed.</li>
+  </ul>
+  <p>A file is rejected, and the site's previous data kept, if any field is missing or malformed, if a fact lacks a source, link or date, if a date is in the future, or if the file names a company or carries a credit line.</p>
+  <h2 id="refresh">Nightly refresh</h2>
+  <p>A scheduled job runs twice a day (03:17 and 19:17 UTC). For each site in the registry it fetches the stats file, validates it, then fetches and validates the map layer. The result is committed to the hub's repository as a snapshot (<code>public/data/snapshot.json</code>, one map file per site) and deployed. The snapshot's time is shown on the home page. Every change to the figures is therefore a commit, with a date, that anyone can read.</p>
+  <h2 id="stale">Stale data</h2>
+  <p>If a site does not answer, or answers with a file that fails validation, the hub keeps that site's last good figures and marks the tile <b>stale since</b> the date of the last good fetch. Figures are never blanked and never guessed. After three days stale, the job opens an issue in the hub's repository so a person looks.</p>
+  <h2 id="derived">Derived figures</h2>
+  <p>Until a site publishes its own stats file, the hub derives one from the site's public data feed: counts of records and cited sources, and a map layer from record coordinates. Such a tile says <b>derived by the hub</b> and names the feed as its source. The site's own file takes over the moment it exists.</p>
+  <h2 id="map">The map</h2>
+  <p>Equal Earth projection over Natural Earth 1:110m land (public domain). One layer per site, toggled independently; a point's size on an aggregated layer reflects the count it stands for. State centroids come from U.S. Census Bureau cartographic boundaries via the us-atlas project. The map shows location only; it does not rank places.</p>
+  <h2 id="api">API</h2>
+  <table>
+    <tr><th>Endpoint</th><th>Returns</th></tr>
+    <tr><td><code>/api/network/summary.json</code></td><td>The whole snapshot: every site's stats file, status, fetch time and layer count</td></tr>
+    <tr><td><code>/api/network/sites.json</code></td><td>The site registry with status and last-run dates</td></tr>
+    <tr><td><code>/api/network/layers/&lt;site&gt;.geojson</code></td><td>The last good map layer for a site</td></tr>
+    <tr><td><code>/network/chrome/latest/</code></td><td>The shared header, footer and stylesheet the sites vendor</td></tr>
+  </table>
+  <p>All endpoints are read-only, cached for five minutes and open to cross-origin requests.</p>
+  <h2 id="never">What the hub never does</h2>
+  <ul>
+    <li>Type a number in by hand. Every figure comes from a site's file or feed, through the validator.</li>
+    <li>Rank sites, places or subjects against each other.</li>
+    <li>Edit a site's figures. A correction is the site's to publish; the hub picks it up on the next refresh.</li>
+    <li>Run a script from any third party other than the two pinned libraries on the map page.</li>
+  </ul>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <a href="/" class="footer-brand">earth<em>.exposed</em></a>
+    <span class="footer-links">
+      <a href="standards.html">Standards</a>
+      <a href="methodology.html">Methodology</a>
+      <a href="sources.html">Sources</a>
+      <a href="/api/network/summary.json">Data API (JSON)</a>
+      <a href="https://github.com/Carboman/earth-exposed" rel="noopener">Code</a>
+    </span>
+    <span>Public data, mapped. No opinions.</span>
+  </div>
+<!-- network-footer v1.0.0 -->
+<div class="ex-net-foot" data-network-chrome="1.0.0">
+  <div class="ex-net-inner">
+    <span class="ex-net-foot-brand">Part of the <a href="https://earth.exposed/">earth.exposed</a> network. Public data, mapped. No opinions.</span>
+    <span class="ex-net-foot-links">
+      <a href="https://earth.exposed/standards">Standards</a>
+      <a href="https://earth.exposed/methodology">Methodology</a>
+      <a href="https://earth.exposed/sources">Sources</a>
+      <a href="https://earth.exposed/map">Map</a>
+    </span>
+    <span class="ex-net-slot" data-network-slot="credit"></span>
+  </div>
+</div>
+<!-- /network-footer -->
+</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "name": "earth-exposed",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node tools/site-check.mjs && node --test tests/*.test.mjs",
+    "chrome": "node tools/chrome.mjs",
+    "refresh": "node tools/refresh.mjs",
+    "dev": "wrangler dev --port 8788",
+    "deploy": "node tools/site-check.mjs && wrangler deploy",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "devDependencies": {
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "wrangler": "^4.149.0"
+  }
+}
