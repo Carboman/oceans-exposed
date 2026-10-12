@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ocean Issues Infographic · oceans.exposed</title>
+<meta name="description" content="A live, scrolling infographic of every tracked ocean issue: severity, seas and basins, categories, what it harms, and whether it is being fixed.">
+<link rel="canonical" href="https://oceans.exposed/infographic.html">
+<meta property="og:site_name" content="oceans.exposed">
+<meta property="og:url" content="https://oceans.exposed/infographic.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="assets/infographic.css">
+<script>try{var t=localStorage.getItem('oe-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+</head>
+<body data-page="infographic" class="ig">
+<header class="topbar">
+  <a href="/" class="topbar-wordmark" aria-label="oceans.exposed home">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" style="flex-shrink:0;display:block"><circle cx="12" cy="12" r="10" fill="var(--accent-bright)"/><path d="M3.6 10.4c1.7-1.6 3.4-1.6 5.1 0s3.4 1.6 5.1 0 3.4-1.6 5.1 0" fill="none" stroke="#06202e" stroke-width="1.8" stroke-linecap="round"/><path d="M4.2 14.8c1.7-1.6 3.4-1.6 5.1 0s3.4 1.6 5.1 0 3.4-1.6 5.1 0" fill="none" stroke="#06202e" stroke-width="1.8" stroke-linecap="round" opacity=".55"/></svg>
+    <span>oceans<em>.exposed</em></span>
+  </a>
+  <button class="nav-toggle" aria-expanded="false" aria-controls="topnav">Menu</button>
+  <nav class="topnav" id="topnav">
+    <a href="index.html">Overview</a>
+    <a href="infographic.html" aria-current="page">Infographic</a>
+    <a href="explorer.html">Explorer</a>
+    <a href="updates.html">Changes &amp; Coverage</a>
+    <a href="methodology.html">Methodology</a>
+    <button class="theme-toggle" type="button" aria-label="Toggle light/dark theme">◐</button>
+  </nav>
+</header>
+<div id="sample-banner" class="sample-banner" hidden><b>Sample data.</b> All locations and figures on this site are fictional placeholders that show the format. </div>
+
+<main class="ig-main">
+  <!-- 1. Hero -->
+  <section class="hero-bleed ig-hero" id="top">
+    <img class="hero-img" src="assets/img/hero-ocean-960.jpg" srcset="assets/img/hero-ocean-960.jpg 960w, assets/img/hero-ocean.jpg 1920w" sizes="100vw" alt="" fetchpriority="high" decoding="async" onerror="this.remove()">
+    <div class="hero-shade" aria-hidden="true"></div>
+    <div class="hero-inner ig-hero-inner">
+      <div class="ig-kicker"><span class="ig-live" aria-hidden="true"></span>Live · updates with every published run</div>
+      <h1 class="ig-h1">The world ocean,<br>exposed.</h1>
+      <div class="ig-hero-num"><span id="ig-hero-count" data-count="0">0</span><span class="ig-hero-unit">active findings<br><small>of <b id="ig-hero-total">0</b> tracked across <b id="ig-hero-seas">0</b> of <b id="ig-hero-seas-total">32</b> regional seas, each scored 0–10 on documented evidence</small></span></div>
+      <p class="ig-run" id="ig-run"></p>
+      <a class="ig-scroll" href="#ig-toll">Scroll<span aria-hidden="true">↓</span></a>
+    </div>
+    <div class="hero-waves" aria-hidden="true">
+      <svg viewBox="0 0 1200 90" preserveAspectRatio="none">
+        <path class="wave wave-1" d="M0 46q75-26 150 0t150 0t150 0t150 0t150 0t150 0t150 0t150 0t150 0t150 0t150 0t150 0t150 0t150 0t150 0t150 0V90H0z"/>
+        <path class="wave wave-2" d="M0 58q90-22 180 0t180 0t180 0t180 0t180 0t180 0t180 0t180 0t180 0t180 0t180 0t180 0t180 0t180 0V90H0z"/>
+        <path class="wave wave-3" d="M0 72q60-16 120 0t120 0t120 0t120 0t120 0t120 0t120 0t120 0t120 0t120 0t120 0t120 0t120 0t120 0t120 0t120 0t120 0t120 0t120 0t120 0V90H0z"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- 2. The toll -->
+  <section class="ig-sec ig-dark" id="ig-toll">
+    <div class="ig-wrap">
+      <header class="ig-head reveal">
+        <p class="eyebrow">The toll</p>
+        <h2 class="ig-h2">What this run adds up to.</h2>
+        <p class="ig-lede">Headline counts from the live feed. Findings are never summed into a single global score; these are counts of records, levels and places.</p>
+      </header>
+      <div class="ig-stats" id="ig-stats"></div>
+    </div>
+  </section>
+
+  <!-- 3. Dot wall -->
+  <section class="ig-sec" id="ig-dots-sec">
+    <div class="ig-wrap">
+      <header class="ig-head reveal">
+        <p class="eyebrow">Severity</p>
+        <h2 class="ig-h2">Every dot is a finding.</h2>
+        <p class="ig-lede">Coloured by level, from Critical (9–10) to Low (0–3). Hollow dots are resolved or stabilized. Click any dot to open its dossier.</p>
+      </header>
+      <div class="ig-dots reveal" id="ig-dots" aria-label="One dot per finding, coloured by severity level"></div>
+      <div id="ig-levels" class="reveal"></div>
+    </div>
+  </section>
+
+  <!-- 4. Where -->
+  <section class="ig-sec ig-tint" id="ig-where">
+    <div class="ig-wrap">
+      <header class="ig-head reveal">
+        <p class="eyebrow">Geography</p>
+        <h2 class="ig-h2">Where the ocean is under strain.</h2>
+        <p class="ig-lede">Each regional sea is shaded by its most severe active finding; glowing points are findings with coordinates. Hover for details, click a sea for its page.</p>
+      </header>
+      <section class="card map-card ig-map-card reveal" aria-label="World map of active findings">
+        <p class="small muted viz-toolbar-note" id="map-note" hidden></p>
+        <div id="worldmap-wrap">
+          <div class="worldmap" id="worldmap"><p class="muted small map-loading">Drawing the map…</p></div>
+          <div id="worldmap-legend"></div>
+        </div>
+        <div id="tilemap-wrap" hidden>
+          <div class="tilemap" id="tilemap" role="img" aria-label="Tile map of the 32 regional seas shaded by the highest active finding severity"></div>
+          <div class="legend">
+            <span><i style="background:var(--sev-critical)"></i>Critical 9–10</span>
+            <span><i style="background:var(--sev-high)"></i>High 7–8</span>
+            <span><i style="background:var(--sev-moderate)"></i>Moderate 4–6</span>
+            <span><i style="background:var(--sev-low)"></i>Low 0–3</span>
+            <span><i style="background:var(--map-empty)"></i>No active finding in feed</span>
+          </div>
+        </div>
+        <p class="small muted map-foot">Grey or untinted means no finding in this feed. It does not mean the sea has no problems. Sea outlines are approximate; findings spanning several seas shade every sea they touch.</p>
+      </section>
+    </div>
+  </section>
+
+  <!-- 5. Categories -->
+  <section class="ig-sec" id="ig-cats-sec">
+    <div class="ig-wrap">
+      <header class="ig-head reveal">
+        <p class="eyebrow">What kind of problem</p>
+        <h2 class="ig-h2">Seventeen ways the ocean is under pressure.</h2>
+        <p class="ig-lede">Active findings per category, with the level mix and the top-ranked finding in each. Categories are ranked separately, never against each other.</p>
+      </header>
+      <div class="ig-cats" id="ig-cats"></div>
+    </div>
+  </section>
+
+  <!-- 6. Layers -->
+  <section class="ig-sec ig-dark" id="ig-layers-sec">
+    <div class="ig-wrap ig-split">
+      <header class="ig-head reveal">
+        <p class="eyebrow">Issue layer</p>
+        <h2 class="ig-h2">Four layers of trouble.</h2>
+        <p class="ig-lede">Every finding gets exactly one primary layer: a change in the ocean itself, something put into it, something taken from or living in it, or the way it is governed and used.</p>
+      </header>
+      <div id="ig-layers"></div>
+    </div>
+  </section>
+
+  <!-- 7. Basins -->
+  <section class="ig-sec" id="ig-basins-sec">
+    <div class="ig-wrap">
+      <header class="ig-head reveal">
+        <p class="eyebrow">Ocean basins</p>
+        <h2 class="ig-h2">Five basins, thirty-two seas.</h2>
+        <p class="ig-lede">Active findings per basin; a finding counts once, under its own basin. Under each basin, its regional seas with the number of findings touching them.</p>
+      </header>
+      <div class="ig-basins" id="ig-basins"></div>
+    </div>
+  </section>
+
+  <!-- 8. What it harms -->
+  <section class="ig-sec ig-dark ig-photo" id="ig-harm-sec">
+    <img class="ig-photo-img" src="assets/img/reef-960.jpg" srcset="assets/img/reef-960.jpg 960w, assets/img/reef.jpg 1920w" sizes="100vw" alt="" loading="lazy" decoding="async" onerror="this.remove()">
+    <div class="ig-photo-shade" aria-hidden="true"></div>
+    <div class="ig-wrap">
+      <header class="ig-head reveal">
+        <p class="eyebrow">What it harms</p>
+        <h2 class="ig-h2">Five things every score measures.</h2>
+        <p class="ig-lede">Each finding is scored 0–2 on five components, and every point must rest on cited evidence. These are the averages across all active findings, with the rubric wording for the band each average falls in.</p>
+      </header>
+      <div class="ig-comps" id="ig-comps"></div>
+    </div>
+  </section>
+
+  <!-- 9. Timeline -->
+  <section class="ig-sec" id="ig-time-sec">
+    <div class="ig-wrap ig-split ig-split-wide">
+      <div>
+        <header class="ig-head reveal">
+          <p class="eyebrow">Timeline</p>
+          <h2 class="ig-h2">When the evidence landed.</h2>
+          <p class="ig-lede" id="ig-months-note">Findings by the month they were first seen in the feed.</p>
+        </header>
+        <div class="ig-months reveal" id="ig-months"></div>
+      </div>
+      <div class="reveal">
+        <h3 class="ig-h3">Newest sources</h3>
+        <p class="ig-muted small">The most recently dated sources cited by any finding.</p>
+        <ol class="ig-sources" id="ig-sources"></ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. Status and trend -->
+  <section class="ig-sec ig-tint" id="ig-status-sec">
+    <div class="ig-wrap">
+      <header class="ig-head reveal">
+        <p class="eyebrow">Where things stand</p>
+        <h2 class="ig-h2">Fixing it, or still failing?</h2>
+        <p class="ig-lede">The current status of every tracked finding, as reported in its most recent source, and the observed direction of every active one.</p>
+      </header>
+      <div class="ig-two">
+        <div class="reveal">
+          <h3 class="ig-h3">Status <span class="ig-h3-sub">all findings</span></h3>
+          <div id="ig-status"></div>
+        </div>
+        <div class="reveal">
+          <h3 class="ig-h3">Trend <span class="ig-h3-sub">active findings</span></h3>
+          <div id="ig-trend"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. The wall -->
+  <section class="ig-sec" id="ig-wall-sec">
+    <div class="ig-wrap">
+      <header class="ig-head reveal">
+        <p class="eyebrow">The full roll-up</p>
+        <h2 class="ig-h2">Every finding, one wall.</h2>
+        <p class="ig-lede" id="ig-wall-note">Every active finding, grouped by regional sea and ranked by score within each. A finding that spans several seas is listed under the first.</p>
+      </header>
+      <div id="ig-wall"></div>
+    </div>
+  </section>
+
+  <!-- 12. End band -->
+  <section class="ig-sec ig-dark ig-photo ig-end" id="ig-end">
+    <img class="ig-photo-img" src="assets/img/polar-960.jpg" srcset="assets/img/polar-960.jpg 960w, assets/img/polar.jpg 1920w" sizes="100vw" alt="" loading="lazy" decoding="async" onerror="this.remove()">
+    <div class="ig-photo-shade" aria-hidden="true"></div>
+    <div class="ig-wrap">
+      <p class="eyebrow">How to read this page</p>
+      <div id="ig-coverage"></div>
+      <ul class="ig-howto">
+        <li>Every figure comes from the live feed and re-renders when a new run is published. Nothing is hand-typed.</li>
+        <li>Levels follow the 0–10 score: Critical 9–10, High 7–8, Moderate 4–6, Low 0–3. Rank is within a category only; categories are never ranked against each other.</li>
+        <li>Grey seas, empty categories and missing figures mean nothing was found in this feed, not that there is no problem.</li>
+      </ul>
+      <div class="ig-cta">
+        <a class="ig-btn" href="explorer.html">Explore and filter every finding</a>
+        <a class="ig-btn ghost" href="methodology.html">How findings are scored</a>
+        <a class="ig-btn ghost" href="/api/ocean/feed">Data API (JSON)</a>
+      </div>
+      <p class="ig-updated"><span class="ig-kicker"><span class="ig-live" aria-hidden="true"></span>Live</span> <span id="ig-updated"></span></p>
+    </div>
+  </section>
+  <div class="ig-toast" id="ig-toast" role="status" aria-live="polite"></div>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <a href="/" class="footer-brand">oceans<em>.exposed</em></a>
+    <span class="footer-links">
+      <a href="methodology.html">Methodology</a>
+      <a href="updates.html#coverage">Coverage limitations</a>
+      <a href="/api/ocean/feed">Data API (JSON)</a>
+    </span>
+    <span class="footer-sponsor">Sponsored by <a href="https://carbotura.com" target="_blank" rel="noopener">Carbotura</a></span>
+    <span>Informational only. Not a census of every ocean issue.</span>
+  </div>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<script src="assets/app.js"></script>
+<script src="assets/charts.js"></script>
+<script src="assets/geo.js"></script>
+<script src="assets/worldmap.js"></script>
+<script src="assets/infographic.js"></script>
+</body>
+</html>

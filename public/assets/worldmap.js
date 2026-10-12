@@ -135,7 +135,7 @@
     var note = $('#map-note'); if (note) { note.hidden = false; note.textContent = 'The world map could not be drawn' + (reason ? ' (' + reason + ')' : '') + '; the tile grid is shown instead.'; }
   }
   function setView(v) {
-    state.view = v; try { localStorage.setItem('oe-mapview', v); } catch (e) {}
+    state.view = v; if ($('#map-toggle')) { try { localStorage.setItem('oe-mapview', v); } catch (e) {} }
     var wrap = $('#worldmap-wrap'), grid = $('#tilemap-wrap');
     if (wrap) wrap.hidden = v !== 'map';
     if (grid) grid.hidden = v !== 'grid';
@@ -148,7 +148,7 @@
     if (!G || !G.libsReady()) { fallback('map library unavailable'); return; }
     var tog = $('#map-toggle');
     if (tog && !tog._bound) { tog._bound = true; tog.addEventListener('click', function (e) { var b = e.target.closest('button[data-view]'); if (b) setView(b.getAttribute('data-view')); }); }
-    setView(state.view);
+    setView(tog ? state.view : 'map');  // pages without the toggle (infographic) always show the map
     var leg = $('#worldmap-legend'); if (leg) leg.innerHTML = legendHtml();
     Promise.all([G.loadTopo(G.LAND_110), G.loadTopo(G.COUNTRIES_110).catch(function () { return null; })]).then(function (res) {
       var land = res[0], countries = res[1];
@@ -161,9 +161,11 @@
       };
       redraw();
       var t; window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(redraw, 150); });
+      document.addEventListener('wx:updated', function () { lastW = 0; redraw(); });  // a new run was loaded (infographic polling)
     }).catch(function (err) { console.error(err); fallback('map data missing'); });
   }
 
-  document.addEventListener('wx:ready', function (e) { W = e.detail; if (W.page === 'overview') init(); });
-  if (window.WX && window.WX.page === 'overview') { W = window.WX; init(); }
+  var PAGES = { overview: 1, infographic: 1 };
+  document.addEventListener('wx:ready', function (e) { W = e.detail; if (PAGES[W.page]) init(); });
+  if (window.WX && PAGES[window.WX.page]) { W = window.WX; init(); }
 })();
