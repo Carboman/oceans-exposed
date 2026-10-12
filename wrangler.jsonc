@@ -13,7 +13,7 @@
     "binding": "ASSETS",
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "404-page",
-    "run_worker_first": ["/api/*", "/internal/*", "/reports/*"]
+    "run_worker_first": ["/api/*", "/internal/*", "/reports/*", "/network/*"]
   },
   "r2_buckets": [
     { "binding": "OCEAN_REPORTS", "bucket_name": "oceans-exposed-reports" }
