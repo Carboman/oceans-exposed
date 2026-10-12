@@ -85,7 +85,7 @@ function adaptSource(s) {
     ...s,
     url: first(s, ['url', 'link', 'source_url', 'href']),
     // Contract 1.4.0: date is when the source was published or issued (null if it shows none); accessed is when it was opened.
-    date: day(first(s, ['date', 'source_date', 'published', 'published_at', 'publication_date'])) || s.date || null,
+    date: day(first(s, ['date', 'source_date', 'published', 'published_at', 'publication_date'])) || cleanDate(s.date),
     accessed: day(first(s, ['accessed', 'accessed_at', 'access_date', 'retrieved', 'retrieved_at'])) || s.accessed,
     title: first(s, ['title', 'name', 'label']),
     publisher: first(s, ['publisher', 'source', 'organization', 'agency']),
@@ -139,6 +139,7 @@ function adaptProjection(p) {
 }
 function adaptConflict(c) { return typeof c === 'string' ? { note: c } : c; }
 function adaptMeasure(m) {
+  if (m && typeof m === 'object' && typeof m.unit === 'string' && !m.unit.trim()) m = { ...m, unit: null };
   if (!m || typeof m !== 'object' || typeof m.value !== 'string') return m;
   const n = Number(m.value.replace(/[,$%\s]/g, ''));
   return Number.isFinite(n) && /^[\s$,.%0-9-]+$/.test(m.value) ? { ...m, value: n } : { ...m, value: null, text: m.text || m.value };
@@ -146,8 +147,11 @@ function adaptMeasure(m) {
 function adaptBody(b) {
   if (typeof b === 'string') return { name: b };
   if (b && typeof b === 'object' && Array.isArray(b.name)) return b.name.map(adaptBody);  // a list sent where one name belongs
+  if (b && typeof b === 'object' && 'contact' in b && !(typeof b.contact === 'string' && b.contact.trim())) return { ...b, contact: null };  // "" means unknown (contract 1.0.1)
   return b;
 }
+// A source date that is not a date ("None", "", "n/a") is unknown: null (contract 1.0.1).
+function cleanDate(v) { return typeof v === 'string' && /^\d{4}(-\d{2}(-\d{2})?)?$/.test(v.trim()) ? v.trim() : null; }
 const NEAR = { change_type: { corrected: 'changed', updated: 'changed' }, direction: { 'Volatile Mixed': 'Volatile or Mixed', 'Mixed': 'Volatile or Mixed', 'Volatile': 'Volatile or Mixed' }, risk: { High: 'Elevated', Moderate: 'Watch', Low: 'Not Indicated', None: 'Not Indicated' } };
 export function adaptRecord(r) {
   if (!r || typeof r !== 'object') return r;

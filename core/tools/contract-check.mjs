@@ -1,6 +1,8 @@
 // Validates every research run in runs/ against the site's contract schema (site.config.json → schema).
 // Used by the Contract check workflow on pull requests that change contract/**, and locally.
-// Usage: node tools/contract-check.mjs [--schema path] [--base path-to-main-schema] [--out report.md]
+// Usage: node core/tools/contract-check.mjs [--schema path] [--base path-to-main-schema] [--out report.md] [--only runs/<a> runs/<b>...]
+// --only: check just those run folders and exit 1 if any is invalid (the Stage runs schema gate).
+// site.config.json → contract.historical: run folders kept as published but no longer checked (listed, never counted).
 // With --base, a change is "breaking" only if a run that was valid under the base schema becomes invalid.
 import { readFileSync, readdirSync, existsSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -13,6 +15,9 @@ const schemaArg = opt('--schema', cfg.schema);
 const schemaPath = schemaArg.startsWith('/') ? schemaArg : sitePath(schemaArg);
 const basePath = opt('--base');
 const out = opt('--out');
+const onlyIdx = args.indexOf('--only');
+const only = onlyIdx >= 0 ? args.slice(onlyIdx + 1).filter((a) => !a.startsWith('--')).map((a) => a.replace(/^runs\//, '').replace(/\/$/, '')) : null;
+const historical = new Set(((cfg.contract || {}).historical) || []);
 const lines = [];
 const log = (s) => { console.log(s); lines.push(s); };
 const tick = '`';
@@ -44,12 +49,15 @@ log('Schema ' + code(schemaArg) + ' · contract_version ' + code(cur.schema.cont
 if (version && cur.schema.contract_version !== version) log('\n- ⚠️ ' + code('contract_version') + ' in the schema does not match ' + code('contract/VERSION') + '.');
 if (base && base.schema.contract_version === cur.schema.contract_version && JSON.stringify(base.schema) !== JSON.stringify(cur.schema)) log('\n- ⚠️ The schema changed but ' + code('contract_version') + ' was not bumped.');
 
-const runs = existsSync(sitePath('runs')) ? readdirSync(sitePath('runs')).filter((d) => existsSync(sitePath('runs', d, 'feed.json'))).sort() : [];
+let runs = existsSync(sitePath('runs')) ? readdirSync(sitePath('runs')).filter((d) => existsSync(sitePath('runs', d, 'feed.json'))).sort() : [];
+if (only) runs = runs.filter((d) => only.includes(d));
+let skippedHistorical = 0;
 let checked = 0, invalid = 0, newlyBroken = 0;
 log('\n| Run | Result | First problems |\n|---|---|---|');
 for (const d of runs) {
   const feed = JSON.parse(readFileSync(sitePath('runs', d, 'feed.json'), 'utf8'));
   if (feed.feed_name !== cfg.feedName) { log('| ' + code(d) + ' | skipped (site-format baseline) | |'); continue; }
+  if (!only && historical.has(d)) { skippedHistorical++; log('| ' + code(d) + ' | historical (kept as published, not checked) | |'); continue; }
   checked++;
   const wasValid = base ? base.validate(feed) : true;
   if (cur.validate(feed)) { log('| ' + code(d) + ' | ✅ valid' + (base && !wasValid ? ' (was invalid on main)' : '') + ' | |'); continue; }
@@ -61,5 +69,6 @@ for (const d of runs) {
 const breaking = base ? newlyBroken : invalid;
 log('\n**' + (checked - invalid) + ' of ' + checked + ' research runs are valid under this schema.** ' +
   (breaking ? breaking + ' run(s) ' + (base ? 'that were valid on main become invalid' : 'are invalid') + ': this is a **breaking change** and needs the owner\'s explicit approval (contract/README.md).'
-    : (base ? 'No run that was valid on main becomes invalid: backward compatible.' : 'No past run is invalid.')));
-finish(0, breaking > 0);
+    : (base ? 'No run that was valid on main becomes invalid: backward compatible.' : 'No past run is invalid.')) +
+  (skippedHistorical ? ' ' + skippedHistorical + ' historical run(s) listed in site.config.json were not checked.' : ''));
+finish(only && invalid ? 1 : 0, breaking > 0);

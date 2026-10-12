@@ -1,5 +1,15 @@
 # Contract changelog
 
+## 1.0.1 (2026-10-12)
+
+Schema aligned with what the publish validator has always accepted, and the validator tightened where the schema
+was right: `responsible_bodies[].contact` is an https URL or `null` (never an empty string), `location.coordinates`
+is a point or `null`, `measures[].unit` may be `null` only when the value is null. The validator now rejects an
+empty-string contact, a source `date` that is not `YYYY[-MM[-DD]]` or null (so never "None"), and a numeric measure
+without a unit; the adapter turns legacy empty strings and "None" into null at publish time. Stage runs now also
+validates every staged run against this schema before promoting it. Runs published before this version that fail
+the schema are listed as historical in `site.config.json` and kept exactly as published.
+
 ## 1.0.0 (2026-10-12): first ocean contract
 
 - `ocean-intelligence.schema.json` codifies what the research lane commits as `runs/<folder>/feed.json`:

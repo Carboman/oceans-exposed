@@ -81,6 +81,12 @@ jobs:
           if grep -q 'waiting' "$RUNNER_TEMP/v/validation.md" && ! grep -qE 'VALID|INVALID|⚠️' "$RUNNER_TEMP/v/validation.md"; then echo "Waiting for feed.json"; exit 0; fi
           gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments" -F body=@"$RUNNER_TEMP/v/validation.md" > /dev/null
 
+      - name: Schema check (contract)
+        if: steps.dirs.outputs.list != '' && steps.validate.outputs.valid == 'true'
+        run: |
+          npm ci --no-audit --no-fund
+          node core/tools/contract-check.mjs --only ${{ steps.dirs.outputs.list }}
+
       - name: Stop if invalid
         if: steps.dirs.outputs.list != '' && steps.validate.outputs.valid != 'true'
         run: |

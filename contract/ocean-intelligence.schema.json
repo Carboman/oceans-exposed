@@ -3,7 +3,7 @@
   "$id": "https://oceans.exposed/contract/ocean-intelligence.schema.json",
   "title": "ocean-intelligence feed",
   "description": "What the research lane commits as runs/<folder>/feed.json. Governed by contract/README.md. contract_version below must match contract/VERSION.",
-  "contract_version": "1.0.0",
+  "contract_version": "1.0.1",
   "type": "object",
   "required": [
     "feed_name",
@@ -564,7 +564,11 @@
               "type": "string"
             },
             "coordinates": {
-              "$ref": "#/$defs/geoPoint"
+              "anyOf": [
+                { "$ref": "#/$defs/geoPoint" },
+                { "type": "null" }
+              ],
+              "description": "A point when a public source gives one; null when the finding is not located to a point."
             },
             "points": {
               "type": "array",
@@ -727,7 +731,8 @@
                 "description": "Number when the source gives one; a short phrase (e.g. \"about half\") is shown as text."
               },
               "unit": {
-                "type": "string"
+                "type": ["string", "null"],
+                "description": "Required when value is a number; null only for a measure whose value is null (Not reported)."
               },
               "status": {
                 "$ref": "#/$defs/statusLabel"
@@ -882,8 +887,11 @@
                 "type": "string"
               },
               "contact": {
-                "type": "string",
-                "pattern": "^https?://"
+                "anyOf": [
+                  { "type": "string", "pattern": "^https?://" },
+                  { "type": "null" }
+                ],
+                "description": "An https URL for the body, or null when none is known. Never an empty string."
               }
             }
           }

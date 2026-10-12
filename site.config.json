@@ -17,5 +17,15 @@
   },
   "workflows": {
     "skip": []
+  },
+  "contract": {
+    "historical": [
+      "2026-10-12-6",
+      "2026-10-12-7",
+      "2026-10-12-9",
+      "2026-10-12-10",
+      "2026-10-12-11"
+    ],
+    "note": "Published before the schema and validator were aligned (contract changelog); kept exactly as published, not re-checked. Live records corrected by a correction run."
   }
 }

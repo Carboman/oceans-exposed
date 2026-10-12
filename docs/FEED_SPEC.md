@@ -96,3 +96,10 @@ Content-quality warnings (`src/quality.js`) never block publishing; they are fil
 `name-changed`, `trend-reset`, `projection-dropped`, `milestones-dropped`, `records-dropped`, `rescored-silently`,
 `balance` (one sea dominates), `summary-process-notes`, `sources-dataset-only`, `location-unmappable`,
 `location-approximate`.
+
+## Nulls (contract 1.0.1)
+
+Unknown optional fields are `null`, never an empty string or a placeholder word. In particular `responsible_bodies[].contact`
+is an https URL or null, a source `date` is `YYYY[-MM[-DD]]` or null, `location.coordinates` is a point or null, and a
+measure with a numeric value always has a string `unit`. The validator rejects the rest; the adapter normalises legacy
+empty strings and "None" to null when older runs are republished.

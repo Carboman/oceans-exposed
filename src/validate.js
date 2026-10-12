@@ -29,6 +29,9 @@ export function validateFeed(f) {
     else if (!LAYERS.includes(r.issue_layer)) p.push(`${r.id}: issue_layer must be one of ${LAYERS.join(', ')}.`);
     if (!Array.isArray(r.sources) || !r.sources.some((s) => s && /^https?:\/\//.test(s.url || '') && (s.date || s.accessed))) p.push(`${r.id}: at least one http(s) source with a date or accessed date is required.`);
     (r.sources || []).forEach((s, i) => { if (s && s.accessed && !/^\d{4}-\d{2}-\d{2}$/.test(s.accessed)) p.push(`${r.id}: sources[${i}].accessed must be YYYY-MM-DD.`); });
+    (r.sources || []).forEach((s, i) => { if (s && s.date !== undefined && s.date !== null && !/^\d{4}(-\d{2}(-\d{2})?)?$/.test(String(s.date))) p.push(`${r.id}: sources[${i}].date must be YYYY, YYYY-MM, YYYY-MM-DD or null (never "None" or an empty string).`); });
+    (r.responsible_bodies || []).forEach((b, i) => { if (b && b.contact !== undefined && b.contact !== null && !/^https?:\/\//.test(String(b.contact))) p.push(`${r.id}: responsible_bodies[${i}].contact must be an http(s) URL or null (never an empty string).`); });
+    (r.measures || []).forEach((m, i) => { if (m && typeof m.value === 'number' && (typeof m.unit !== 'string' || !m.unit)) p.push(`${r.id}: measures[${i}].unit is required when value is a number.`); });
     p.push(...validateLocation(r));
   });
   return p;

@@ -1,4 +1,4 @@
-instructions_version: 2026-10-12.1
+instructions_version: 2026-10-12.2
 
 Daily research run for oceans.exposed (https://oceans.exposed), a ranked, sourced, public tracker of ocean issues
 worldwide. You are the research lane: you edit only `runs/<folder>/` in the repository Carboman/oceans-exposed. Never
@@ -72,7 +72,10 @@ target is not finished. Count your searches per category as you go and record th
   findings), `countries[]` (ISO alpha-2, `ABNJ` for the high seas) and an `extent`; coordinates where a public source
   gives the place.
 - Sources in other languages are allowed when they are official (a ministry, a coast guard, a court); note the language.
-- Unknown numbers are null with "Not reported". Severity notes cite the specific fact and source ref; never reuse wording.
+- Unknown numbers are null with "Not reported". A measure with a numeric `value` always carries a `unit`.
+- Unknown fields are `null`, never an empty string or the word "None": `responsible_bodies[].contact` is an https URL
+  or null; a source `date` is `YYYY`, `YYYY-MM`, `YYYY-MM-DD` or null; `location.coordinates` is a point or null.
+  The publish validator rejects anything else (contract 1.0.1). Severity notes cite the specific fact and source ref; never reuse wording.
 - The web search allowance is finite: do the targets in order and prefer official pages. Never get around a search limit
   by querying search engines or news-search feeds with curl or any other tool.
 - Public, professional information only: no private individuals, no residences. Follow the source's wording on allegations.
