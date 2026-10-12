@@ -126,3 +126,13 @@ value, then update the `CLOUDFLARE_API_TOKEN` secret in GitHub. The next deploy 
 token, set both the repository secret and the Worker secret to the new value.
 
 **Turning auto-deploy off:** delete the `CLOUDFLARE_API_TOKEN` secret. The Action goes back to skipping.
+
+---
+
+## Shortcut: the Bootstrap site workflow
+
+Once the repository secrets `CLOUDFLARE_API_TOKEN` and `PUBLISH_TOKEN` exist, **Actions → Bootstrap site → Run workflow**
+does Parts 3 and 4 and the first publish in one go: it creates the R2 bucket `oceans-exposed-reports` if it is missing,
+deploys the Worker and the custom domain, sets the Worker secret `PUBLISH_TOKEN` from the repository secret, waits for
+https://oceans.exposed to answer, and publishes the sample run `runs/2026-10-12`. It is safe to re-run. The token needs one
+row beyond the Deploy site token: **Account · Workers R2 Storage · Edit**, so the bucket can be created.
