@@ -134,8 +134,8 @@ so the hub shows yesterday's completed runs; a second run at 19:17 UTC catches l
    `public/data/layers/<site>.geojson`.
 3. On any failure: keep the previous entry and layer, set `status: "stale"`, `stale_since` and `last_error`
    (message only, never the body). The page shows "Last good data: <date>".
-4. If anything changed, commit (`Network refresh <date>: N fresh, M stale`) and push; the push deploys through
-   Deploy site. A site stale for 3 days or more opens (or comments on) one `network-stale` issue; the issue closes
+4. If anything changed, commit (`Network refresh <date>: N fresh, M stale`), push, and deploy from the same job (a
+   push made with the Actions token never triggers Deploy site). A site stale for 3 days or more opens (or comments on) one `network-stale` issue; the issue closes
    when the site is fresh again.
 
 ## 6. Shared header and footer
