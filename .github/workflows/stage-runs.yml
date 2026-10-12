@@ -1,0 +1,146 @@
+name: Stage runs
+
+# The research lane publishes through GitHub, never with a publish token of its own:
+#   1. A run (the Daily research Action or a Claude Code session) pushes runs/<folder>/ to a branch staging/<folder>.
+#   2. This workflow validates feed.json against oceans.exposed and posts the result as a COMMIT COMMENT
+#      on that commit.
+#   3. If valid: copies the run folder to main, publishes it, files/closes issues, mirrors the live feed to
+#      branch `live`, comments "Published", and deletes the staging branch.
+#      If invalid: nothing is published; push a fix to the same branch and this runs again.
+on:
+  push:
+    branches: ['staging/**']
+  workflow_dispatch: {}   # re-validate a staging branch without a new commit: gh workflow run stage-runs.yml --ref staging/<folder>
+
+concurrency:
+  group: publish-runs        # shared with "Publish runs": never two publishes at once
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  stage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Find staged run folders (lane check)
+        id: dirs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git fetch -q origin main
+          base=$(git merge-base origin/main HEAD)
+          changed=$(git diff --name-only "$base" HEAD)
+          other=$(echo "$changed" | grep -v '^runs/' | grep -v '^$' || true)
+          dirs=$(echo "$changed" | grep '^runs/' | awk -F/ 'NF>=3 {print $1"/"$2}' | sort -u | while read d; do [ -d "$d" ] && echo "$d"; done | tr '\n' ' ')
+          msg=""
+          if [ -n "$other" ]; then msg="Staging branches may only change files under runs/. Remove these changes: $(echo $other | tr '\n' ' ')"; fi
+          for d in $dirs; do
+            if git cat-file -e "origin/main:$d/feed.json" 2>/dev/null; then msg="$msg Folder $d already exists on main; use the next free runs/<date>-N folder."; fi
+          done
+          if [ -n "$msg" ]; then
+            printf '<!-- ocean-validate -->\n## oceans.exposed validation\n\n❌ **Not staged:** %s\n\n```json\n{"valid": false, "results": []}\n```\n' "$msg" > "$RUNNER_TEMP/lane.md"
+            gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments" -F body=@"$RUNNER_TEMP/lane.md" > /dev/null
+            # A branch whose folder is already on main can never be promoted: remove it so it does not look like a run in flight.
+            case "$msg" in *"already exists on main"*) git push -q origin --delete "$GITHUB_REF_NAME" || true;; esac
+            echo "::error::$msg"; exit 1
+          fi
+          echo "Staged run folders: ${dirs:-none}"
+          echo "list=$dirs" >> "$GITHUB_OUTPUT"
+
+      - name: Validate against oceans.exposed
+        id: validate
+        if: steps.dirs.outputs.list != ''
+        env:
+          OUT_DIR: ${{ runner.temp }}/v
+        run: |
+          set +e
+          node tools/validate-remote.mjs ${{ steps.dirs.outputs.list }}
+          code=$?
+          echo "valid=$(node -e "console.log(require('$RUNNER_TEMP/v/validation.json').valid)")" >> "$GITHUB_OUTPUT"
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Comment validation result on the staged commit
+        if: steps.dirs.outputs.list != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # (hashFiles() only sees the workspace, so test for the file here instead.)
+          if [ ! -f "$RUNNER_TEMP/v/validation.md" ]; then echo "::warning::No validation result file"; exit 0; fi
+          # A PDF-only commit has nothing to validate yet; stay quiet until feed.json arrives.
+          if grep -q 'waiting' "$RUNNER_TEMP/v/validation.md" && ! grep -qE 'VALID|INVALID|⚠️' "$RUNNER_TEMP/v/validation.md"; then echo "Waiting for feed.json"; exit 0; fi
+          gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments" -F body=@"$RUNNER_TEMP/v/validation.md" > /dev/null
+
+      - name: Stop if invalid
+        if: steps.dirs.outputs.list != '' && steps.validate.outputs.valid != 'true'
+        run: |
+          if [ "${{ steps.validate.outputs.code }}" = "0" ]; then echo "Nothing to publish yet."; exit 0; fi
+          echo "::error::Run is invalid or could not be validated; nothing was published. See the commit comment."; exit 1
+
+      - name: Promote to main
+        id: promote
+        if: steps.validate.outputs.valid == 'true'
+        run: |
+          git config user.name "oceans-exposed-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for attempt in 1 2 3; do
+            git fetch -q origin main
+            git checkout -q -B promote origin/main
+            for d in ${{ steps.dirs.outputs.list }}; do git checkout -q "$GITHUB_SHA" -- "$d"; done
+            git add runs/
+            git commit -q -m "Ocean run ${{ steps.dirs.outputs.list }}(validated, promoted from ${GITHUB_REF_NAME})" -m "Staged commit: $GITHUB_SHA"
+            if git push -q origin promote:main; then echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"; exit 0; fi
+            echo "main moved; retrying ($attempt)"; sleep 5
+          done
+          echo "::error::Could not push to main after 3 attempts"; exit 1
+
+      - name: Publish
+        id: publish
+        if: steps.promote.outputs.sha != ''
+        env:
+          PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
+          REPORT_DIR: ${{ runner.temp }}/reports
+        run: node tools/publish-run.mjs ${{ steps.dirs.outputs.list }} | tee "$RUNNER_TEMP/publish.log"
+
+      - name: File or close GitHub issues
+        if: always() && steps.promote.outputs.sha != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPORT_DIR: ${{ runner.temp }}/reports
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          COMMIT: ${{ steps.promote.outputs.sha }}
+        run: node tools/file-issues.mjs
+
+      - name: Mirror live feed to branch `live`
+        if: steps.publish.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash tools/mirror-live.sh
+
+      - name: Comment publish result and clean up
+        if: always() && steps.promote.outputs.sha != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OUTCOME: ${{ steps.publish.outcome }}
+          MAIN_SHA: ${{ steps.promote.outputs.sha }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          live=$(grep -E 'confirmed live' "$RUNNER_TEMP/publish.log" | tail -1 || true)
+          if [ "$OUTCOME" = "success" ]; then
+            printf '<!-- ocean-published -->\n## Published ✅\n\n%s\n\nPromoted to main as %s. Live feed mirrored to branch `live`. %s\n\n```json\n{"published": true, "main_sha": "%s"}\n```\n' "$live" "$MAIN_SHA" "$RUN_URL" "$MAIN_SHA" > "$RUNNER_TEMP/pub.md"
+            gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments" -F body=@"$RUNNER_TEMP/pub.md" > /dev/null
+            git push -q origin --delete "$GITHUB_REF_NAME" || true
+          else
+            printf '<!-- ocean-published -->\n## Publish failed ❌\n\nValidation passed but publishing failed; see %s and the publish-failed issue.\n\n```json\n{"published": false}\n```\n' "$RUN_URL" > "$RUNNER_TEMP/pub.md"
+            gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments" -F body=@"$RUNNER_TEMP/pub.md" > /dev/null
+          fi

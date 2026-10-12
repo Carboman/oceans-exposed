@@ -1,0 +1,23 @@
+{
+  // oceans.exposed: static site + API Worker. Deploy: npx wrangler deploy
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "oceans-exposed",
+  "main": "src/worker.js",
+  "account_id": "a0268f33dbddbfc9ca056d7575f661b3",
+  "compatibility_date": "2026-09-01",
+  "routes": [
+    { "pattern": "oceans.exposed", "custom_domain": true }
+  ],
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*", "/internal/*", "/reports/*"]
+  },
+  "r2_buckets": [
+    { "binding": "OCEAN_REPORTS", "bucket_name": "oceans-exposed-reports" }
+  ],
+  "observability": { "enabled": true }
+  // Secret (not in this file): PUBLISH_TOKEN, set with `npx wrangler secret put PUBLISH_TOKEN`
+}

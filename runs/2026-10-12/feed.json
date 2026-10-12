@@ -1,0 +1,293 @@
+{
+ "feed_name": "ocean-issues",
+ "schema_version": "agent-1.0.0",
+ "generated_at": "2026-10-12T09:00:00Z",
+ "source_feed": {
+  "feed_name": "ocean-intelligence",
+  "schema_version": "1.0.0",
+  "run_id": "run_2026-10-12_example",
+  "mode": "snapshot"
+ },
+ "run": {
+  "mode": "snapshot",
+  "run_id": "run_2026-10-12_example",
+  "run_date": "2026-10-12",
+  "research_start": "2023-10-12",
+  "research_end": "2026-10-12",
+  "prior_run_date": null,
+  "revision": 1
+ },
+ "filters_applied": {},
+ "summary": {
+  "highest_risk": "Sample data: every record on this site is a fictional placeholder that shows the format until the first research run is published.",
+  "directional_picture": "Example only.",
+  "cross_cutting": []
+ },
+ "records": [
+  {
+   "id": "EXAMPLE-CORAL-REEF-BLEACHING-2026",
+   "revision": 1,
+   "change_type": "new",
+   "title": "Example: mass bleaching across an example reef system",
+   "description": "An illustrative record. A regional reef authority reported bleaching across most surveyed reefs after a marine heatwave. Figures are placeholders.",
+   "location": {
+    "name": "Example Reef",
+    "type": "Coral reef system",
+    "sea": "CORAL",
+    "basin": "PAC",
+    "countries": [
+     "AU"
+    ],
+    "detail": "Example coast, example country",
+    "coordinates": {
+     "lat": -18.29,
+     "lon": 147.7,
+     "precision": "site",
+     "source_ref": 1
+    },
+    "extent": "regional_sea"
+   },
+   "primary_category": "coral-reefs",
+   "secondary_categories": [
+    "ocean-warming-heatwaves"
+   ],
+   "issue_layer": "Living Resources & Habitats",
+   "layer_rationale": "Example rationale: habitat loss driven by thermal stress.",
+   "secondary_drivers": [
+    "Marine heatwave"
+   ],
+   "severity": {
+    "components": {
+     "harm": 2,
+     "livelihoods": 1,
+     "scale": 2,
+     "duration": 1,
+     "significance": 1
+    },
+    "notes": {
+     "harm": "Example: the authority's survey (ref 1) recorded bleaching on 73% of surveyed reefs.",
+     "livelihoods": "Example: tour operators reported cancellations (ref 2).",
+     "scale": "Example: the event spans the whole regional sea (ref 1).",
+     "duration": "Example: thermal stress persisted for four months (ref 1).",
+     "significance": "Example: a formal condition report was issued (ref 1)."
+    }
+   },
+   "status": "Ongoing Major Issue",
+   "population_affected": {
+    "value": null,
+    "status": "Not reported",
+    "note": "Example."
+   },
+   "key_measure": {
+    "status": "Reported",
+    "text": "Example: 73% of surveyed reefs showed bleaching."
+   },
+   "measures": [
+    {
+     "name": "Reefs with bleaching",
+     "value": 73,
+     "unit": "%",
+     "status": "Reported",
+     "note": "Example."
+    }
+   ],
+   "economic_risk": {
+    "level": "Watch",
+    "signals": [
+     "Example: reef tourism revenue at risk"
+    ]
+   },
+   "trend": {
+    "direction": "Worsening",
+    "note": "Example: fourth event in a decade.",
+    "projection": {
+     "statement": "Example projection.",
+     "horizon": "2027",
+     "confidence": "Low",
+     "assumptions": [
+      "Example assumption"
+     ],
+     "reversal_factors": [
+      "Example reversal factor"
+     ]
+    }
+   },
+   "responsible_bodies": [
+    {
+     "name": "Example Marine Park Authority",
+     "role": "Reef manager",
+     "contact": "https://example.org/contact"
+    }
+   ],
+   "public_contact": "Example Marine Park Authority, public enquiries line",
+   "corrective_actions": [
+    "Example: restoration pilots announced."
+   ],
+   "sources": [
+    {
+     "ref": 1,
+     "title": "Example reef condition report",
+     "publisher": "Example Marine Park Authority",
+     "date": "2026-05-20",
+     "accessed": "2026-10-12",
+     "url": "https://example.org/reef-report",
+     "basis": "Agency report"
+    },
+    {
+     "ref": 2,
+     "title": "Example news article on tourism impact",
+     "publisher": "Example News",
+     "date": "2026-06-02",
+     "accessed": "2026-10-12",
+     "url": "https://example.org/news",
+     "basis": "News"
+    }
+   ],
+   "history": [
+    {
+     "date": "2026-10-12",
+     "status": "Ongoing Major Issue",
+     "score": 7,
+     "note": "New record (example)."
+    }
+   ],
+   "first_seen": "2026-10-12",
+   "latest_seen": "2026-10-12",
+   "verification": {
+    "status": "Verified through cited source date(s)",
+    "last_verified": "2026-10-12",
+    "confidence": "Medium"
+   },
+   "conflicts": [],
+   "missing_fields": [],
+   "related_ids": []
+  },
+  {
+   "id": "EXAMPLE-GLOBAL-TREATY-RATIFICATION-2026",
+   "revision": 1,
+   "change_type": "new",
+   "title": "Example: high seas treaty ratification milestone",
+   "description": "An illustrative global governance record with no regional sea. Figures are placeholders.",
+   "location": {
+    "name": "High seas (example)",
+    "type": "Treaty process",
+    "basin": "GLOBAL",
+    "countries": [
+     "ABNJ"
+    ],
+    "extent": "global"
+   },
+   "primary_category": "governance-treaties-disputes",
+   "secondary_categories": [],
+   "issue_layer": "Governance & Economy",
+   "layer_rationale": "Example rationale.",
+   "severity": {
+    "components": {
+     "harm": 0,
+     "livelihoods": 0,
+     "scale": 2,
+     "duration": 2,
+     "significance": 2
+    },
+    "notes": {
+     "harm": "Example: no direct harm documented (ref 1).",
+     "livelihoods": "Example: no disruption documented (ref 1).",
+     "scale": "Example: applies to all areas beyond national jurisdiction (ref 1).",
+     "duration": "Example: a multi-year process (ref 1).",
+     "significance": "Example: a treaty entering into force (ref 1)."
+    }
+   },
+   "status": "Monitoring or Emerging Risk",
+   "population_affected": {
+    "value": null,
+    "status": "Not reported"
+   },
+   "key_measure": {
+    "status": "Reported",
+    "text": "Example: 60 ratifications reached."
+   },
+   "measures": [],
+   "economic_risk": {
+    "level": "Not Indicated",
+    "signals": []
+   },
+   "trend": {
+    "direction": "Improving",
+    "note": "Example."
+   },
+   "responsible_bodies": [
+    {
+     "name": "Example treaty secretariat",
+     "role": "Secretariat"
+    }
+   ],
+   "corrective_actions": [],
+   "sources": [
+    {
+     "ref": 1,
+     "title": "Example treaty status page",
+     "publisher": "Example secretariat",
+     "date": null,
+     "accessed": "2026-10-12",
+     "url": "https://example.org/treaty",
+     "basis": "Official record"
+    },
+    {
+     "ref": 2,
+     "title": "Example press statement",
+     "publisher": "Example secretariat",
+     "date": "2026-09-30",
+     "accessed": "2026-10-12",
+     "url": "https://example.org/press",
+     "basis": "Press release"
+    }
+   ],
+   "history": [
+    {
+     "date": "2026-10-12",
+     "status": "Monitoring or Emerging Risk",
+     "score": 6,
+     "note": "New record (example)."
+    }
+   ],
+   "first_seen": "2026-10-12",
+   "latest_seen": "2026-10-12",
+   "verification": {
+    "status": "Verified through cited source date(s)",
+    "last_verified": "2026-10-12",
+    "confidence": "High"
+   },
+   "missing_fields": [],
+   "related_ids": [],
+   "secondary_drivers": []
+  }
+ ],
+ "corrections": [],
+ "tombstones": [],
+ "coverage": {
+  "date_range": "2023-10-12 to 2026-10-12",
+  "searched_geography": [
+   "Example"
+  ],
+  "categories": [
+   {
+    "slug": "coral-reefs",
+    "researched": true
+   },
+   {
+    "slug": "governance-treaties-disputes",
+    "researched": true
+   }
+  ],
+  "unverified_fields": [],
+  "gaps": [
+   "Example file: not research.",
+   "Example feed showing the ocean-intelligence contract."
+  ],
+  "exhaustive": false,
+  "regions_researched": [],
+  "statement": "This is a ranked set of discoverable, reported, or officially documented issues, not a census of every problem in the world ocean. Low coverage or missing public records do not prove the absence of an issue."
+ },
+ "errors": [],
+ "sample": true
+}

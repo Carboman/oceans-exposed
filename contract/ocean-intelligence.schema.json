@@ -1,0 +1,1063 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oceans.exposed/contract/ocean-intelligence.schema.json",
+  "title": "ocean-intelligence feed",
+  "description": "What the research lane commits as runs/<folder>/feed.json. Governed by contract/README.md. contract_version below must match contract/VERSION.",
+  "contract_version": "1.0.0",
+  "type": "object",
+  "required": [
+    "feed_name",
+    "schema_version",
+    "generated_at",
+    "run_id",
+    "mode",
+    "records",
+    "coverage"
+  ],
+  "properties": {
+    "feed_name": {
+      "const": "ocean-intelligence"
+    },
+    "schema_version": {
+      "type": "string",
+      "pattern": "^1\\.\\d+\\.\\d+$"
+    },
+    "generated_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T"
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mode": {
+      "enum": [
+        "snapshot",
+        "incremental"
+      ]
+    },
+    "research_window": {
+      "$ref": "#/$defs/dateWindow"
+    },
+    "summary": {
+      "type": "object",
+      "properties": {
+        "highest_risk": {
+          "type": "string"
+        },
+        "directional_picture": {
+          "type": "string"
+        },
+        "cross_cutting": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "label",
+              "text"
+            ],
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "text": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "category_notes": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/category"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/source"
+            }
+          }
+        }
+      }
+    },
+    "milestones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "title",
+          "category",
+          "status",
+          "date",
+          "text"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "category": {
+            "$ref": "#/$defs/category"
+          },
+          "status": {
+            "type": "string"
+          },
+          "date": {
+            "$ref": "#/$defs/date"
+          },
+          "text": {
+            "type": "string"
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/source"
+            }
+          }
+        }
+      }
+    },
+    "records": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/record"
+      }
+    },
+    "corrections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "date",
+          "field"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "date": {
+            "$ref": "#/$defs/date"
+          },
+          "field": {
+            "type": "string"
+          },
+          "from": {},
+          "to": {},
+          "reason": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "tombstones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "change_type"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "change_type": {
+            "enum": [
+              "merged",
+              "removed"
+            ]
+          },
+          "merged_into": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "required": [
+        "date_window"
+      ],
+      "properties": {
+        "searched_geography": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/category"
+              },
+              {
+                "type": "object"
+              }
+            ]
+          }
+        },
+        "date_window": {
+          "$ref": "#/$defs/dateWindow"
+        },
+        "source_limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "missing_fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "exhaustive": {
+          "type": "boolean"
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "baseline_note": {
+          "type": "string"
+        },
+        "scope_limits": {
+          "type": "string"
+        },
+        "statement": {
+          "type": "string"
+        },
+        "regions_researched": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "NPAC",
+              "SPAC",
+              "BERING",
+              "JPN",
+              "ECS",
+              "SCS",
+              "SEA",
+              "CORAL",
+              "TASMAN",
+              "NEPAC",
+              "TROPEPAC",
+              "SEPAC",
+              "NATL",
+              "SATL",
+              "NWATL",
+              "GOM",
+              "CAR",
+              "NSEA",
+              "BAL",
+              "NEATL",
+              "MED",
+              "BLK",
+              "GOG",
+              "BRA",
+              "SAFR",
+              "RED",
+              "GULF",
+              "BEN",
+              "WIND",
+              "EIND",
+              "SOUTHERN",
+              "ARCTIC"
+            ]
+          },
+          "description": "Regional seas whose dedicated, all-category research pass is complete. Cumulative: the site unions it with the live list."
+        }
+      }
+    },
+    "errors": {
+      "type": "array"
+    },
+    "indicators": {
+      "type": "object",
+      "description": "Reserved for contract 1.1.0: monthly ocean indicators (global sea-surface temperature anomaly, sea-ice extent, sea level, surface pH, coral bleaching alert area). Not validated or shown yet; a run without it keeps the live block."
+    }
+  },
+  "$defs": {
+    "date": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "dateWindow": {
+      "type": "object",
+      "required": [
+        "start",
+        "end"
+      ],
+      "properties": {
+        "start": {
+          "$ref": "#/$defs/date"
+        },
+        "end": {
+          "$ref": "#/$defs/date"
+        }
+      }
+    },
+    "category": {
+      "enum": [
+        "ocean-warming-heatwaves",
+        "sea-level-coastal-flooding",
+        "acidification-deoxygenation",
+        "coral-reefs",
+        "fisheries-overfishing",
+        "plastics-marine-debris",
+        "nutrient-pollution-dead-zones",
+        "chemical-oil-pollution",
+        "shipping-ports-noise",
+        "offshore-energy",
+        "deep-sea-mining",
+        "coastal-habitats",
+        "marine-wildlife",
+        "polar-oceans-sea-ice",
+        "governance-treaties-disputes",
+        "aquaculture",
+        "other"
+      ]
+    },
+    "score": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2
+    },
+    "statusLabel": {
+      "enum": [
+        "Reported",
+        "Estimated",
+        "Not reported"
+      ]
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "url"
+      ],
+      "properties": {
+        "ref": {
+          "type": [
+            "integer",
+            "string"
+          ]
+        },
+        "title": {
+          "type": "string"
+        },
+        "publisher": {
+          "type": "string"
+        },
+        "date": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Publication or issue date shown by the source: YYYY-MM-DD, or YYYY-MM / YYYY when the source gives only a month or a year; null when it shows none (contract 1.4.0)."
+        },
+        "url": {
+          "type": "string",
+          "pattern": "^https?://"
+        },
+        "basis": {
+          "type": "string"
+        },
+        "accessed": {
+          "$ref": "#/$defs/date",
+          "description": "Day the source was opened (contract 1.4.0). Database lookups carry only this."
+        }
+      }
+    },
+    "record": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "description",
+        "location",
+        "primary_category",
+        "issue_layer",
+        "severity",
+        "status",
+        "sources"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Z0-9][A-Z0-9-]*$"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "change_type": {
+          "enum": [
+            "new",
+            "changed",
+            "escalated",
+            "de-escalated",
+            "resolved",
+            "reopened",
+            "unchanged"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "location": {
+          "type": "object",
+          "required": [
+            "name",
+            "type"
+          ],
+          "anyOf": [
+            {
+              "required": [
+                "sea"
+              ]
+            },
+            {
+              "required": [
+                "seas"
+              ]
+            },
+            {
+              "required": [
+                "basin"
+              ]
+            }
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "type": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sea": {
+              "enum": [
+                "NPAC",
+                "SPAC",
+                "BERING",
+                "JPN",
+                "ECS",
+                "SCS",
+                "SEA",
+                "CORAL",
+                "TASMAN",
+                "NEPAC",
+                "TROPEPAC",
+                "SEPAC",
+                "NATL",
+                "SATL",
+                "NWATL",
+                "GOM",
+                "CAR",
+                "NSEA",
+                "BAL",
+                "NEATL",
+                "MED",
+                "BLK",
+                "GOG",
+                "BRA",
+                "SAFR",
+                "RED",
+                "GULF",
+                "BEN",
+                "WIND",
+                "EIND",
+                "SOUTHERN",
+                "ARCTIC"
+              ],
+              "description": "Regional sea code (src/geo.js). The unit of the map, the side panel, coverage and re-verification."
+            },
+            "seas": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "NPAC",
+                  "SPAC",
+                  "BERING",
+                  "JPN",
+                  "ECS",
+                  "SCS",
+                  "SEA",
+                  "CORAL",
+                  "TASMAN",
+                  "NEPAC",
+                  "TROPEPAC",
+                  "SEPAC",
+                  "NATL",
+                  "SATL",
+                  "NWATL",
+                  "GOM",
+                  "CAR",
+                  "NSEA",
+                  "BAL",
+                  "NEATL",
+                  "MED",
+                  "BLK",
+                  "GOG",
+                  "BRA",
+                  "SAFR",
+                  "RED",
+                  "GULF",
+                  "BEN",
+                  "WIND",
+                  "EIND",
+                  "SOUTHERN",
+                  "ARCTIC"
+                ]
+              },
+              "description": "For findings spanning several regional seas."
+            },
+            "basin": {
+              "enum": [
+                "PAC",
+                "ATL",
+                "IND",
+                "SOU",
+                "ARC",
+                "GLOBAL"
+              ],
+              "description": "Ocean basin. Optional when a sea is given (derived from it); required for open-ocean findings without a sea, or GLOBAL."
+            },
+            "countries": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^([A-Z]{2}|ABNJ)$"
+              },
+              "description": "ISO 3166-1 alpha-2 codes of the coastal states involved; ABNJ for the high seas."
+            },
+            "detail": {
+              "type": "string"
+            },
+            "coordinates": {
+              "$ref": "#/$defs/geoPoint"
+            },
+            "points": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/geoPoint"
+              }
+            },
+            "extent": {
+              "enum": [
+                "site",
+                "local",
+                "national_waters",
+                "regional_sea",
+                "basin",
+                "global"
+              ],
+              "description": "How far the issue spreads: a site, a locality, one country's waters, a regional sea, a basin, or the global ocean."
+            }
+          }
+        },
+        "primary_category": {
+          "$ref": "#/$defs/category"
+        },
+        "secondary_categories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/category"
+          }
+        },
+        "issue_layer": {
+          "enum": [
+            "Climate & Physical",
+            "Pollution",
+            "Living Resources & Habitats",
+            "Governance & Economy"
+          ]
+        },
+        "layer_rationale": {
+          "type": "string"
+        },
+        "secondary_drivers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "severity": {
+          "type": "object",
+          "required": [
+            "components"
+          ],
+          "properties": {
+            "components": {
+              "type": "object",
+              "required": [
+                "harm",
+                "livelihoods",
+                "scale",
+                "duration",
+                "significance"
+              ],
+              "properties": {
+                "harm": {
+                  "$ref": "#/$defs/score"
+                },
+                "livelihoods": {
+                  "$ref": "#/$defs/score"
+                },
+                "scale": {
+                  "$ref": "#/$defs/score"
+                },
+                "duration": {
+                  "$ref": "#/$defs/score"
+                },
+                "significance": {
+                  "$ref": "#/$defs/score"
+                }
+              }
+            },
+            "notes": {
+              "type": "object",
+              "properties": {
+                "harm": {
+                  "type": "string"
+                },
+                "livelihoods": {
+                  "type": "string"
+                },
+                "scale": {
+                  "type": "string"
+                },
+                "duration": {
+                  "type": "string"
+                },
+                "significance": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "status": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Preferred: Ongoing Major Issue, Corrective Action Underway, Monitoring or Emerging Risk, Resolved or Stabilized (also Active Emergency, Unknown). Free text is accepted; anything starting with \"Resolved\" counts as inactive."
+        },
+        "population_affected": {
+          "type": "object",
+          "required": [
+            "status"
+          ],
+          "properties": {
+            "value": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "status": {
+              "$ref": "#/$defs/statusLabel"
+            },
+            "note": {
+              "type": "string"
+            }
+          }
+        },
+        "key_measure": {
+          "type": "object",
+          "required": [
+            "status",
+            "text"
+          ],
+          "properties": {
+            "status": {
+              "$ref": "#/$defs/statusLabel"
+            },
+            "text": {
+              "type": "string"
+            }
+          }
+        },
+        "measures": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "status"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "value": {
+                "type": [
+                  "number",
+                  "string",
+                  "null"
+                ],
+                "description": "Number when the source gives one; a short phrase (e.g. \"about half\") is shown as text."
+              },
+              "unit": {
+                "type": "string"
+              },
+              "status": {
+                "$ref": "#/$defs/statusLabel"
+              },
+              "note": {
+                "type": "string"
+              },
+              "text": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "economic_risk": {
+          "type": "object",
+          "required": [
+            "level"
+          ],
+          "properties": {
+            "level": {
+              "enum": [
+                "Severe",
+                "Elevated",
+                "Watch",
+                "Not Indicated",
+                "Unknown"
+              ]
+            },
+            "signals": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "description": "Risk to the economic base behind the finding: a fishery, a port, a coastal economy, an operator."
+        },
+        "trend": {
+          "type": "object",
+          "required": [
+            "direction"
+          ],
+          "properties": {
+            "direction": {
+              "enum": [
+                "Worsening",
+                "Improving",
+                "Stable",
+                "Volatile or Mixed",
+                "Insufficient History"
+              ]
+            },
+            "note": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "projection": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "statement"
+                  ],
+                  "properties": {
+                    "statement": {
+                      "anyOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "horizon": {
+                      "anyOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "confidence": {
+                      "anyOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "assumptions": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      ]
+                    },
+                    "reversal_factors": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ],
+              "description": "Analyst judgment. Preferred: {statement, horizon, confidence, assumptions[], reversal_factors[]}. A plain sentence is accepted and read as the statement."
+            }
+          }
+        },
+        "responsible_bodies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string"
+              },
+              "contact": {
+                "type": "string",
+                "pattern": "^https?://"
+              }
+            }
+          }
+        },
+        "public_contact": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "not": {
+                "pattern": "mailto:"
+              }
+            }
+          ]
+        },
+        "corrective_actions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          },
+          "contains": {
+            "type": "object",
+            "required": [
+              "url"
+            ],
+            "properties": {
+              "url": {
+                "type": "string",
+                "pattern": "^https?://"
+              }
+            },
+            "anyOf": [
+              {
+                "required": [
+                  "date"
+                ],
+                "properties": {
+                  "date": {
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "required": [
+                  "accessed"
+                ]
+              }
+            ]
+          },
+          "description": "At least one http(s) source with date or accessed."
+        },
+        "history": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "date"
+            ],
+            "properties": {
+              "date": {
+                "$ref": "#/$defs/date"
+              },
+              "status": {
+                "type": "string"
+              },
+              "score": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10
+              },
+              "note": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "first_seen": {
+          "$ref": "#/$defs/date"
+        },
+        "latest_seen": {
+          "$ref": "#/$defs/date"
+        },
+        "verification": {
+          "type": "object"
+        },
+        "conflicts": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "field": {
+                    "type": "string"
+                  },
+                  "values": {
+                    "type": "array"
+                  },
+                  "note": {
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          },
+          "description": "Disagreements between sources. Preferred: {field, values[], note}; a plain sentence is accepted as a note."
+        },
+        "missing_fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "related_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "geoPoint": {
+      "type": "object",
+      "required": [
+        "lat",
+        "lon",
+        "precision"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "lat": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "lon": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        "precision": {
+          "enum": [
+            "exact",
+            "site",
+            "city",
+            "coastline",
+            "sea"
+          ],
+          "description": "exact/site = a public facility, reef, platform or wreck; city = a coastal city; coastline = a stretch of coast; sea = centroid of the regional sea."
+        },
+        "role": {
+          "type": "string",
+          "description": "For points[]: e.g. 'platform', 'port', 'reef', 'outfall', 'spill site'."
+        },
+        "source_ref": {
+          "type": [
+            "integer",
+            "string"
+          ]
+        }
+      }
+    }
+  }
+}
