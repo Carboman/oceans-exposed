@@ -4,8 +4,7 @@ Hand this file to a Claude Code session on the site's repository. It adds two pu
 Nothing here changes the site's data, research lane, branding, navigation or theme. Estimated time: one session.
 Reference implementations: branch `earth-exposed/oceans-child` of `Carboman/oceans-exposed` and branch
 `earth-exposed/water-child` of `Carboman/water-exposed` (same codebase; the water layer is one feature per state). Each adds
-`src/network.js`, two routes in `src/worker.js`, the chrome in every page, one site-check
-rule).
+`src/network.js`, two routes in `src/worker.js`, the chrome in every page, and one site-check rule.
 
 ## 1. The stats file and the map layer
 
@@ -87,7 +86,17 @@ and the tile changes from "derived by the hub" to "published by the site".
 When the hub publishes a new chrome version, repeat steps 1 to 3 with the new files (the version in the CSS's first
 line and in the `data-network-chrome` attributes changes together).
 
-## 3. What not to do
+## 3. waste.exposed specifics
+
+Different codebase, same two files. Its feed has `run_id` (`YYYY-MM-DD[-N]`, so `last_run` is the first 10
+characters), `records[].location.coordinates` for most records and `location.state` for the rest, `summary.findings`
+and `summary.sources` already computed in `src/worker.js` → `summarize()`. Finding pages are `/finding?id=<id>`,
+state pages `/state?s=<code>`; the Worker's `liveFeed(env)` returns the feed (or the bundled baseline), so the routes
+go next to `/api/waste/summary` and need no R2 lookup of their own. Stylesheets are linked as `/assets/styles.css`
+(absolute) and the footer is a single `<footer>` line inside `.wrap`: paste the footer strip just before its
+`</footer>` and the bar as the first child of `<body>`, before `<div class="wrap">`, so it spans the full width.
+
+## 4. What not to do
 
 - Do not load the chrome from earth.exposed at page-load time: every site's rule is "external scripts only from
   cdnjs with exact versions", and a site must render with the hub down.
