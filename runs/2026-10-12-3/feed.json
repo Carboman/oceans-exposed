@@ -1,0 +1,59 @@
+{
+ "feed_name": "ocean-intelligence",
+ "schema_version": "1.0.0",
+ "generated_at": "2026-10-12T15:51:16Z",
+ "run_id": "run_2026-10-12_cleanup_claude",
+ "mode": "incremental",
+ "research_window": {
+  "start": "2023-10-12",
+  "end": "2026-10-12"
+ },
+ "summary": {
+  "highest_risk": "The highest-scored finding so far is the historic eastern Pacific El Niño warmth, with NOAA forecasting a record share of the ocean in marine heatwave conditions, followed by the 2026 Arctic sea-ice minimum and the third-lowest Antarctic winter peak, and crude oil from the grounded tanker Caroline Bezengi reaching Oman's coast.",
+  "directional_picture": "Coverage is in its first days: these findings come from a global sweep of the last week of news and agency releases, not from the sea-by-sea baseline passes, which begin next. Physical and climate findings dominate the early picture; pollution, fisheries and habitat findings will fill in as the baseline passes run.",
+  "cross_cutting": [
+   {
+    "label": "Climate signal",
+    "text": "Marine heatwave extent, king-tide flooding in South Florida and record-low polar sea ice all point the same way in the same season."
+   },
+   {
+    "label": "Governance in motion",
+    "text": "A NOAA public comment on a Clarion-Clipperton nodule permit and the Nairobi Convention COP12 show seabed and regional-sea governance decisions under way."
+   }
+  ]
+ },
+ "records": [],
+ "tombstones": [
+  {
+   "id": "EXAMPLE-CORAL-REEF-BLEACHING-2026",
+   "change_type": "removed",
+   "reason": "Placeholder record from the launch sample feed; not a finding."
+  },
+  {
+   "id": "EXAMPLE-GLOBAL-TREATY-RATIFICATION-2026",
+   "change_type": "removed",
+   "reason": "Placeholder record from the launch sample feed; not a finding."
+  }
+ ],
+ "corrections": [],
+ "coverage": {
+  "searched_geography": [
+   "World ocean"
+  ],
+  "categories": [],
+  "date_window": {
+   "start": "2023-10-12",
+   "end": "2026-10-12"
+  },
+  "source_limitations": [
+   "Researched by Claude Code agents from international and national agencies, scientific monitoring programmes, courts and news; documented issues, not a census."
+  ],
+  "missing_fields": [],
+  "exhaustive": false,
+  "notes": [
+   "Cleanup run: removes the two placeholder records of the launch sample feed and sets the first public executive summary. No new findings."
+  ],
+  "regions_researched": []
+ },
+ "errors": []
+}
