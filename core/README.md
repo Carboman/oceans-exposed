@@ -31,7 +31,13 @@ workflows/*.yml.tpl          Daily research, Stage runs, Publish runs, Research 
    command with `--check`, so a hand-edited workflow fails CI.
 4. The site keeps what is its own: `src/` (Worker, validation vocabulary, quality rules, adapters), `public/`,
    `tools/site-check.mjs`, `tools/research/`, `contract/`, `docs/`, `runs/`.
-5. The Core sync Action (weekly) opens a pull request when this repository has a newer version.
+5. The Core sync Action (weekly) opens a pull request when this repository has a newer version. Each site needs one
+   repository secret, `CORE_SYNC_TOKEN`: a fine-grained GitHub token (Settings → Developer settings → Fine-grained
+   tokens) with repository access to the site repositories **and** `Carboman/exposed-core`, and these permissions:
+   Contents read and write, Workflows read and write, Pull requests read and write (Metadata read is added
+   automatically). The built-in Actions token cannot read this private repository and may not push changes to
+   workflow files, which the update always contains. The site also needs "Allow GitHub Actions to create and approve
+   pull requests" enabled (Settings → Actions → General → Workflow permissions). One token can serve every site.
 
 ## Releasing a change
 

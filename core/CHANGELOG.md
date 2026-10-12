@@ -1,5 +1,15 @@
 # exposed-core changelog
 
+## 1.1.2 (2026-10-12)
+
+Core sync uses one secret, `CORE_SYNC_TOKEN` (contents, workflows and pull requests on the site; contents read on
+exposed-core), for the clone, the push and the pull request. The built-in token could not push the re-rendered
+workflow files. `CORE_READ_TOKEN` is no longer used.
+
+## 1.1.1 (2026-10-12)
+
+`cost-report` reads `runs/` from the site root, not the current directory (every core tool now does).
+
 ## 1.1.0 (2026-10-12)
 
 - Stage runs gains a **schema gate**: after the live-site validation passes, every staged run folder must also validate

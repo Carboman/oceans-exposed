@@ -2,10 +2,11 @@
 // Usage: node tools/cost-report.mjs [--json]
 import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
+import { sitePath } from './config.mjs';
 
 const runs = [];
-for (const d of (existsSync('runs') ? readdirSync('runs') : []).sort()) {
-  const p = join('runs', d, 'RUN.json');
+for (const d of (existsSync(sitePath('runs')) ? readdirSync(sitePath('runs')) : []).sort()) {
+  const p = sitePath('runs', d, 'RUN.json');
   if (!existsSync(p)) continue;
   try { runs.push({ folder: d, ...JSON.parse(readFileSync(p, 'utf8')) }); } catch (e) { console.error(`${p}: ${e.message}`); }
 }

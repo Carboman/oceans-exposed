@@ -1,4 +1,4 @@
-# GENERATED from core/workflows/research-watchdog.yml.tpl by node core/tools/render-workflows.mjs (exposed-core 1.1.0).
+# GENERATED from core/workflows/research-watchdog.yml.tpl by node core/tools/render-workflows.mjs (exposed-core 1.1.2).
 # Edit the template in exposed-core or site.config.json, then re-render; CI fails when this file is out of date.
 name: Research watchdog
 
