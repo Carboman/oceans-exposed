@@ -1,0 +1,44 @@
+{
+  "network": {
+    "name": "earth.exposed",
+    "url": "https://earth.exposed",
+    "tagline": "Public data, mapped. No opinions.",
+    "chrome_version": "1.0.0",
+    "forbidden_terms": ["carbotura", "sponsored by"]
+  },
+  "sites": [
+    {
+      "id": "water",
+      "site": "water.exposed",
+      "url": "https://water.exposed",
+      "name": "water.exposed",
+      "short": "Water",
+      "tagline": "U.S. Water Issues Tracker",
+      "stats_url": "https://water.exposed/network/stats.json",
+      "launched": "2026-09",
+      "adapter": "water"
+    },
+    {
+      "id": "waste",
+      "site": "waste.exposed",
+      "url": "https://waste.exposed",
+      "name": "waste.exposed",
+      "short": "Waste",
+      "tagline": "U.S. waste, recycling and waste-to-energy",
+      "stats_url": "https://waste.exposed/network/stats.json",
+      "launched": "2026-10",
+      "adapter": "waste"
+    },
+    {
+      "id": "oceans",
+      "site": "oceans.exposed",
+      "url": "https://oceans.exposed",
+      "name": "oceans.exposed",
+      "short": "Oceans",
+      "tagline": "Global Ocean Issues Tracker",
+      "stats_url": "https://oceans.exposed/network/stats.json",
+      "launched": "2026-10",
+      "adapter": "oceans"
+    }
+  ]
+}

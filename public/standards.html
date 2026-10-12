@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Standards — earth.exposed</title>
+<meta name="description" content="What every site in the .exposed network promises: facts only, every number sourced and dated, neutral language, disagreement shown, no rankings across sites, no sponsors on the hub.">
+<link rel="canonical" href="https://earth.exposed/standards">
+<meta property="og:site_name" content="earth.exposed">
+<meta property="og:title" content="Standards — earth.exposed">
+<meta property="og:description" content="What every site in the .exposed network promises: facts only, every number sourced and dated, neutral language, disagreement shown, no rankings across sites, no sponsors on the hub.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="network/chrome/latest/chrome.css">
+<link rel="stylesheet" href="assets/styles.css">
+<script>try{var t=localStorage.getItem('ex-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+</head>
+<body data-page="standards">
+<!-- network-bar v1.0.0 -->
+<div class="ex-net-bar" data-network-chrome="1.0.0" data-network-site="earth.exposed" role="navigation" aria-label="earth.exposed network">
+  <div class="ex-net-inner">
+    <a class="ex-net-home" href="https://earth.exposed/">earth<em>.exposed</em></a>
+    <span class="ex-net-tag">Public data, mapped. No opinions.</span>
+    <span class="ex-net-sites">
+      <a href="https://earth.exposed/" data-site="earth.exposed" aria-current="true">Hub</a>
+      <a href="https://water.exposed/" data-site="water.exposed">Water</a>
+      <a href="https://waste.exposed/" data-site="waste.exposed">Waste</a>
+      <a href="https://oceans.exposed/" data-site="oceans.exposed">Oceans</a>
+    </span>
+  </div>
+</div>
+<!-- /network-bar -->
+<header class="topbar">
+  <a href="/" class="topbar-wordmark" aria-label="earth.exposed home">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="24" height="24" aria-hidden="true" style="flex-shrink:0;display:block"><circle cx="16" cy="16" r="10.5" fill="none" stroke="var(--accent-bright)" stroke-width="2.2"/><path d="M5.5 16h21M16 5.5c-4.2 3.2-4.2 17.8 0 21M16 5.5c4.2 3.2 4.2 17.8 0 21" fill="none" stroke="var(--accent-bright)" stroke-width="1.6" stroke-linecap="round"/></svg>
+    <span>earth<em>.exposed</em></span>
+  </a>
+  <button class="nav-toggle" aria-expanded="false" aria-controls="topnav">Menu</button>
+  <nav class="topnav" id="topnav" aria-label="Main">
+    <a href="index.html">Home</a>
+    <a href="map.html">Map</a>
+    <a href="standards.html" aria-current="page">Standards</a>
+    <a href="methodology.html">Methodology</a>
+    <a href="sources.html">Sources</a>
+    <a href="about.html">About</a>
+    <button class="theme-toggle" type="button" aria-label="Toggle light/dark theme">◐</button>
+  </nav>
+</header>
+
+<main class="wrap prose">
+  <div class="page-head">
+    <div class="eyebrow">Network standards</div>
+    <h1>What every site in the network promises</h1>
+    <p class="lede">These rules apply to this hub and to every site that joins the network. Each site's own methodology page says how it applies them to its subject.</p>
+  </div>
+  <h2 id="facts">1. Facts only</h2>
+  <ul>
+    <li>A site publishes what named public sources say: agency records, court filings, scientific monitoring, official statistics, and news reporting that cites them.</li>
+    <li>No advocacy, no calls to action, no "should". No greenwashing: a claim of improvement needs the same sourcing as a claim of harm.</li>
+    <li>No company mentions and no sponsors on the hub. A site's own pages may carry a credit line in its footer, in the shared footer's optional slot, and nowhere else.</li>
+  </ul>
+  <h2 id="numbers">2. Every number has a source and a date</h2>
+  <ul>
+    <li>Every figure shown on the hub carries the source's name, a link to it, the date of the source, and the date the figure was pulled.</li>
+    <li>The hub's renderer refuses a figure without all four. The <a href="sources.html">Sources</a> page lists every figure currently shown and where it came from.</li>
+    <li>A figure the hub derives itself (for example a count from a site's public data feed) is labeled "derived by the hub" and names the feed as its source.</li>
+  </ul>
+  <h2 id="language">3. Neutral language, disagreement shown</h2>
+  <ul>
+    <li>Describe what a source documents; do not characterize it. Severity on a site is a documented score with a published rubric, not a judgment.</li>
+    <li>Where sources disagree, show both, with their dates. The newer source does not silently replace the older one.</li>
+    <li>Absence of a record is not evidence of absence of a problem. Every site says what it did not search.</li>
+  </ul>
+  <h2 id="rankings">4. No rankings across sites or subjects</h2>
+  <ul>
+    <li>Tiles on the hub are in a fixed order (by the site's launch date). The hub never orders sites, states, seas or subjects by severity.</li>
+    <li>Within a site, ranking is per category only, under that site's published rubric.</li>
+  </ul>
+  <h2 id="privacy">5. Privacy</h2>
+  <ul>
+    <li>No cookies, no fingerprinting, no personal data collected. Visit counts use Cloudflare Web Analytics, which stores no identifiers and needs no consent banner.</li>
+    <li>External resources on the hub: fonts from Google Fonts and two scripts (d3, topojson) from cdnjs, pinned to exact versions. Nothing else loads from a third party.</li>
+  </ul>
+  <h2 id="data">6. Open data</h2>
+  <ul>
+    <li>Every site publishes its full data set as JSON with open cross-origin access, and a small stats file for the network (<a href="methodology.html#contract">the contract</a>).</li>
+    <li>Corrections are published as new revisions, never as silent edits. A withdrawn record is tombstoned with a reason.</li>
+  </ul>
+  <h2 id="chrome">7. One network, one chrome</h2>
+  <ul>
+    <li>Every site carries the shared network bar above its own header and the network strip in its footer, at the version this hub publishes (currently <code id="chrome-version">1.0.0</code>, at <a href="network/chrome/latest/chrome.css">network/chrome/latest/</a>).</li>
+    <li>A site keeps its own name, colors, navigation and theme toggle. The shared parts are deliberately quieter than any site's own header.</li>
+  </ul>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <a href="/" class="footer-brand">earth<em>.exposed</em></a>
+    <span class="footer-links">
+      <a href="standards.html">Standards</a>
+      <a href="methodology.html">Methodology</a>
+      <a href="sources.html">Sources</a>
+      <a href="/api/network/summary.json">Data API (JSON)</a>
+      <a href="https://github.com/Carboman/earth-exposed" rel="noopener">Code</a>
+    </span>
+    <span>Public data, mapped. No opinions.</span>
+  </div>
+<!-- network-footer v1.0.0 -->
+<div class="ex-net-foot" data-network-chrome="1.0.0">
+  <div class="ex-net-inner">
+    <span class="ex-net-foot-brand">Part of the <a href="https://earth.exposed/">earth.exposed</a> network. Public data, mapped. No opinions.</span>
+    <span class="ex-net-foot-links">
+      <a href="https://earth.exposed/standards">Standards</a>
+      <a href="https://earth.exposed/methodology">Methodology</a>
+      <a href="https://earth.exposed/sources">Sources</a>
+      <a href="https://earth.exposed/map">Map</a>
+    </span>
+    <span class="ex-net-slot" data-network-slot="credit"></span>
+  </div>
+</div>
+<!-- /network-footer -->
+</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

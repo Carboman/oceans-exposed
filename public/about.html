@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About — earth.exposed</title>
+<meta name="description" content="About the .exposed network: what it is, how a site joins, where the code is.">
+<link rel="canonical" href="https://earth.exposed/about">
+<meta property="og:site_name" content="earth.exposed">
+<meta property="og:title" content="About — earth.exposed">
+<meta property="og:description" content="About the .exposed network: what it is, how a site joins, where the code is.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="network/chrome/latest/chrome.css">
+<link rel="stylesheet" href="assets/styles.css">
+<script>try{var t=localStorage.getItem('ex-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+</head>
+<body data-page="about">
+<!-- network-bar v1.0.0 -->
+<div class="ex-net-bar" data-network-chrome="1.0.0" data-network-site="earth.exposed" role="navigation" aria-label="earth.exposed network">
+  <div class="ex-net-inner">
+    <a class="ex-net-home" href="https://earth.exposed/">earth<em>.exposed</em></a>
+    <span class="ex-net-tag">Public data, mapped. No opinions.</span>
+    <span class="ex-net-sites">
+      <a href="https://earth.exposed/" data-site="earth.exposed" aria-current="true">Hub</a>
+      <a href="https://water.exposed/" data-site="water.exposed">Water</a>
+      <a href="https://waste.exposed/" data-site="waste.exposed">Waste</a>
+      <a href="https://oceans.exposed/" data-site="oceans.exposed">Oceans</a>
+    </span>
+  </div>
+</div>
+<!-- /network-bar -->
+<header class="topbar">
+  <a href="/" class="topbar-wordmark" aria-label="earth.exposed home">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="24" height="24" aria-hidden="true" style="flex-shrink:0;display:block"><circle cx="16" cy="16" r="10.5" fill="none" stroke="var(--accent-bright)" stroke-width="2.2"/><path d="M5.5 16h21M16 5.5c-4.2 3.2-4.2 17.8 0 21M16 5.5c4.2 3.2 4.2 17.8 0 21" fill="none" stroke="var(--accent-bright)" stroke-width="1.6" stroke-linecap="round"/></svg>
+    <span>earth<em>.exposed</em></span>
+  </a>
+  <button class="nav-toggle" aria-expanded="false" aria-controls="topnav">Menu</button>
+  <nav class="topnav" id="topnav" aria-label="Main">
+    <a href="index.html">Home</a>
+    <a href="map.html">Map</a>
+    <a href="standards.html">Standards</a>
+    <a href="methodology.html">Methodology</a>
+    <a href="sources.html">Sources</a>
+    <a href="about.html" aria-current="page">About</a>
+    <button class="theme-toggle" type="button" aria-label="Toggle light/dark theme">◐</button>
+  </nav>
+</header>
+
+<main class="wrap prose">
+  <div class="page-head">
+    <div class="eyebrow">About</div>
+    <h1>The .exposed network</h1>
+    <p class="lede">A set of independent sites that each track one subject from named public sources, and this hub that shows them together.</p>
+  </div>
+  <h2>What it is</h2>
+  <p>Each site researches and publishes documented issues in its subject, daily, with every record scored under a published rubric and tied to its sources. The hub reads one small file from each site and shows the headline fact, the sources and a shared map. The sites and the hub follow the same <a href="standards.html">standards</a>.</p>
+  <h2>Sites</h2>
+  <ul>
+    <li><a href="https://water.exposed/">water.exposed</a>: U.S. water issues, by state.</li>
+    <li><a href="https://waste.exposed/">waste.exposed</a>: U.S. waste, recycling and waste-to-energy, by state.</li>
+    <li><a href="https://oceans.exposed/">oceans.exposed</a>: marine and coastal issues across 32 regional seas and the high seas.</li>
+  </ul>
+  <h2>How a site joins</h2>
+  <ol>
+    <li>Follow the <a href="standards.html">standards</a> and publish a full data set as open JSON.</li>
+    <li>Publish <code>/network/stats.json</code> and <code>/network/layer.geojson</code> under the <a href="methodology.html#contract">contract</a>.</li>
+    <li>Carry the shared network bar and footer strip from <a href="network/chrome/latest/chrome.css">network/chrome/latest/</a>.</li>
+    <li>Open a pull request adding the site to <code>network/sites.json</code> in the hub's repository.</li>
+  </ol>
+  <h2>Code and contact</h2>
+  <p>The hub's code, the contract, the refresh job and this page's history are public at <a href="https://github.com/Carboman/earth-exposed" rel="noopener">github.com/Carboman/earth-exposed</a>. Questions, corrections and join requests go through that repository's issues.</p>
+  <h2>What this is not</h2>
+  <p>Not a census of every issue in any subject. Not a ranking of places or sites. Not advice. Each site states its coverage limits on its own pages.</p>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <a href="/" class="footer-brand">earth<em>.exposed</em></a>
+    <span class="footer-links">
+      <a href="standards.html">Standards</a>
+      <a href="methodology.html">Methodology</a>
+      <a href="sources.html">Sources</a>
+      <a href="/api/network/summary.json">Data API (JSON)</a>
+      <a href="https://github.com/Carboman/earth-exposed" rel="noopener">Code</a>
+    </span>
+    <span>Public data, mapped. No opinions.</span>
+  </div>
+<!-- network-footer v1.0.0 -->
+<div class="ex-net-foot" data-network-chrome="1.0.0">
+  <div class="ex-net-inner">
+    <span class="ex-net-foot-brand">Part of the <a href="https://earth.exposed/">earth.exposed</a> network. Public data, mapped. No opinions.</span>
+    <span class="ex-net-foot-links">
+      <a href="https://earth.exposed/standards">Standards</a>
+      <a href="https://earth.exposed/methodology">Methodology</a>
+      <a href="https://earth.exposed/sources">Sources</a>
+      <a href="https://earth.exposed/map">Map</a>
+    </span>
+    <span class="ex-net-slot" data-network-slot="credit"></span>
+  </div>
+</div>
+<!-- /network-footer -->
+</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

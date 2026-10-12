@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://earth.exposed/contract/network-layer.schema.json",
+  "title": "earth.exposed network map layer",
+  "description": "Published by every site at /network/layer.geojson. A FeatureCollection of Points, or features with null geometry and a known region, each linking back to the finding on its site.",
+  "type": "object",
+  "required": ["type", "features"],
+  "properties": {
+    "type": { "const": "FeatureCollection" },
+    "site": { "type": "string" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "features": {
+      "type": "array",
+      "maxItems": 5000,
+      "items": {
+        "type": "object",
+        "required": ["type", "geometry", "properties"],
+        "properties": {
+          "type": { "const": "Feature" },
+          "geometry": {
+            "oneOf": [
+              { "type": "null" },
+              {
+                "type": "object",
+                "required": ["type", "coordinates"],
+                "properties": {
+                  "type": { "const": "Point" },
+                  "coordinates": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } }
+                }
+              }
+            ]
+          },
+          "properties": {
+            "type": "object",
+            "required": ["site", "id", "title", "url"],
+            "properties": {
+              "site": { "type": "string" },
+              "id": { "type": "string", "maxLength": 120 },
+              "title": { "type": "string", "maxLength": 200 },
+              "url": { "type": "string", "pattern": "^https://" },
+              "level": { "type": "string", "maxLength": 20 },
+              "category": { "type": "string", "maxLength": 60 },
+              "date": { "type": "string" },
+              "region": {
+                "type": "object",
+                "required": ["type", "code"],
+                "properties": {
+                  "type": { "enum": ["us-state"] },
+                  "code": { "type": "string", "pattern": "^[A-Z]{2}$" }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

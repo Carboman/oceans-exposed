@@ -1,0 +1,83 @@
+name: Network refresh
+
+# Fetches every site's /network/stats.json and map layer, validates them, and commits the snapshot. A site that
+# does not answer keeps its last good figures, marked stale. The commit deploys through Deploy site.
+# Opens (or comments on) one `network-stale` issue when a site has been stale for 3 days or more.
+on:
+  schedule:
+    - cron: '17 3 * * *'
+    - cron: '17 19 * * *'
+  workflow_dispatch:
+    inputs:
+      site:
+        description: 'Refresh one site only (its id in network/sites.json), or leave empty for all'
+        required: false
+        default: ''
+
+concurrency:
+  group: refresh
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
+
+      - name: Refresh the snapshot
+        id: refresh
+        run: |
+          if [ -n "${{ inputs.site }}" ]; then node tools/refresh.mjs --site "${{ inputs.site }}"; else node tools/refresh.mjs; fi
+
+      - name: Validate before committing
+        run: |
+          node tools/site-check.mjs
+          node --test tests/*.test.mjs
+
+      - name: Commit the snapshot
+        id: commit
+        run: |
+          git config user.name 'earth-exposed-bot'
+          git config user.email 'earth-exposed-bot@users.noreply.github.com'
+          git add public/data
+          if git diff --cached --quiet; then echo "No change."; echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          git commit -m "Network refresh $(date -u +%F): ${{ steps.refresh.outputs.fresh }} fresh, ${{ steps.refresh.outputs.stale }} stale, ${{ steps.refresh.outputs.missing }} missing"
+          for i in 1 2 3 4; do git push origin HEAD:main && break || { git pull --rebase origin main; sleep $((2 ** i)); }; done
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Stale-site issue
+        if: ${{ always() && steps.refresh.outputs.stale_long != '' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          STALE: ${{ steps.refresh.outputs.stale_long }}
+        run: |
+          body="These sites have not answered with a valid stats file for 3 days or more: $STALE. The hub shows their last good figures, marked stale. See docs/OPERATIONS.md."
+          n=$(gh issue list --label network-stale --state open --json number --jq '.[0].number')
+          if [ -n "$n" ]; then gh issue comment "$n" --body "$body"; else gh issue create --title "Stale network sites: $STALE" --label network-stale --body "$body"; fi
+
+      - name: Close the stale issue when all is fresh
+        if: ${{ steps.refresh.outputs.stale == '0' && steps.refresh.outputs.missing == '0' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for n in $(gh issue list --label network-stale --state open --json number --jq '.[].number'); do
+            gh issue close "$n" --comment "All sites answered with valid stats files on $(date -u +%F)."
+          done
+
+      - name: Summary
+        if: always()
+        run: |
+          { echo "## Network refresh"; echo; echo '```'; node -e "const s=require('./public/data/snapshot.json');for(const k in s.sites){const x=s.sites[k];console.log(k.padEnd(8),x.status.padEnd(8),x.origin||'',x.stats?x.stats.headline.text:'',x.last_error||'')}"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
