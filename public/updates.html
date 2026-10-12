@@ -32,14 +32,18 @@
 </header>
 <div id="sample-banner" class="sample-banner" hidden><b>Sample data.</b> All locations and figures on this site are fictional placeholders that show the format. </div>
 
-<div class="page-banner" aria-hidden="true"></div>
 <main class="page-body">
-  <section class="hero">
+  <header class="page-head">
     <div class="eyebrow">Run notes</div>
     <h1>Changes &amp; Coverage</h1>
     <p class="lede">What changed since the prior run (<span id="prior-run"></span>), what was corrected, and what this run could and could not cover.</p>
     <div class="run-meta" data-run-meta></div>
-  </section>
+  </header>
+  <div class="narrow-wide">
+<figure class="img-band">
+  <img src="assets/img/polar-960.jpg" srcset="assets/img/polar-960.jpg 960w, assets/img/polar.jpg 1920w" sizes="(min-width: 1200px) 1140px, 100vw" alt="Sea ice floes seen from above" loading="lazy" decoding="async" onerror="this.closest('.img-band').classList.add('no-img');this.remove()">
+  <figcaption><span class="eyebrow">Polar oceans</span>Sea ice seen from above. Ice extent, ice shelves and polar shipping routes are tracked under Polar Oceans &amp; Sea Ice; every change is logged against a stable finding ID.</figcaption>
+</figure>
 
   <h2>Changes since the prior run</h2>
   <div id="baseline-note"></div>
@@ -54,6 +58,11 @@
   <h2>Corrections</h2>
   <div id="corrections"></div>
 
+<figure class="img-band">
+  <img src="assets/img/shipping-960.jpg" srcset="assets/img/shipping-960.jpg 960w, assets/img/shipping.jpg 1920w" sizes="(min-width: 1200px) 1140px, 100vw" alt="A container ship passing offshore wind turbines at dusk" loading="lazy" decoding="async" onerror="this.closest('.img-band').classList.add('no-img');this.remove()">
+  <figcaption><span class="eyebrow">Shipping and energy</span>Shipping lanes and offshore energy share the same water. Coverage notes below say which seas and categories this run searched in depth.</figcaption>
+</figure>
+
   <h2 id="coverage">Coverage limitations</h2>
   <div class="kv">
     <div>Date range searched</div><div id="cov-range"></div>
@@ -61,8 +70,18 @@
     <div>Scope limits</div><div id="cov-scope"></div>
   </div>
   <p class="small muted">Seas are researched one at a time; the daily run re-verifies two seas in rotation. A sea not yet researched in depth shows only findings from global sweeps.</p>
-  <h3>Findings by category</h3>
-  <section class="card"><div id="viz-coverage"></div></section>
+  <div class="grid-2 viz-grid">
+    <section class="card viz-card">
+      <h3 class="viz-title">Findings by category</h3>
+      <p class="viz-sub">Every record in the feed, including resolved ones, split by severity level.</p>
+      <div id="viz-coverage"></div>
+    </section>
+    <section class="card viz-card">
+      <h3 class="viz-title">New findings per month</h3>
+      <p class="viz-sub">Records by the month the tracker first saw them, over the last 24 months.</p>
+      <div id="viz-months"></div>
+    </section>
+  </div>
   <h3>Categories researched</h3>
   <div class="table-wrap"><table class="data-table">
     <thead><tr><th>#</th><th>Category</th><th>Researched</th><th>Findings in feed</th><th>Note</th></tr></thead>
@@ -75,6 +94,7 @@
   <h3>Feed errors</h3>
   <ul class="clean" id="cov-errors"></ul>
   <p class="callout" id="cov-statement"></p>
+  </div>
 </main>
 
 <footer class="footer">

@@ -19,7 +19,7 @@ for (const f of readdirSync(root).filter((n) => n.endsWith('.html'))) {
   if (f !== '404.html' && !html.includes('rel="canonical" href="https://oceans.exposed/')) fails.push(`${f}: canonical URL missing`);
   if (/mailto:/i.test(html)) fails.push(`${f}: mailto: link`);
 }
-for (const f of ['assets/app.js', 'assets/charts.js', 'assets/seamap.js', 'assets/styles.css', 'favicon.svg']) {
+for (const f of ['favicon.svg', ...readdirSync(join(root, 'assets')).filter((n) => /\.(js|css)$/.test(n)).map((n) => 'assets/' + n)]) {
   if (/carbotura/i.test(readFileSync(join(root, f), 'utf8'))) fails.push(`${f}: contains Carbotura`);
 }
 const feed = JSON.parse(readFileSync(join(root, '..', 'runs', '2026-10-12', 'feed.json'), 'utf8'));

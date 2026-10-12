@@ -32,33 +32,34 @@
 </header>
 <div id="sample-banner" class="sample-banner" hidden><b>Sample data.</b> All locations and figures on this site are fictional placeholders that show the format. </div>
 
-<div class="page-banner" aria-hidden="true"></div>
 <main class="page-body with-panel">
 <div class="main-col">
-  <p class="small" style="margin-top:20px"><a href="index.html">← Global overview</a></p>
-  <div class="sm-head">
-    <div>
-      <div class="eyebrow">Regional sea</div>
-      <h1 id="sm-title">Sea</h1>
-      <p class="sm-sub" id="sm-sub"></p>
+  <header class="page-head page-head-sea">
+    <p class="crumb small"><a href="index.html">← Global overview</a></p>
+    <div class="sm-head">
+      <div>
+        <div class="eyebrow">Regional sea</div>
+        <h1 id="sm-title">Sea</h1>
+        <p class="sm-sub" id="sm-sub"></p>
+      </div>
+      <div class="sm-tools">
+        <label class="small muted">Jump to sea<select id="sm-pick"></select></label>
+        <a class="btn" id="sm-explore" href="explorer.html">Filter in Explorer</a>
+      </div>
     </div>
-    <div class="sm-tools">
-      <label class="small muted">Jump to sea<select id="sm-pick"></select></label>
-      <a class="btn" id="sm-explore" href="explorer.html">Filter in Explorer</a>
-    </div>
-  </div>
+  </header>
 
   <div class="sm-stats" id="sm-stats" aria-live="polite"></div>
 
-  <section class="sm-glance" id="sm-glance" aria-label="This sea at a glance"></section>
-
-  <section class="card sm-card">
-    <div id="sm-map"><p class="muted">Loading plot…</p></div>
+  <section class="card sm-card map-card" aria-label="Map of the sea">
+    <div id="sm-map"><p class="muted small map-loading">Loading map…</p></div>
   </section>
+
+  <section class="sm-glance" id="sm-glance" aria-label="This sea at a glance"></section>
 
   <div class="sm-lists">
     <section>
-      <h2>On the plot</h2>
+      <h2>On the map</h2>
       <ol class="sm-list sm-cards" id="sm-placed"></ol>
     </section>
     <section id="sm-unplaced-wrap" hidden>
@@ -96,8 +97,11 @@
     <span>Informational only. Not a census of every ocean issue.</span>
   </div>
 </footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
 <script src="assets/app.js"></script>
 <script src="assets/charts.js"></script>
+<script src="assets/geo.js"></script>
 <script src="assets/seamap.js"></script>
 </body>
 </html>

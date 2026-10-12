@@ -30,7 +30,14 @@
 </header>
 <div id="sample-banner" class="sample-banner" hidden><b>Sample data.</b> All locations and figures on this site are fictional placeholders that show the format. </div>
 
-<main class="page-body"><section class="hero"><div class="eyebrow">404</div><h1>Page not found</h1><p class="lede">That page does not exist. Try the <a href="/index.html">overview</a> or the <a href="/explorer.html">findings explorer</a>.</p></section></main>
+<main class="page-body">
+  <section class="notfound">
+    <figure class="img-band img-band-tall">
+      <img src="/assets/img/reef-960.jpg" srcset="/assets/img/reef-960.jpg 960w, /assets/img/reef.jpg 1920w" sizes="(min-width: 1200px) 1140px, 100vw" alt="" loading="lazy" decoding="async" onerror="this.closest('.img-band').classList.add('no-img');this.remove()">
+      <figcaption class="notfound-text"><div class="eyebrow">404</div><h1>Page not found</h1><p class="lede">That page does not exist. Try the <a href="/index.html">overview</a> or the <a href="/explorer.html">findings explorer</a>.</p></figcaption>
+    </figure>
+  </section>
+</main>
 
 <footer class="footer">
   <div class="footer-inner">

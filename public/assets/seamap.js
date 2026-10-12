@@ -1,41 +1,20 @@
 /* oceans.exposed — sea page (sea.html?code=XXX).
-   Shows one regional sea: counts by level and category, a plain equirectangular point plot of the findings that
-   carry coordinates (no coastline or polygon data in version 1), and the full list as the text twin of the plot.
+   One regional sea: stat tiles, a zoomed map (Equal Earth fitted to the sea's approximate outline, Natural Earth
+   50m coastline loaded lazily, the sea highlighted, located findings as glowing points, graticule labels and an
+   inset world map), a severity spine and category bars for the sea, then the full list as the text twin of the map.
    Findings are placed only by location.coordinates / location.points; a finding with no coordinates is listed as
-   sea-wide, multi-sea or not yet located, never pinned to an arbitrary point. Sea names and basins come from
-   app.js (window.WX.SEAS), which mirrors src/geo.js. */
+   sea-wide, multi-sea or not yet located, never pinned to an arbitrary point. Sea names and basins come from app.js
+   (window.WX.SEAS); outlines and helpers from geo.js (window.OEGeo); shared charts from charts.js (window.OECharts). */
 (function () {
   'use strict';
-  // Approximate bounding boxes per sea: [west, south, east, north] in degrees. East may exceed 180 where a sea
-  // crosses the antimeridian; points are unwrapped into the same frame before plotting.
-  var BBOX = {
-    NPAC: [140, 15, 240, 62], SPAC: [150, -55, 280, 0], BERING: [160, 51, 205, 66], JPN: [127, 33, 142, 52],
-    ECS: [117, 23, 131, 41], SCS: [99, -3, 121, 25], SEA: [95, -12, 135, 21], CORAL: [142, -30, 165, -8],
-    TASMAN: [147, -48, 175, -30], NEPAC: [-160, 30, -115, 62], TROPEPAC: [-120, -20, -70, 25], SEPAC: [-92, -58, -68, -4],
-    NATL: [-70, 20, -5, 65], SATL: [-45, -60, 20, 0], NWATL: [-82, 30, -50, 55], GOM: [-98, 17, -80, 31],
-    CAR: [-90, 8, -58, 24], NSEA: [-5, 50, 12, 62], BAL: [9, 53, 31, 66], NEATL: [-20, 35, 2, 60],
-    MED: [-6, 30, 37, 46], BLK: [27, 40, 42, 48], GOG: [-20, -18, 15, 15], BRA: [-70, -56, -30, 0],
-    SAFR: [10, -40, 40, -22], RED: [32, 11, 44, 31], GULF: [45, 8, 78, 31], BEN: [78, 3, 100, 24],
-    WIND: [30, -32, 70, 12], EIND: [90, -45, 130, -8], SOUTHERN: [-180, -80, 180, -50], ARCTIC: [-180, 62, 180, 90]
-  };
-  var W = null;
+  var W = null, G = window.OEGeo;
   function $(s, r) { return (r || document).querySelector(s); }
   function esc(s) { return W.esc(s); }
   function lv(l) { return 'var(--sev-' + String(l).toLowerCase() + ')'; }
-  function pill(r) { return '<span class="lvl lvl-' + r._level.toLowerCase() + '">' + r._level + ' ' + r._score + '</span>'; }
-  function fmtDeg(v, pos, neg) { return Math.abs(v).toFixed(1).replace(/\.0$/, '') + '°' + (v < 0 ? neg : pos); }
-
-  /* ---------- tooltip ---------- */
-  var tipEl;
-  function tip(html, x, y) {
-    if (!tipEl) { tipEl = document.createElement('div'); tipEl.className = 'viz-tip'; tipEl.setAttribute('role', 'tooltip'); document.body.appendChild(tipEl); }
-    if (html === null) { tipEl.classList.remove('on'); return; }
-    tipEl.innerHTML = html; tipEl.classList.add('on');
-    var r = tipEl.getBoundingClientRect(), left = x + 14, top = y + 14;
-    if (left + r.width > innerWidth - 8) left = x - r.width - 14;
-    if (top + r.height > innerHeight - 8) top = y - r.height - 14;
-    tipEl.style.left = Math.max(8, left) + 'px'; tipEl.style.top = Math.max(8, top) + 'px';
-  }
+  function lvlKey(l) { return String(l).toLowerCase(); }
+  function pill(r) { return '<span class="lvl lvl-' + lvlKey(r._level) + '">' + r._level + ' ' + r._score + '</span>'; }
+  function fmtDeg(v, pos, neg) { v = Math.round(v * 10) / 10; if (Math.abs(v) === 180) return '180°'; return Math.abs(v).toFixed(1).replace(/\.0$/, '') + '°' + (v < 0 ? neg : pos); }
+  function plural(n, s) { return n + ' ' + s + (n === 1 ? '' : 's'); }
 
   function render(code) {
     var sea = W.SEAS[code];
@@ -54,13 +33,13 @@
     var levels = ['Critical', 'High', 'Moderate', 'Low'].map(function (l) { return { l: l, n: active.filter(function (r) { return r._level === l; }).length }; });
     var done = (W.feed.coverage || {}).regions_researched || [];
     var researched = done.indexOf(code) >= 0, anyResearch = done.length > 0;
-    $('#sm-sub').innerHTML = '<span class="tag" data-basin="' + sea.basin + '" style="border-color:var(--basin);color:var(--page-text)">' + esc(basin) + '</span> <span class="mono muted small">' + code + '</span> ' +
+    $('#sm-sub').innerHTML = '<span class="tag basin-tag" data-basin="' + sea.basin + '"><i class="basin-chip" data-basin="' + sea.basin + '"></i>' + esc(basin) + '</span> <span class="mono muted small">' + code + '</span> ' +
       (anyResearch && !researched ? '<span class="sm-pending">Not yet researched in depth: only findings from global sweeps are shown so far.</span> ' : '') +
       (recs.length ? '<b>' + active.length + '</b> active issue' + (active.length === 1 ? '' : 's') + (recs.length > active.length ? ' (+' + (recs.length - active.length) + ' resolved)' : '') + ' · ' +
         levels.filter(function (x) { return x.n; }).map(function (x) { return '<span class="lvl lvl-' + x.l.toLowerCase() + '">' + x.n + ' ' + x.l + '</span>'; }).join(' ') : 'No issues in the current feed. That does not mean there are no problems in this sea.');
 
     renderStats(code, recs, active);
-    renderGlance(recs, active);
+    renderGlance(code, recs, active);
     renderMap(code, recs);
   }
 
@@ -80,108 +59,145 @@
       (top ? '<div class="sm-stat"><span class="sm-stat-v">' + top._score + '<span class="small muted">/10</span></span><span class="sm-stat-l">Highest score</span><span class="sm-stat-s">' + esc(top.location.name) + '. Newest source in this sea: ' + esc(newest || 'undated') + '.</span></div>' : '');
   }
 
-  // "At a glance": small multiples for this sea's issues only (severity, category, layer, status).
-  function renderGlance(recs, active) {
+  // "At a glance": severity spine (0-10), category bars, issue layer and status, for this sea only.
+  function renderGlance(code, recs, active) {
     var el = $('#sm-glance'); if (!el) return;
     if (!recs.length) { el.innerHTML = ''; return; }
-    var LV = ['Critical', 'High', 'Moderate', 'Low'];
-    var lvCounts = LV.map(function (l) { return { l: l, n: active.filter(function (r) { return r._level === l; }).length }; });
-    var n = active.length || 1;
-    var bars = function (rows, colorFn, iconFn) {
+    var C = window.OECharts;
+    var bars = function (rows, colorFn) {
       var max = Math.max.apply(null, rows.map(function (x) { return x.n; }).concat([1]));
       return '<div class="smg-bars">' + rows.map(function (x) {
-        return '<div class="smg-row"><span class="smg-l" title="' + esc(x.label) + '">' + (iconFn ? iconFn(x) : '') + esc(x.label) + '</span><span class="smg-track"><span style="width:' + (x.n / max * 100).toFixed(1) + '%;background:' + colorFn(x) + '"></span></span><b>' + x.n + '</b></div>';
+        return '<div class="smg-row"><span class="smg-l" title="' + esc(x.label) + '">' + esc(x.label) + '</span><span class="smg-track"><span style="width:' + (x.n / max * 100).toFixed(1) + '%;background:' + colorFn(x) + '"></span></span><b>' + x.n + '</b></div>';
       }).join('') + '</div>';
     };
-    var cats = W.CATEGORIES.map(function (c) { return { slug: c.slug, label: c.name, n: active.filter(function (r) { return r.primary_category === c.slug; }).length }; }).filter(function (x) { return x.n; }).sort(function (a, b) { return b.n - a.n; });
     var layers = W.LAYERS.map(function (l, i) { return { label: l, slot: i + 1, n: active.filter(function (r) { return r.issue_layer === l; }).length }; }).filter(function (x) { return x.n; });
     var st = {}; recs.forEach(function (r) { st[r.status || 'Unknown'] = (st[r.status || 'Unknown'] || 0) + 1; });
     var status = Object.keys(st).map(function (k) { return { label: k, n: st[k] }; }).sort(function (a, b) { return b.n - a.n; });
     el.innerHTML =
-      '<div class="smg-card"><h3>Severity mix</h3><div class="smg-stack">' + lvCounts.filter(function (x) { return x.n; }).map(function (x) { return '<span style="flex:' + x.n + ';background:' + lv(x.l) + '" title="' + x.l + ': ' + x.n + '"></span>'; }).join('') + '</div>' +
-        '<div class="smg-legend">' + lvCounts.map(function (x) { return '<span><i style="background:' + lv(x.l) + '"></i>' + x.l + ' <b>' + x.n + '</b> <em>' + Math.round(x.n / n * 100) + '%</em></span>'; }).join('') + '</div></div>' +
-      '<div class="smg-card"><h3>By category</h3>' + bars(cats, function (x) { return 'var(--series-' + ((W.CAT_LAYER[x.slug] === undefined ? 3 : W.CAT_LAYER[x.slug]) + 1) + ')'; }, function (x) { return '<span class="smg-ic">' + W.catIcon(x.slug, 14) + '</span>'; }) + '</div>' +
+      '<div class="smg-card smg-wide"><h3>Severity spine</h3><p class="viz-sub">Active findings in this sea at each score from 0 to 10.</p><div id="smg-hist"></div></div>' +
+      '<div class="smg-card smg-wide"><h3>By category</h3><p class="viz-sub">Active findings per category, split by level.</p><div id="smg-cats"></div></div>' +
       '<div class="smg-card"><h3>Issue layer</h3>' + bars(layers, function (x) { return 'var(--series-' + x.slot + ')'; }) + '</div>' +
-      '<div class="smg-card"><h3>Where things stand</h3>' + bars(status, function () { return 'var(--accent-bright)'; }) + '</div>';
+      '<div class="smg-card"><h3>Where things stand</h3>' + bars(status, function () { return 'var(--accent)'; }) + '</div>';
+    if (C) {
+      C.renderHist($('#smg-hist'), active, { href: 'explorer.html?sea=' + code });
+      C.renderCatBars($('#smg-cats'), active, { hideEmpty: true, href: 'explorer.html?sea=' + code, caption: 'Findings by category in ' + W.seaName(code) });
+    }
   }
 
-  /* ---------- point plot ---------- */
+  /* ---------- the map ---------- */
+  function projectionFor(code, geom) {
+    var proj;
+    if (code === 'ARCTIC') proj = d3.geoAzimuthalEqualArea().rotate([0, -90]);
+    else if (code === 'SOUTHERN') proj = d3.geoAzimuthalEqualArea().rotate([0, 90]);
+    else proj = d3.geoEqualEarth().rotate([-G.centroid(code)[0], 0]);
+    return proj;
+  }
+  function niceStep(span) { return span > 150 ? 30 : span > 60 ? 10 : span > 25 ? 5 : span > 10 ? 2 : 1; }
+
   function renderMap(code, recs) {
-    var box = BBOX[code] || [-180, -90, 180, 90];
-    var west = box[0];
-    var unwrap = function (lon) { return lon < west ? lon + 360 : lon; };
+    var mount = $('#sm-map');
+    if (!G || !G.libsReady()) { mount.innerHTML = '<p class="error-box">The map library did not load; the lists below still work.</p>'; renderLists(code, recs, [], recs); return; }
+    var feat = G.feature(code, d3);
     // Collect the points of every finding; a point is placed wherever it is, and the frame grows to include it.
     var placed = [], unplaced = [];
-    recs.forEach(function (r) {
-      var l = r.location || {}, spots = [];
-      (Array.isArray(l.points) ? l.points : []).concat(l.coordinates ? [l.coordinates] : []).forEach(function (p) {
-        if (p && typeof p.lat === 'number' && typeof p.lon === 'number' && isFinite(p.lat) && isFinite(p.lon)) spots.push({ lat: p.lat, lon: unwrap(p.lon), prec: p.precision || 'exact', label: p.name || '' });
-      });
-      if (spots.length) placed.push({ r: r, spots: spots }); else unplaced.push(r);
-    });
-    var W0 = box[0], S0 = box[1], E0 = box[2], N0 = box[3];
-    placed.forEach(function (p) { p.spots.forEach(function (s) { W0 = Math.min(W0, s.lon); E0 = Math.max(E0, s.lon); S0 = Math.min(S0, s.lat); N0 = Math.max(N0, s.lat); }); });
-    var padX = Math.max(1, (E0 - W0) * 0.06), padY = Math.max(1, (N0 - S0) * 0.08);
-    W0 -= padX; E0 += padX; S0 = Math.max(-90, S0 - padY); N0 = Math.min(90, N0 + padY);
-    // Equirectangular with the x scale reduced by cos(mid-latitude) so a degree box keeps its true proportions.
-    var midLat = (S0 + N0) / 2, kx = Math.max(0.2, Math.cos(midLat * Math.PI / 180));
-    var Wd = 960, aspect = ((N0 - S0) / ((E0 - W0) * kx));
-    var Hd = Math.round(Math.max(220, Math.min(620, Wd * aspect)));
-    var x = function (lon) { return (lon - W0) / (E0 - W0) * Wd; }, y = function (lat) { return (N0 - lat) / (N0 - S0) * Hd; };
+    recs.forEach(function (r) { var spots = G.pointsOf(r); if (spots.length) placed.push({ r: r, spots: spots }); else unplaced.push(r); });
+    var allPts = []; placed.forEach(function (p) { p.spots.forEach(function (s) { allPts.push([s.lon, s.lat]); }); });
+    var fitGeom = { type: 'GeometryCollection', geometries: [feat.geometry].concat(allPts.length ? [{ type: 'MultiPoint', coordinates: allPts }] : []) };
 
-    // Fan out markers that share a point so each one is visible and clickable.
-    var stacks = {};
-    placed.forEach(function (p) { p.spots.forEach(function (s) { s.xy = [x(s.lon), y(s.lat)]; s.at = s.xy; var k = Math.round(s.xy[0] / 4) + ',' + Math.round(s.xy[1] / 4); (stacks[k] = stacks[k] || []).push(s); }); });
-    Object.keys(stacks).forEach(function (k) {
-      var g = stacks[k]; if (g.length < 2) return;
-      g.forEach(function (s, i) { var a = i * 2.399963, rr = 9 * Math.sqrt(i + 0.6); s.xy = [s.at[0] + rr * Math.cos(a), s.at[1] + rr * Math.sin(a)]; s.stacked = g.length; });
-    });
+    var VW = 960, VH = code === 'ARCTIC' || code === 'SOUTHERN' ? 620 : 520, PAD = 36;
+    var proj = projectionFor(code, feat.geometry);
+    proj.fitExtent([[PAD, PAD], [VW - PAD, VH - PAD]], fitGeom);
+    var path = d3.geoPath(proj);
+    var inv = function (xy) { var p = proj.invert(xy); return p && isFinite(p[0]) && isFinite(p[1]) ? p : null; };
+    var bl = inv([PAD, VH - PAD]), br = inv([VW - PAD, VH - PAD]), tl = inv([PAD, PAD]), bc = inv([VW / 2, VH - 6]), lc = inv([6, VH / 2]), rc = inv([VW - 6, VH / 2]);
+    var polar = code === 'ARCTIC' || code === 'SOUTHERN';
+    var lonSpan = (bl && br) ? (((br[0] - bl[0]) % 360) + 360) % 360 : 360, latSpan = (tl && bl) ? Math.abs(tl[1] - bl[1]) : 180;
+    var step = polar ? 30 : niceStep(Math.max(lonSpan, latSpan));
+    var latStep = polar ? 10 : step;
+    var grat = d3.geoGraticule().step([step, latStep]).precision(1);
 
-    var svg = '<svg viewBox="0 0 ' + Wd + ' ' + Hd + '" class="sm-svg" role="img" aria-label="Point plot of ' + esc(W.seaName(code)) + ' with ' + placed.length + ' placed findings">';
-    // Graticule every 10° (5° for small seas), labelled along the edges.
-    var step = (E0 - W0) < 25 || (N0 - S0) < 15 ? 5 : (E0 - W0) > 150 ? 30 : 10;
-    svg += '<g class="sm-grat">';
-    for (var lon = Math.ceil(W0 / step) * step; lon <= E0; lon += step) svg += '<line x1="' + x(lon).toFixed(1) + '" y1="0" x2="' + x(lon).toFixed(1) + '" y2="' + Hd + '"/>';
-    for (var lat = Math.ceil(S0 / step) * step; lat <= N0; lat += step) svg += '<line x1="0" y1="' + y(lat).toFixed(1) + '" x2="' + Wd + '" y2="' + y(lat).toFixed(1) + '"/>';
-    svg += '</g><g class="sm-grat-label" aria-hidden="true">';
-    for (lon = Math.ceil(W0 / step) * step; lon <= E0; lon += step) if (x(lon) > 24 && x(lon) < Wd - 24) svg += '<text x="' + (x(lon) + 3).toFixed(1) + '" y="' + (Hd - 5) + '">' + fmtDeg(lon > 180 ? lon - 360 : lon, 'E', 'W') + '</text>';
-    for (lat = Math.ceil(S0 / step) * step; lat <= N0; lat += step) if (y(lat) > 14 && y(lat) < Hd - 14) svg += '<text x="4" y="' + (y(lat) - 3).toFixed(1) + '">' + fmtDeg(lat, 'N', 'S') + '</text>';
-    svg += '</g>';
-    // The sea's own bounding box.
-    svg += '<rect class="sm-sea" x="' + x(box[0]).toFixed(1) + '" y="' + y(box[3]).toFixed(1) + '" width="' + (x(box[2]) - x(box[0])).toFixed(1) + '" height="' + (y(box[1]) - y(box[3])).toFixed(1) + '" rx="6"><title>' + esc(W.seaName(code)) + ' (approximate extent)</title></rect>';
-    svg += '<g class="sm-marks">' + placed.map(function (p, i) {
-      return p.spots.map(function (s, j) {
-        var approx = /coastline|sea|city/.test(s.prec);
-        return '<g class="sm-mark' + (approx ? ' approx' : '') + (W.isActive(p.r) ? '' : ' resolved') + '" transform="translate(' + s.xy[0].toFixed(1) + ',' + s.xy[1].toFixed(1) + ')" data-i="' + i + '" data-j="' + j + '" tabindex="0" role="link" aria-label="' + esc(p.r.location.name + ', ' + p.r._level + ' ' + p.r._score + ', ' + (W.PRECISIONS[s.prec] || s.prec)) + '" style="--c:' + lv(p.r._level) + '">' +
-          '<circle r="' + (6 + p.r._score * 1.2).toFixed(1) + '" class="halo"/><circle r="5" class="dot"/></g>';
+    mount.innerHTML = '<p class="muted small map-loading">Loading coastline…</p>';
+    Promise.all([G.loadTopo(G.LAND_50).catch(function () { return G.loadTopo(G.LAND_110); }), G.loadTopo(G.LAND_110).catch(function () { return null; })]).then(function (res) {
+      var land = res[0], land110 = res[1];
+      var landPath = path(topojson.feature(land, land.objects.land));
+      // Graticule labels: longitudes along the bottom edge, latitudes along the left edge (skipped for polar views).
+      var labels = '';
+      if (!polar && bc && lc) {
+        var lonA = Math.ceil(bl[0] / step) * step, lonB = br[0] < bl[0] ? br[0] + 360 : br[0];
+        for (var lon = lonA; lon <= lonB; lon += step) { var xy = proj([((lon + 180) % 360 + 360) % 360 - 180, bc[1]]); if (xy && xy[0] > 30 && xy[0] < VW - 30) labels += '<text x="' + xy[0].toFixed(1) + '" y="' + (VH - 6) + '" text-anchor="middle">' + fmtDeg(((lon + 180) % 360 + 360) % 360 - 180, 'E', 'W') + '</text>'; }
+        var latA = Math.ceil(bl[1] / latStep) * latStep, latB = tl[1];
+        for (var lat = latA; lat <= latB; lat += latStep) { var yx = proj([lc[0], lat]); if (yx && yx[1] > 16 && yx[1] < VH - 16) labels += '<text x="6" y="' + (yx[1] - 3).toFixed(1) + '">' + fmtDeg(lat, 'N', 'S') + '</text>'; }
+      } else if (polar) {
+        for (var la = code === 'ARCTIC' ? 60 : -60; code === 'ARCTIC' ? la < 90 : la > -90; la += code === 'ARCTIC' ? 10 : -10) { var pxy = proj([0, la]); if (pxy && pxy[1] > 16 && pxy[1] < VH - 16 && pxy[0] > 0 && pxy[0] < VW) labels += '<text x="' + (pxy[0] + 4).toFixed(1) + '" y="' + (pxy[1] - 3).toFixed(1) + '">' + fmtDeg(la, 'N', 'S') + '</text>'; }
+      }
+      // Neighbouring seas, faint, with their codes, for orientation.
+      var others = W.SEA_CODES.filter(function (c) { return c !== code; }).map(function (c) {
+        var f = G.feature(c, d3), d = f && path(f); if (!d) return '';
+        var lp = G.LABELS[c] ? proj(G.LABELS[c]) : null;
+        return '<a class="sm-other" href="sea.html?code=' + c + '" aria-label="' + esc(W.seaName(c)) + '"><path d="' + d + '"/>' + (lp && lp[0] > 20 && lp[0] < VW - 20 && lp[1] > 20 && lp[1] < VH - 20 ? '<text x="' + lp[0].toFixed(1) + '" y="' + lp[1].toFixed(1) + '" text-anchor="middle">' + c + '</text>' : '') + '</a>';
       }).join('');
-    }).join('') + '</g></svg>';
-    $('#sm-map').innerHTML = svg + '<div class="sm-legends">' +
-      '<div class="sm-key"><span><svg width="14" height="14"><circle cx="7" cy="7" r="4.5" class="k-exact"/></svg>exact or site location</span><span><svg width="14" height="14"><circle cx="7" cy="7" r="4.5" class="k-approx"/></svg>approximate (city, coastline or sea centre)</span>' +
-      '<span><i style="background:var(--sev-critical)"></i>Critical</span><span><i style="background:var(--sev-high)"></i>High</span><span><i style="background:var(--sev-moderate)"></i>Moderate</span><span><i style="background:var(--sev-low)"></i>Low</span></div>' +
-      '<p class="small muted">Plain latitude/longitude plot; the dashed box is the sea\'s approximate extent and the halo grows with the severity score. No coastline data is drawn in this version. ' +
-      (placed.length ? placed.length + ' finding' + (placed.length === 1 ? '' : 's') + ' carr' + (placed.length === 1 ? 'ies' : 'y') + ' coordinates; ' : 'No finding here carries coordinates yet; ') + unplaced.length + ' listed below without a point.</p></div>';
 
-    // interactions
-    var map = $('#sm-map');
-    var tipFor = function (i, j) {
-      var p = placed[+i], r = p.r, s = p.spots[+j || 0];
-      return '<div class="tt-title">' + esc(r.location.name) + '</div><div class="tt-sub">' + esc(r.title) + '</div><div class="tt-row">' + pill(r) + ' <span class="muted">' + esc(r.status) + '</span></div>' +
-        '<div class="tt-row">' + esc(W.catName(r.primary_category)) + ' · ' + esc(W.countriesOf(r).map(W.countryName).join(', ') || 'no country given') + '</div>' +
-        '<div class="tt-row muted">' + esc(fmtDeg(s.lat, 'N', 'S') + ', ' + fmtDeg(s.lon > 180 ? s.lon - 360 : s.lon, 'E', 'W') + ' · ' + (W.PRECISIONS[s.prec] || s.prec)) + (p.spots.length > 1 ? ' · ' + p.spots.length + ' points' : '') + (s.stacked ? ' · ' + s.stacked + ' findings share this point (spread out for visibility)' : '') + '</div><div class="tt-hint">Click to open the dossier</div>';
-    };
-    if (!map._bound) {
-      map._bound = true;
-      map.addEventListener('mousemove', function (e) { var el = e.target.closest('[data-i]'); if (el) tip(tipFor(el.getAttribute('data-i'), el.getAttribute('data-j')), e.clientX, e.clientY); else tip(null); });
-      map.addEventListener('mouseleave', function () { tip(null); });
-      map.addEventListener('focusin', function (e) { var el = e.target.closest('[data-i]'); if (el) { var b = el.getBoundingClientRect(); tip(tipFor(el.getAttribute('data-i'), el.getAttribute('data-j')), b.left + b.width / 2, b.top + b.height / 2); } });
-      map.addEventListener('focusout', function () { tip(null); });
-      var go = function (el) { if (el) location.href = 'dossier.html?id=' + encodeURIComponent(placed[+el.getAttribute('data-i')].r.id); };
-      map.addEventListener('click', function (e) { go(e.target.closest('[data-i]')); });
-      map.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(e.target.closest('[data-i]')); });
-    }
+      // Points: project, fan out stacks so each marker is visible and clickable.
+      var cells = {};
+      placed.forEach(function (p) { p.spots.forEach(function (s) { var xy = proj([s.lon, s.lat]); s.xy = xy && isFinite(xy[0]) ? xy : null; s.at = s.xy; if (s.xy) { var k = Math.round(s.xy[0] / 6) + ',' + Math.round(s.xy[1] / 6); (cells[k] = cells[k] || []).push(s); } }); });
+      Object.keys(cells).forEach(function (k) { var g = cells[k]; if (g.length < 2) return; g.forEach(function (s, i) { var a = i * 2.399963, rr = 9 * Math.sqrt(i + 0.6); s.xy = [s.at[0] + rr * Math.cos(a), s.at[1] + rr * Math.sin(a)]; s.stacked = g.length; }); });
+      var marks = placed.map(function (p, i) {
+        return p.spots.map(function (s, j) {
+          if (!s.xy) return '';
+          var approx = /coastline|sea|city/.test(s.precision), hr = 6 + p.r._score * 1.3;
+          return '<a class="sm-mark' + (approx ? ' approx' : '') + (W.isActive(p.r) ? '' : ' resolved') + ' lvl-' + lvlKey(p.r._level) + '" href="dossier.html?id=' + encodeURIComponent(p.r.id) + '" transform="translate(' + s.xy[0].toFixed(1) + ',' + s.xy[1].toFixed(1) + ')" data-i="' + i + '" data-j="' + j + '" data-tip="1" tabindex="0" role="link" aria-label="' + esc(p.r.location.name + ', ' + p.r._level + ' ' + p.r._score + ', ' + (W.PRECISIONS[s.precision] || s.precision)) + '">' +
+            '<circle class="sm-hit" r="' + Math.max(hr, 12) + '"/><circle class="halo" r="' + hr.toFixed(1) + '" fill="url(#sm-halo-' + lvlKey(p.r._level) + ')"/><circle class="dot" r="5.5"/></a>';
+        }).join('');
+      }).join('');
 
-    // lists (the text twin of the plot): big score, 10-step meter, the five components as a mini heat strip.
+      var defs = '<defs><linearGradient id="sm-ocean" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--map-ocean-1)"/><stop offset="1" stop-color="var(--map-ocean-2)"/></linearGradient>' +
+        '<filter id="sm-feather" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="5"/></filter>' +
+        ['Critical', 'High', 'Moderate', 'Low'].map(function (l) { return '<radialGradient id="sm-halo-' + lvlKey(l) + '"><stop offset="0" stop-color="' + lv(l) + '" stop-opacity=".5"/><stop offset=".65" stop-color="' + lv(l) + '" stop-opacity=".16"/><stop offset="1" stop-color="' + lv(l) + '" stop-opacity="0"/></radialGradient>'; }).join('') + '</defs>';
+      var svg = '<svg viewBox="0 0 ' + VW + ' ' + VH + '" class="sm-svg" role="group" aria-label="Map of ' + esc(W.seaName(code)) + ' with ' + placed.length + ' placed findings">' + defs +
+        '<rect class="sm-ocean" width="' + VW + '" height="' + VH + '" fill="url(#sm-ocean)"/>' +
+        '<path class="sm-grat" d="' + path(grat()) + '"/>' +
+        '<g class="sm-others">' + others + '</g>' +
+        '<path class="sm-sea-fill" d="' + path(feat) + '" filter="url(#sm-feather)"/>' +
+        '<path class="sm-land" d="' + landPath + '"/>' +
+        '<path class="sm-sea" d="' + path(feat) + '"><title>' + esc(W.seaName(code)) + ' (approximate extent)</title></path>' +
+        '<g class="sm-grat-label" aria-hidden="true">' + labels + '</g>' +
+        '<g class="sm-marks">' + marks + '</g></svg>';
+
+      // Inset: where this sea is on the globe.
+      var inset = '';
+      if (land110) {
+        var IW = 200, ip = d3.geoEqualEarth().rotate([-G.centroid(code)[0], 0]).fitWidth(IW, { type: 'Sphere' }), ipath = d3.geoPath(ip);
+        var ib = ipath.bounds({ type: 'Sphere' }), IH = Math.ceil(ib[1][1] - ib[0][1]) + 2;
+        ip.fitExtent([[1, 1], [IW - 1, IH - 1]], { type: 'Sphere' });
+        inset = '<svg class="sm-inset" viewBox="0 0 ' + IW + ' ' + IH + '" aria-label="Inset: where ' + esc(W.seaName(code)) + ' is on the globe" role="img"><path class="in-sphere" d="' + ipath({ type: 'Sphere' }) + '"/><path class="in-land" d="' + ipath(topojson.feature(land110, land110.objects.land)) + '"/><path class="in-sea" d="' + ipath(feat) + '"/></svg>';
+      }
+
+      mount.innerHTML = '<div class="sm-map-stage">' + svg + inset + '</div><div class="sm-legends">' +
+        '<div class="sm-key"><span><svg width="14" height="14"><circle cx="7" cy="7" r="4.5" class="k-exact"/></svg>exact or site location</span><span><svg width="14" height="14"><circle cx="7" cy="7" r="4.5" class="k-approx"/></svg>approximate (city, coastline or sea centre)</span>' +
+        '<span><i style="background:var(--sev-critical)"></i>Critical</span><span><i style="background:var(--sev-high)"></i>High</span><span><i style="background:var(--sev-moderate)"></i>Moderate</span><span><i style="background:var(--sev-low)"></i>Low</span><span><i class="k-sea"></i>Approximate extent of the sea</span></div>' +
+        '<p class="small muted">Equal Earth projection fitted to the sea; coastline from Natural Earth. The halo grows with the severity score. ' +
+        (placed.length ? placed.length + ' finding' + (placed.length === 1 ? '' : 's') + ' carr' + (placed.length === 1 ? 'ies' : 'y') + ' coordinates; ' : 'No finding here carries coordinates yet; ') + unplaced.length + ' listed below without a point.</p></div>';
+
+      if (!mount._bound) {
+        mount._bound = true;
+        G.bindTips(mount, function (el) {
+          var p = placed[+el.getAttribute('data-i')], r = p.r, s = p.spots[+el.getAttribute('data-j') || 0];
+          return '<div class="tt-title">' + esc(r.location.name) + '</div><div class="tt-sub">' + esc(r.title) + '</div><div class="tt-row">' + pill(r) + ' <span class="muted">' + esc(r.status) + '</span></div>' +
+            '<div class="tt-row">' + esc(W.catName(r.primary_category)) + ' · ' + esc(W.countriesOf(r).map(W.countryName).join(', ') || 'no country given') + '</div>' +
+            '<div class="tt-row muted">' + esc(fmtDeg(s.lat, 'N', 'S') + ', ' + fmtDeg(s.lon, 'E', 'W') + ' · ' + (W.PRECISIONS[s.precision] || s.precision)) + (p.spots.length > 1 ? ' · ' + p.spots.length + ' points' : '') + (s.stacked ? ' · ' + s.stacked + ' findings share this point (spread out for visibility)' : '') + '</div><div class="tt-hint">Open the dossier</div>';
+        });
+        mount.addEventListener('keydown', function (e) { if (e.key === 'Enter') { var a = e.target.closest('a[href]'); if (a) location.href = a.getAttribute('href'); } });
+      }
+      renderLists(code, recs, placed, unplaced);
+    }).catch(function (err) {
+      console.error(err);
+      mount.innerHTML = '<p class="error-box">Could not draw the sea map (' + esc(err.message) + '). The list below still works.</p>';
+      renderLists(code, recs, [], recs);
+    });
+  }
+
+  // Lists (the text twin of the map): big score, 10-step meter, the five components as a mini heat strip.
+  function renderLists(code, recs, placed, unplaced) {
     var COMP = W.COMPONENTS.map(function (c) { return [c.key, c.name.split(' ')[0].replace(/&/, '')]; });
     var item = function (r, where) {
       var c = (r.severity || {}).components || {};
@@ -197,7 +213,7 @@
         (km ? '<span class="smc-km">' + esc(km) + '</span>' : '') + comps +
         '<span class="sm-item-meta">' + esc(W.catName(r.primary_category)) + ' · ' + esc(where) + ' · ' + esc(W.countriesOf(r).map(W.countryName).join(', ') || 'no country given') + ' · ' + esc(r.status || '') + (W.isActive(r) ? '' : ' (resolved)') + '</span></a></li>';
     };
-    $('#sm-placed').innerHTML = placed.length ? placed.map(function (p) { return item(p.r, p.spots.map(function (s) { return s.label || (W.PRECISIONS[s.prec] || s.prec); }).slice(0, 3).join('; ')); }).join('') : '<li class="muted">None placed on the plot.</li>';
+    $('#sm-placed').innerHTML = placed.length ? placed.map(function (p) { return item(p.r, p.spots.map(function (s) { return s.name || (W.PRECISIONS[s.precision] || s.precision); }).slice(0, 3).join('; ')); }).join('') : '<li class="muted">None placed on the map.</li>';
     $('#sm-unplaced').innerHTML = unplaced.length ? unplaced.map(function (r) {
       var l = r.location || {}, seas = W.seasOf(r);
       return item(r, l.extent ? (W.EXTENTS[l.extent] || l.extent) : (seas.length > 1 ? 'multi-sea: ' + seas.join(', ') : 'no coordinates given'));
@@ -221,6 +237,6 @@
     W = e.detail; if (W.page !== 'sea') return;
     var code = String(new URLSearchParams(location.search).get('code') || '').toUpperCase();
     initPicker(code);
-    try { render(code); } catch (err) { console.error(err); $('#sm-map').innerHTML = '<p class="error-box">Could not draw the sea plot (' + esc(err.message) + '). The list below still works.</p>'; }
+    try { render(code); } catch (err) { console.error(err); $('#sm-map').innerHTML = '<p class="error-box">Could not draw the sea map (' + esc(err.message) + '). The list below still works.</p>'; }
   });
 })();

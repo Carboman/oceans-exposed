@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="assets/styles.css">
 <script>try{var t=localStorage.getItem('oe-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 </head>
-<body data-page="overview">
+<body data-page="overview" class="has-hero">
 <header class="topbar">
   <a href="/" class="topbar-wordmark" aria-label="oceans.exposed home">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" style="flex-shrink:0;display:block"><circle cx="12" cy="12" r="10" fill="var(--accent-bright)"/><path d="M3.6 10.4c1.7-1.6 3.4-1.6 5.1 0s3.4 1.6 5.1 0 3.4-1.6 5.1 0" fill="none" stroke="#06202e" stroke-width="1.8" stroke-linecap="round"/><path d="M4.2 14.8c1.7-1.6 3.4-1.6 5.1 0s3.4 1.6 5.1 0 3.4-1.6 5.1 0" fill="none" stroke="#06202e" stroke-width="1.8" stroke-linecap="round" opacity=".55"/></svg>
@@ -32,6 +32,25 @@
 </header>
 <div id="sample-banner" class="sample-banner" hidden><b>Sample data.</b> All locations and figures on this site are fictional placeholders that show the format. </div>
 
+<section class="hero-bleed" id="hero">
+  <img class="hero-img" src="assets/img/hero-ocean-960.jpg" srcset="assets/img/hero-ocean-960.jpg 960w, assets/img/hero-ocean.jpg 1920w" sizes="100vw" alt="" fetchpriority="high" decoding="async" onerror="this.remove()">
+  <div class="hero-shade" aria-hidden="true"></div>
+  <div class="hero-inner">
+    <div class="eyebrow">Global baseline · daily update</div>
+    <h1>Global Ocean Issues Tracker</h1>
+    <p class="lede">Ranked, sourced findings on ocean warming, sea level, acidification, coral reefs, fisheries, plastics, pollution, shipping, offshore energy, deep-sea mining, coastal habitats, wildlife, polar seas, governance and aquaculture, across 32 regional seas and the high seas. Each finding is scored from 0 to 10 on documented evidence only.</p>
+    <div class="run-meta" data-run-meta></div>
+  </div>
+  <div class="hero-waves" aria-hidden="true">
+    <svg viewBox="0 0 1200 90" preserveAspectRatio="none">
+      <path class="wave wave-1" d="M0 46q75-26 150 0t150 0t150 0t150 0t150 0t150 0t150 0t150 0t150 0t150 0t150 0t150 0t150 0t150 0t150 0t150 0V90H0z"/>
+      <path class="wave wave-2" d="M0 58q90-22 180 0t180 0t180 0t180 0t180 0t180 0t180 0t180 0t180 0t180 0t180 0t180 0t180 0t180 0V90H0z"/>
+      <path class="wave wave-3" d="M0 72q60-16 120 0t120 0t120 0t120 0t120 0t120 0t120 0t120 0t120 0t120 0t120 0t120 0t120 0t120 0t120 0t120 0t120 0t120 0t120 0t120 0V90H0z"/>
+    </svg>
+  </div>
+</section>
+<div class="kpi-band"><div class="kpis glass" id="kpis" aria-label="Key figures for this run"></div></div>
+
 <main class="page-body with-panel with-left">
   <aside class="issue-panel sea-left" id="sea-panel" aria-label="All regional seas with issue mini graphs">
     <details class="ip-details" open>
@@ -46,105 +65,119 @@
         <div class="sp-legend" id="sp-legend"></div>
       </div>
       <ol class="ip-list sp-list" id="sp-list"></ol>
-      <p class="ip-foot small muted">Bars: active issues by severity, scaled to the sea with the most. Strip: issues per category, coloured by issue layer. The 32 regional seas are listed in <a href="methodology.html#geography">Methodology</a>.</p>
+      <p class="ip-foot small muted">Bar: active issues by severity, scaled to the sea with the most. Sparkline: dated history events in the last 12 months. Chip: ocean basin. The 32 regional seas are listed in <a href="methodology.html#geography">Methodology</a>.</p>
     </details>
   </aside>
 <div class="main-col">
-  <section class="hero hero-grid">
-    <div>
-      <div class="eyebrow">Global baseline · daily update</div>
-      <h1>Global Ocean Issues Tracker</h1>
-      <p class="lede">Ranked, sourced findings on ocean warming, sea level, acidification, coral reefs, fisheries, plastics, pollution, shipping, offshore energy, deep-sea mining, coastal habitats, wildlife, polar seas, governance and aquaculture, across 32 regional seas and the high seas. Each finding is scored from 0 to 10 on documented evidence only.</p>
-      <div class="run-meta" data-run-meta></div>
-    </div>
-    <svg class="hero-art" viewBox="0 0 480 300" role="img" aria-label="Illustration: ocean swells over a latitude and longitude grid, with findings marked along a coastline">
-      <g class="grid">
-        <path d="M0 60H480M0 120H480M0 180H480M0 240H480M80 0V300M160 0V300M240 0V300M320 0V300M400 0V300"/>
-      </g>
-      <path class="w1" d="M0 205c60-26 120-26 180 0s120 26 180 0 90-20 120-8V300H0z"/>
-      <path class="w2" d="M0 232c70-22 140-22 210 0s140 22 210 0c25-8 45-10 60-6V300H0z"/>
-      <path class="w3" d="M0 262c80-16 160-16 240 0s160 16 240 0V300H0z"/>
-      <path class="ln" d="M40 170C90 120 130 150 170 110S260 60 300 96 380 150 440 92"/>
-      <path class="ln" d="M60 80c40 12 70 40 110 30" opacity=".35"/>
-      <circle class="dot" cx="170" cy="110" r="9"/><circle cx="170" cy="110" r="16" fill="none" stroke="var(--sev-critical)" stroke-width="2" opacity=".35"/>
-      <circle class="dot2" cx="300" cy="96" r="7.5"/>
-      <circle class="dot3" cx="98" cy="137" r="6.5"/>
-      <circle class="dot" cx="440" cy="92" r="7"/>
-      <circle class="drop" cx="372" cy="46" r="24"/>
-      <path d="M352 42c4-4 8-4 12 0s8 4 12 0 8-4 12 0" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity=".75"/>
-      <path d="M354 54c4-4 8-4 12 0s8 4 12 0 8-4 12 0" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity=".45"/>
-    </svg>
-  </section>
-
-  <div class="kpis" id="kpis"></div>
-
-  <section class="card" id="exec" hidden style="margin-bottom:20px">
-    <h2 style="margin-top:0">Executive summary</h2>
-    <h3 style="margin-top:.4em">Highest-risk findings</h3>
-    <p id="exec-risk" style="margin-top:0"></p>
+  <section class="card exec-card" id="exec" hidden>
+    <div class="eyebrow">Executive summary</div>
+    <h3>Highest-risk findings</h3>
+    <p id="exec-risk"></p>
     <h3>Directional picture</h3>
-    <p id="exec-direction" style="margin:0"></p>
+    <p id="exec-direction"></p>
   </section>
 
-  <section class="card viz-card">
+  <header class="section-head">
+    <div class="eyebrow">Geography</div>
     <h2>Where the findings are</h2>
-    <p class="viz-sub">Each regional sea is shaded by its most severe active finding; the small number counts findings touching the sea. Tiles sit on a fixed grid, grouped by ocean basin: Arctic at the top, Southern Ocean at the bottom, Pacific on the left, Atlantic in the centre, Indian on the right. Hover for details; click a sea for its page.</p>
-    <div id="tilemap-wrap">
+    <p class="standfirst">Each regional sea is shaded by its most severe active finding; glowing points are findings with coordinates. Hover for details, click a sea for its page.</p>
+  </header>
+  <section class="card viz-card map-card">
+    <div class="viz-toolbar">
+      <div class="viz-toggle" id="map-toggle" role="group" aria-label="Map style">
+        <button type="button" data-view="map" aria-pressed="true">Map</button>
+        <button type="button" data-view="grid" aria-pressed="false">Grid</button>
+      </div>
+      <p class="small muted viz-toolbar-note" id="map-note" hidden></p>
+    </div>
+    <div id="worldmap-wrap">
+      <div class="worldmap" id="worldmap"><p class="muted small map-loading">Drawing the map…</p></div>
+      <div id="worldmap-legend"></div>
+    </div>
+    <div id="tilemap-wrap" hidden>
+      <p class="viz-sub">Tiles sit on a fixed grid, grouped by ocean basin: Arctic at the top, Southern Ocean at the bottom, Pacific on the left, Atlantic in the centre, Indian on the right.</p>
       <div class="tilemap" id="tilemap" role="img" aria-label="Tile map of the 32 regional seas shaded by the highest active finding severity"></div>
+      <div class="legend">
+        <span><i style="background:var(--sev-critical)"></i>Critical 9–10</span>
+        <span><i style="background:var(--sev-high)"></i>High 7–8</span>
+        <span><i style="background:var(--sev-moderate)"></i>Moderate 4–6</span>
+        <span><i style="background:var(--sev-low)"></i>Low 0–3</span>
+        <span><i style="background:var(--map-empty)"></i>No active finding in feed</span>
+      </div>
+      <div class="legend basin-key">
+        <span>Basin (bottom edge):</span>
+        <span><i style="background:var(--basin-pac)"></i>Pacific</span>
+        <span><i style="background:var(--basin-atl)"></i>Atlantic</span>
+        <span><i style="background:var(--basin-ind)"></i>Indian</span>
+        <span><i style="background:var(--basin-sou)"></i>Southern</span>
+        <span><i style="background:var(--basin-arc)"></i>Arctic</span>
+      </div>
     </div>
-    <div class="legend">
-      <span><i style="background:var(--sev-critical)"></i>Critical 9–10</span>
-      <span><i style="background:var(--sev-high)"></i>High 7–8</span>
-      <span><i style="background:var(--sev-moderate)"></i>Moderate 4–6</span>
-      <span><i style="background:var(--sev-low)"></i>Low 0–3</span>
-      <span><i style="background:var(--map-empty)"></i>No active finding in feed</span>
-    </div>
-    <div class="legend basin-key">
-      <span>Basin (bottom edge):</span>
-      <span><i style="background:var(--series-1)"></i>Pacific</span>
-      <span><i style="background:var(--series-3)"></i>Atlantic</span>
-      <span><i style="background:var(--series-4)"></i>Indian</span>
-      <span><i style="background:var(--hm-2)"></i>Southern</span>
-      <span><i style="background:var(--hm-1)"></i>Arctic</span>
-    </div>
-    <p class="small muted" style="margin-bottom:0">Grey means no finding in this feed. It does not mean the sea has no problems. Findings spanning several seas shade every sea they touch; open-ocean and global findings with no regional sea appear only in the lists and the <a href="explorer.html">Explorer</a>.</p>
+    <p class="small muted map-foot">Grey or untinted means no finding in this feed. It does not mean the sea has no problems. Sea outlines are approximate; findings spanning several seas shade every sea they touch. Open-ocean and global findings with no regional sea appear only in the lists and the <a href="explorer.html">Explorer</a>.</p>
   </section>
 
-  <div class="grid-2" style="margin-top:20px">
+  <header class="section-head">
+    <div class="eyebrow">Severity</div>
+    <h2>Severity by category</h2>
+    <p class="standfirst">How the active findings split by category, score, basin and month. Categories are ranked separately, never against each other.</p>
+  </header>
+  <div class="grid-2 viz-grid">
     <section class="card viz-card">
-      <h2>Severity by category</h2>
-      <p class="viz-sub">Every active finding, grouped by category and scored 0–10. Categories are ranked separately, never against each other.</p>
-      <div id="viz-ranked"></div>
+      <h3 class="viz-title">Findings by category</h3>
+      <p class="viz-sub">Active findings per category, split by severity level. Longest bar first.</p>
+      <div id="viz-cats"></div>
     </section>
+    <div class="viz-stack">
+      <section class="card viz-card">
+        <h3 class="viz-title">Severity distribution</h3>
+        <p class="viz-sub">Active findings at each score from 0 to 10.</p>
+        <div id="viz-hist"></div>
+      </section>
+      <section class="card viz-card">
+        <h3 class="viz-title">Findings by ocean basin</h3>
+        <p class="viz-sub">Active findings per basin; a finding counts once, under its own basin.</p>
+        <div id="viz-basins"></div>
+      </section>
+    </div>
+  </div>
+  <div class="grid-2 viz-grid">
     <section class="card viz-card">
-      <h2>What drives each score</h2>
-      <p class="viz-sub">The five scoring components, 0–2 each. The more strongly shaded the cell, the more severe the documented evidence.</p>
+      <h3 class="viz-title">What drives each score</h3>
+      <p class="viz-sub">Average of each 0–2 scoring component across a category's active findings. Darker means more severe evidence.</p>
       <div id="viz-heatmap"></div>
     </section>
+    <div class="viz-stack">
+      <section class="card viz-card">
+        <h3 class="viz-title">New findings per month</h3>
+        <p class="viz-sub">Findings by the month they were first seen, over the last 24 months.</p>
+        <div id="viz-months"></div>
+      </section>
+      <section class="card viz-card">
+        <h3 class="viz-title">Primary issue layer</h3>
+        <p class="viz-sub">What kind of problem each active finding mainly is.</p>
+        <div id="viz-layers"></div>
+        <p class="small muted" style="margin:12px 0 0"><b>Climate &amp; Physical</b>: warming, sea level, acidification, ice. <b>Pollution</b>: plastics, nutrients, chemicals and oil. <b>Living Resources &amp; Habitats</b>: reefs, fisheries, habitats, wildlife, aquaculture. <b>Governance &amp; Economy</b>: shipping, energy, mining, treaties, disputes. <a href="methodology.html#layers">More</a></p>
+      </section>
+    </div>
   </div>
-
-  <div class="grid-2" style="margin-top:20px">
+  <div class="grid-2 viz-grid">
     <section class="card viz-card">
-      <h2>Primary issue layer</h2>
-      <p class="viz-sub">What kind of problem each finding mainly is.</p>
-      <div id="viz-layers"></div>
-      <p class="small muted" style="margin:12px 0 0"><b>Climate &amp; Physical</b>: warming, sea level, acidification, ice. <b>Pollution</b>: plastics, nutrients, chemicals and oil. <b>Living Resources &amp; Habitats</b>: reefs, fisheries, habitats, wildlife, aquaculture. <b>Governance &amp; Economy</b>: shipping, energy, mining, treaties, disputes. <a href="methodology.html#layers">More</a></p>
-    </section>
-    <section class="card viz-card">
-      <h2>Economic risk</h2>
+      <h3 class="viz-title">Economic risk</h3>
       <p class="viz-sub">Risk to a fishery, a port, a coastal economy or an operator, from the cited evidence.</p>
       <div id="viz-risk"></div>
     </section>
+    <section class="card viz-card">
+      <h3 class="viz-title">Trend direction</h3>
+      <p class="viz-sub">Observed direction for each active finding. Early runs have little comparable history, so many findings read as insufficient history.</p>
+      <div class="trend-tiles" id="viz-trends"></div>
+    </section>
   </div>
 
-  <section class="card viz-card" style="margin-top:20px">
-    <h2>Trend direction</h2>
-    <p class="viz-sub">Observed direction for each active finding. Early runs have little comparable history, so many findings read as insufficient history.</p>
-    <div class="trend-tiles" id="viz-trends"></div>
-  </section>
-
-  <h2>Ranked findings by category</h2>
-  <p class="muted small">Ranked within each category by severity score, with the newer source date breaking ties. Categories are not combined into a global rank.</p>
+  <header class="section-head">
+    <div class="eyebrow">Findings</div>
+    <h2>Ranked findings by category</h2>
+    <p class="standfirst">Ranked within each category by severity score, with the newer source date breaking ties. Categories are not combined into a global rank.</p>
+  </header>
   <div id="categories"></div>
 
   <section id="milestones-wrap" hidden>
@@ -153,7 +186,10 @@
     <div id="milestones"></div>
   </section>
 
-  <h2>Coverage</h2>
+  <header class="section-head">
+    <div class="eyebrow">Scope</div>
+    <h2>Coverage</h2>
+  </header>
   <p class="callout" id="coverage-statement"></p>
   <p class="small muted" id="coverage-seas" hidden></p>
   <p><a href="updates.html#coverage">Full coverage limitations</a> · <a href="methodology.html">How findings are scored</a></p>
@@ -186,7 +222,11 @@
     <span>Informational only. Not a census of every ocean issue.</span>
   </div>
 </footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
 <script src="assets/app.js"></script>
 <script src="assets/charts.js"></script>
+<script src="assets/geo.js"></script>
+<script src="assets/worldmap.js"></script>
 </body>
 </html>

@@ -552,7 +552,7 @@
       '<div>Secondary categories</div><div>' + ((r.secondary_categories || []).length ? r.secondary_categories.map(catName).map(esc).join('; ') : '<span class="muted">None</span>') + '</div></div>';
 
     var seas = seasOf(r), countries = countriesOf(r), points = Array.isArray(l.points) ? l.points.filter(function (p) { return p && typeof p.lat === 'number'; }) : [];
-    html += '<h2>Location &amp; scale</h2><div class="kv">' +
+    html += '<h2>Location &amp; scale</h2><div class="loc-grid"><div class="kv">' +
       '<div>Location type</div><div>' + esc(l.type) + '</div>' +
       '<div>Regional sea' + (seas.length > 1 ? 's' : '') + '</div><div>' + (seas.length ? seas.map(function (s) { return '<a href="sea.html?code=' + s + '">' + esc(seaName(s)) + '</a> <span class="mono muted small">' + s + '</span>'; }).join('; ') : '<span class="muted">None (open-ocean or global finding)</span>') + '</div>' +
       '<div>Ocean basin</div><div>' + (basinOf(r) ? esc(basinName(basinOf(r))) + ' <span class="mono muted small">' + esc(basinOf(r)) + '</span>' : '<span class="muted">Not given</span>') + '</div>' +
@@ -560,7 +560,8 @@
       '<div>Extent</div><div>' + (l.extent ? esc(EXTENTS[l.extent] || l.extent) : '<span class="muted">Not given</span>') + '</div>' +
       (l.detail ? '<div>Location detail</div><div>' + esc(l.detail) + '</div>' : '') +
       '<div>Coordinates</div><div>' + (fmtCoord(l.coordinates) || '<span class="muted">None given</span>') + (points.length ? '<div class="small muted">' + points.length + ' further point' + (points.length === 1 ? '' : 's') + ' recorded' + (seas[0] ? '; see the <a href="sea.html?code=' + seas[0] + '">sea map</a>' : '') + '</div>' : '') + '</div>' +
-      '<div>Population affected</div><div>' + fmtPopLong(r.population_affected) + '</div></div>';
+      '<div>Population affected</div><div>' + fmtPopLong(r.population_affected) + '</div></div>' +
+      '<div class="locator-card" id="viz-locator" aria-label="Locator map"><p class="small muted">Locator map loads with the map library.</p></div></div>';
 
     if (r.key_measure && r.key_measure.text) html += '<h2>Key quantitative measure</h2><p class="callout"><span class="tag">' + esc(r.key_measure.status) + '</span> ' + esc(r.key_measure.text) + '</p>';
     if ((r.measures || []).length) html += '<h2>Quantitative evidence</h2><div class="table-wrap"><table class="data-table"><thead><tr><th>Measure</th><th>Value</th><th>Status</th><th>Note / conversion</th></tr></thead><tbody>' +
@@ -595,7 +596,7 @@
 
     html += '<h2>Corrective actions</h2>' + ((r.corrective_actions || []).length ? '<ul class="clean">' + r.corrective_actions.map(function (a) { return '<li>' + esc(a) + '</li>'; }).join('') + '</ul>' : '<p class="muted">None documented.</p>');
 
-    html += '<h2>Evidence timeline</h2><div class="card" id="viz-timeline"></div>';
+    html += '<h2>Source timeline</h2><p class="small muted" style="margin-top:-8px">Dated sources across the research window, with the day the tracker first saw this finding.</p><div class="card" id="viz-timeline"></div>';
     html += '<h2>Sources</h2><div class="table-wrap"><table class="data-table"><thead><tr><th>Date</th><th>Source</th><th>Publisher</th><th>Basis</th></tr></thead><tbody>' +
       (r.sources || []).map(function (s) { return '<tr><td class="num">' + (s.date ? esc(s.date) : '<span class="muted">Undated</span>') + (s.accessed ? '<div class="small muted">accessed ' + esc(s.accessed) + '</div>' : '') + '</td><td>' + (s.ref ? '<span class="mono muted">[' + esc(s.ref) + ']</span> ' : '') + link(s.url, s.title) + '</td><td>' + esc(s.publisher) + '</td><td>' + esc(s.basis) + '</td></tr>'; }).join('') + '</tbody></table></div>';
     html += '<p class="small muted">Date is the source\'s own publication date; "accessed" is the day it was opened for this tracker. Database and dashboard lookups carry an accessed date only.</p>';
@@ -630,7 +631,7 @@
     $('#changes').innerHTML = groups.map(function (g) {
       return '<h3 style="text-transform:capitalize">' + esc(g[0]) + ' (' + g[1].length + ')</h3>' + g[1].sort(cmpRank).map(function (r) {
         var h = r.history || [], last = h[h.length - 1] || {};
-        return '<a class="finding-line" href="dossier.html?id=' + encodeURIComponent(r.id) + '"><span class="rk mono small">' + esc(r.id.replace(/^OC-/, '')) + '</span><span><span class="t">' + esc(r.location.name) + '</span> — ' + esc(r.title) + '<br><span class="sub">' + esc(last.note || '') + '</span></span>' + lvlPill(r._score) + '</a>';
+        return '<a class="finding-line finding-line-id" href="dossier.html?id=' + encodeURIComponent(r.id) + '"><span class="rk mono small">' + esc(r.id.replace(/^OC-/, '')) + '</span><span><span class="t">' + esc(r.location.name) + '</span> — ' + esc(r.title) + '<br><span class="sub">' + esc(last.note || '') + '</span></span>' + lvlPill(r._score) + '</a>';
       }).join('');
     }).join('') || '<p class="muted">No changes recorded.</p>';
 
