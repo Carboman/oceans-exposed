@@ -1,5 +1,9 @@
 # exposed-core changelog
 
+## 1.1.5 (2026-10-12)
+
+README: how a release reaches a site. No tool or template change.
+
 ## 1.1.4 (2026-10-12)
 
 Core sync checks out with `CORE_SYNC_TOKEN`, so its push carries that token (checkout's stored credential had been

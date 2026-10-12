@@ -41,6 +41,9 @@ workflows/*.yml.tpl          Daily research, Stage runs, Publish runs, Research 
 
 ## Releasing a change
 
+A site picks up a release through the Core sync pull request (weekly, or Actions → Core sync → Run workflow). Merging
+that pull request is the whole update; the next Deploy site run verifies the rendered workflows.
+
 Edit here, bump `VERSION` (semver: patch for a fix, minor for a new template or config key, major when a site must
 change its config), describe it in `CHANGELOG.md`, push to `main`. Sites pick it up through Core sync, or by hand with
 step 2 and 3 above. Never change a template in a way that alters a site's behaviour without saying so in the changelog.
