@@ -48,3 +48,19 @@ test('routes answer with CORS and 404 before any publish', async () => {
   const empty = await worker.fetch(new Request('https://oceans.test/network/stats.json'), { ...env, OCEAN_REPORTS: { get: async () => null } });
   assert.equal(empty.status, 404);
 });
+
+test('discoveries: 30 days ending on the run date, totals equal the daily sums, latest newest first', async () => {
+  const { networkStats: ns } = await import('../src/network.js');
+  const day = (k) => new Date(Date.parse('2026-10-13') - k * 86400000).toISOString().slice(0, 10);
+  const rec = (id, d) => ({ id, title: `Finding ${id}`, history: [{ date: d }], sources: [] });
+  const records = [rec('A', day(0)), rec('B', day(0)), rec('C', day(3)), rec('D', day(10)), rec('E', day(40)), { id: 'F', title: 'F', history: [] }];
+  const d = ns({ run: { run_date: '2026-10-13' }, run_id: '2026-10-13', records }, 'https://site.test').discoveries;
+  assert.equal(d.as_of, '2026-10-13');
+  assert.equal(d.by_day.length, 30);
+  assert.equal(d.by_day[29].date, '2026-10-13');
+  assert.equal(d.added_7d, 3);
+  assert.equal(d.added_30d, 4);
+  assert.equal(d.added_30d, d.by_day.reduce((t, b) => t + b.added, 0));
+  assert.deepEqual(d.latest.map((x) => x.title), ['Finding A', 'Finding B', 'Finding C', 'Finding D']);
+  assert.match(d.latest[0].url, /^https:\/\/site\.test\//);
+});
