@@ -20,6 +20,11 @@ publishes it and mirrors `live`. Nothing in this path depends on claude.ai sessi
   published, trigger and the Actions run URL. `node core/tools/cost-report.mjs` totals them by month; the job summary
   (Actions → Daily research → the run) shows the same figures plus Claude's report.
 - The model is Sonnet (`claude-sonnet-5-5`); the repository variable `RESEARCH_MODEL` overrides it.
+- Web searches: Claude Code caps WebSearch at 200 calls per session by default, shared by every subagent, with no
+  refill in a headless run. The daily Action sets `CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION` to 1,000 (the repository
+  variable `RESEARCH_MAX_WEB_SEARCHES` overrides it) and `.claude/settings.json` raises it to 2,000 with 500 refills an
+  hour for interactive Claude Code sessions on this repository, so a baseline batch of ten to twelve research agents is
+  not cut off. Searches cost about $10 per 1,000 at list price and show up in `RUN.json` and the cost report.
 - One run at a time: the workflow refuses to start while a `staging/*` branch exists, and stops after 150 minutes or
   700 turns. A run that does its targets should cost about $5 to $15; read the first week before changing anything.
 

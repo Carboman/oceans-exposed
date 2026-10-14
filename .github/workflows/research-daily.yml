@@ -71,6 +71,8 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GH_TOKEN: ${{ github.token }}
           MODEL: ${{ vars.RESEARCH_MODEL || 'claude-sonnet-5-5' }}
+          # WebSearch cap for the headless session (Claude Code default 200, no refill when non-interactive).
+          CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION: ${{ vars.RESEARCH_MAX_WEB_SEARCHES || '1000' }}
           WORKSPACE_ID: ${{ vars.ANTHROPIC_WORKSPACE_ID }}
           NOTE: ${{ github.event.inputs.note }}
           FOLDER: ${{ steps.prep.outputs.folder }}
