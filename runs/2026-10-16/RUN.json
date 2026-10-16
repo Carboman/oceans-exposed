@@ -1,0 +1,82 @@
+{
+  "folder": "2026-10-16",
+  "date": "2026-10-16",
+  "model": "claude-sonnet-5-5",
+  "instructions_version": "2026-10-12.2",
+  "trigger": "schedule",
+  "note": "",
+  "records": 48,
+  "turns": 11,
+  "web_searches": 43,
+  "cost_usd_list": 4.2519583999999995,
+  "duration_min": 19.2,
+  "input_tokens": 24,
+  "output_tokens": 5620,
+  "cache_read_tokens": 1345817,
+  "error": false,
+  "workflow_run": "https://github.com/Carboman/oceans-exposed/actions/runs/38914360652",
+  "usage": {
+    "input_tokens": 24,
+    "cache_creation_input_tokens": 131626,
+    "cache_read_input_tokens": 1345817,
+    "output_tokens": 5620,
+    "output_tokens_details": {
+      "thinking_tokens": 524
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 131626
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1062,
+        "cache_read_input_tokens": 139571,
+        "cache_creation_input_tokens": 225,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 225,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "model_usage": {
+    "claude-sonnet-5-5": {
+      "inputTokens": 298,
+      "outputTokens": 86925,
+      "cacheReadInputTokens": 12494259,
+      "cacheCreationInputTokens": 586227,
+      "webSearchRequests": 0,
+      "costUSD": 3.5848393999999986,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 20898,
+      "canonicalModel": "claude-sonnet-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    },
+    "claude-haiku-5-5": {
+      "inputTokens": 1925260,
+      "outputTokens": 89186,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 0,
+      "webSearchRequests": 43,
+      "costUSD": 0.6671189999999998,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 41646,
+      "canonicalModel": "claude-haiku-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  }
+}
