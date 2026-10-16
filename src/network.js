@@ -2,7 +2,8 @@
 // (contract: docs/NETWORK_STATS_SPEC.md in Carboman/earth-exposed). Pure functions over the live feed; every figure
 // names the site's own public data feed as its source. No company names or credit lines may appear here.
 import { score, level } from './model.js';
-import { seasOf } from './geo.js';
+import { seasOf, seaName, countriesOf } from './geo.js';
+import { networkLinks } from './xref.js';
 
 const SITE = 'oceans.exposed';
 const n = (v) => Number(v || 0).toLocaleString('en-US');
@@ -67,4 +68,20 @@ export function networkLayer(feed, origin = `https://${SITE}`, now = new Date())
     };
   }).filter(Boolean);
   return { type: 'FeatureCollection', site: SITE, generated_at: iso(now), features };
+}
+
+// /network/links.json (network contract 1.2.0): records with network tags, shared IDs or cross-references.
+export function networkLinksFile(feed, origin = `https://${SITE}`, now = new Date()) {
+  return networkLinks(publicRecords(feed), {
+    site: SITE,
+    findingUrl: (r) => `${origin}/dossier.html?id=${encodeURIComponent(r.id)}`,
+    level: (r) => level(score(r)).toLowerCase(),
+    place: (r) => {
+      const c = (r.location || {}).coordinates, out = {};
+      const cc = countriesOf(r).filter((x) => /^[A-Z]{2}$/.test(x)); if (cc.length) out.countries = cc;
+      if (c && typeof c.lat === 'number' && typeof c.lon === 'number') { out.lat = c.lat; out.lon = c.lon; }
+      const sea = seasOf(r)[0]; if (sea) out.label = seaName(sea).slice(0, 120);
+      return out;
+    },
+  }, now);
 }

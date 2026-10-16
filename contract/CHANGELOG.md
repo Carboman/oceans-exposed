@@ -1,5 +1,14 @@
 # Contract changelog
 
+## 1.1.0 (2026-10-16): network cross-references
+
+Three optional record fields for the earth.exposed network (network contract 1.2.0, plan in the hub's
+`docs/CROSS_REFERENCE_PLAN.md`): `network_tags` (event and topic keys from the hub's registry), `shared_ids` (public
+identifiers copied from the source: EPA FRS, EIA plant or utility, PWSID, IAEA reactor, court docket, county FIPS) and
+`cross_refs` (links to findings on other network sites; a cause carries the source that states it and a one-line
+basis). Validated on publish (`src/xref.js`). The site publishes them at `/network/links.json`. Additive: every
+past run stays valid.
+
 ## 1.0.1 (2026-10-12)
 
 Schema aligned with what the publish validator has always accepted, and the validator tightened where the schema

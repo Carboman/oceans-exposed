@@ -1,6 +1,7 @@
 // Feed validation shared by the Worker publish endpoint, the research tools and tools/site-check.mjs.
 import { validateLocation } from './geo.js';
 import { COMPONENTS, CATEGORY_SLUGS, LAYERS } from './model.js';
+import { validateNetworkFields } from './xref.js';
 
 const RUN_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -33,6 +34,7 @@ export function validateFeed(f) {
     (r.responsible_bodies || []).forEach((b, i) => { if (b && b.contact !== undefined && b.contact !== null && !/^https?:\/\//.test(String(b.contact))) p.push(`${r.id}: responsible_bodies[${i}].contact must be an http(s) URL or null (never an empty string).`); });
     (r.measures || []).forEach((m, i) => { if (m && typeof m.value === 'number' && (typeof m.unit !== 'string' || !m.unit)) p.push(`${r.id}: measures[${i}].unit is required when value is a number.`); });
     p.push(...validateLocation(r));
+    p.push(...validateNetworkFields(r, 'oceans.exposed'));  // optional network_tags, shared_ids, cross_refs (contract 1.1.0)
   });
   return p;
 }

@@ -64,3 +64,24 @@ test('discoveries: 30 days ending on the run date, totals equal the daily sums, 
   assert.deepEqual(d.latest.map((x) => x.title), ['Finding A', 'Finding B', 'Finding C', 'Finding D']);
   assert.match(d.latest[0].url, /^https:\/\/site\.test\//);
 });
+
+test('network links: validator, links file and route (contract 1.2.0 on the hub)', async () => {
+  const { validateNetworkFields } = await import('../src/xref.js');
+  const { networkLinksFile } = await import('../src/network.js');
+  const src = { name: 'Agency report', url: 'https://agency.example/r', date: '2021-03-04' };
+  const ok = { id: 'A', network_tags: ['EV-2021-WINTER-STORM-URI'], shared_ids: { epa_frs: ['110000123'] }, cross_refs: [{ site: 'energy.exposed', id: 'E1', relation: 'caused-by', source: src, basis: 'The agency says the outage caused this.' }] };
+  assert.deepEqual(validateNetworkFields(ok, 'oceans.exposed'), []);
+  const bad = validateNetworkFields({ id: 'B', network_tags: ['Bad Tag'], shared_ids: { foo: ['1'] }, cross_refs: [{ site: 'oceans.exposed', id: 'X', relation: 'causes' }] }, 'oceans.exposed');
+  for (const m of ['network_tags', 'shared_ids.foo', 'another network site', 'source', 'basis']) assert.ok(bad.some((x) => x.includes(m)), m);
+  const rec = { ...ok, title: 'A finding', severity: { components: { harm: 2, service: 2, scale: 1, duration: 1, significance: 1 } }, sources: [{ url: 'https://x.example', date: '2021-02-16' }, { url: 'https://y.example', date: '2021-02-15' }], location: { state: 'TX', countries: ['US'] } };
+  const l = networkLinksFile({ run: { run_date: '2026-10-16' }, records: [rec, { id: 'PLAIN', title: 'No links', sources: [] }] }, 'https://site.test', new Date('2026-10-16T00:00:00Z'));
+  assert.equal(l.schema, 'earth.exposed/network-links/1');
+  assert.equal(l.site, 'oceans.exposed');
+  assert.equal(l.findings.length, 1);
+  const f = l.findings[0];
+  assert.equal(f.date, '2021-02-15');
+  assert.deepEqual(f.tags, ['EV-2021-WINTER-STORM-URI']);
+  assert.equal(f.refs[0].relation, 'caused-by');
+  assert.match(f.url, /^https:\/\/site\.test\//);
+  assert.ok(!/carbotura|sponsored by/i.test(JSON.stringify(l)));
+});

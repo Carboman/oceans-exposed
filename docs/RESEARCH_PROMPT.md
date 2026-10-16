@@ -1,4 +1,4 @@
-instructions_version: 2026-10-12.2
+instructions_version: 2026-10-16.1
 
 Daily research run for oceans.exposed (https://oceans.exposed), a ranked, sourced, public tracker of ocean issues
 worldwide. You are the research lane: you edit only `runs/<folder>/` in the repository Carboman/oceans-exposed. Never
@@ -80,3 +80,12 @@ target is not finished. Count your searches per category as you go and record th
   by querying search engines or news-search feeds with curl or any other tool.
 - Public, professional information only: no private individuals, no residences. Follow the source's wording on allegations.
 - Never mention the sponsor, runs, merges or tooling in research data. Never print any token or secret.
+- Network links (contract 1.1.0, optional fields, never a reason to skip research): copy public identifiers that a
+  source shows into `shared_ids` (`epa_frs`, `eia_plant`, `eia_utility`, `pwsid`, `iaea_reactor`, `court_docket`, `fips`);
+  tag a finding with keys from the network's tag registry, only these: `EV-2021-WINTER-STORM-URI`, `pfas`, `lead-service-lines`, `data-centers`, `drought`,
+  `wildfire`, `extreme-cold`, `extreme-heat`, `flooding`, `tropical-cyclones`, `grid-failure`, `harmful-algal-blooms`,
+  `methane`, `microplastics`, `critical-minerals`, `coal-ash`, `sea-level-rise`) in `network_tags`; propose a missing key in
+  `NOTES.md`, never invent one. Add a `cross_refs` entry only for a finding you saw on another network site. A
+  `causes` or `caused-by` link needs the `source` (name, url, date) that states the cause and a `basis` of 10 to 200
+  characters saying what it states; if no source states a cause, use `same-event`. The finding stays on this site
+  only; never copy another site's finding.

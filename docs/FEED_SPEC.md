@@ -58,6 +58,7 @@ Unknown extra fields are kept but not shown. Missing optional fields render as "
 | `verification` | `{status, last_verified, confidence}` |
 | `conflicts[]` | `{field, values[], note}`; a plain sentence is accepted as a note |
 | `missing_fields[]`, `related_ids[]` | |
+| `network_tags[]`, `shared_ids`, `cross_refs[]` | Optional network links (contract 1.1.0): registry tag keys; public IDs by type (`epa_frs`, `eia_plant`, `eia_utility`, `pwsid`, `iaea_reactor`, `court_docket`, `fips`), each an array of strings; links `{site, id, relation, source?, basis?}` to findings on other network sites, `relation` one of `same-event`, `causes`, `caused-by`, `same-facility`, `same-policy`, `supersedes`; a cause requires `source` (name, https url, date) and `basis` (10 to 200 characters). Published at `/network/links.json` |
 
 ## Category slugs (display order)
 

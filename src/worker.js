@@ -12,7 +12,7 @@ import { isAgentFeed, adaptAgentFeed } from './adapt.js';
 import { checkRun } from './quality.js';
 import { score, level } from './model.js';
 import { seasOf, basinOf, countriesOf } from './geo.js';
-import { networkStats, networkLayer } from './network.js';
+import { networkStats, networkLayer, networkLinksFile } from './network.js';
 
 const JSON_HEADERS = { 'content-type': 'application/json; charset=utf-8' };
 const PUBLIC_CACHE = 'public, max-age=300';
@@ -29,7 +29,7 @@ export default {
       if (path === '/api/ocean/validate') return await validateOnly(request, env);
       if (request.method !== 'GET' && request.method !== 'HEAD') return error(405, 'method_not_allowed', 'Read-only endpoint.');
       if (path.startsWith('/api/ocean')) return await api(request, env, url, path);
-      if (path === '/network/stats.json' || path === '/network/layer.geojson') return await network(request, env, url, path);
+      if (path === '/network/stats.json' || path === '/network/layer.geojson' || path === '/network/links.json') return await network(request, env, url, path);
       if (path.startsWith('/reports/')) return await report(env, path);
       return env.ASSETS.fetch(request);
     } catch (err) {
@@ -136,11 +136,11 @@ async function network(request, env, url, path) {
   const obj = await env.OCEAN_REPORTS.get('feeds/latest.json');
   if (!obj) return error(404, 'feed_unavailable', 'No feed has been published yet.');
   const etagIn = request.headers.get('if-none-match');
-  const etag = obj.httpEtag.replace(/"$/, '-net"');
+  const etag = obj.httpEtag.replace(/"$/, `-${path.split('/').pop().split('.')[0]}"`);
   if (etagIn && etagIn === etag) return new Response(null, { status: 304, headers: { etag } });
   const feed = await obj.json();
   const geo = path.endsWith('.geojson');
-  const body = geo ? networkLayer(feed, url.origin) : networkStats(feed, url.origin);
+  const body = geo ? networkLayer(feed, url.origin) : path.endsWith('/links.json') ? networkLinksFile(feed, url.origin) : networkStats(feed, url.origin);
   return new Response(JSON.stringify(body), { headers: { 'content-type': (geo ? 'application/geo+json' : 'application/json') + '; charset=utf-8', 'cache-control': PUBLIC_CACHE, etag, 'access-control-allow-origin': '*' } });
 }
 
